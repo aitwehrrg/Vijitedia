@@ -17,3 +17,10 @@ export type Year = {
     label: string; // e.g., "Year 1"
     semesters: Semester[];
 };
+
+export type Program = {
+    id: string;
+    name: string;
+    department: string;
+    years: Year[];
+};
