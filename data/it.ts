@@ -201,7 +201,7 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "MDM-I-IT",
+                            id: "MDM-I",
                             code: "MDM-I",
                             title: "Multiisciplinary Minor I",
                             credits: 2,
@@ -277,11 +277,11 @@ export const IT_PROGRAM: Program = {
                     label: "Semester IV",
                     courses: [
                         {
-                            id: "MDM-II-IT",
+                            id: "MDM-II",
                             code: "MDM-II",
                             title: "Multidisciplinary Minor II",
                             credits: 2,
-                            prereqs: [],
+                            prereqs: ["MDM-I"],
                         },
                         {
                             id: "R5IT2006T",
@@ -366,11 +366,11 @@ export const IT_PROGRAM: Program = {
                     label: "Semester V",
                     courses: [
                         {
-                            id: "R5IT3201T",
-                            code: "R5IT3201T",
+                            id: "MDM-III",
+                            code: "MDM-III",
                             title: "Multidisciplinary Minor III",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["MDM-II"],
                         },
                         {
                             id: "R5IT3001T",
@@ -449,11 +449,11 @@ export const IT_PROGRAM: Program = {
                     label: "Semester VI",
                     courses: [
                         {
-                            id: "MDM-IV-IT",
-                            code: "R5IT3205T",
+                            id: "MDM-IV",
+                            code: "MDM-IV",
                             title: "Multidisciplinary Minor IV",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["MDM-III"],
                         },
                         {
                             id: "R5IT3004L",
