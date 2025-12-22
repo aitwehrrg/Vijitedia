@@ -15,6 +15,13 @@ export const IT_PROGRAM: Program = {
                     label: "Semester I",
                     courses: [
                         {
+                            id: "R5MA1003T",
+                            code: "R5MA1003T",
+                            title: "Mathematics I",
+                            credits: 3,
+                            prereqs: [],
+                        },
+                        {
                             id: "R5CH1011T",
                             code: "R5CH1011T",
                             title: "Chemistry I",
@@ -26,20 +33,6 @@ export const IT_PROGRAM: Program = {
                             code: "R5CH1011L",
                             title: "Chemistry I Laboratory",
                             credits: 1,
-                            prereqs: [],
-                        },
-                        {
-                            id: "R5MA1003T",
-                            code: "R5MA1003T",
-                            title: "Mathematics-I",
-                            credits: 3,
-                            prereqs: [],
-                        },
-                        {
-                            id: "R5CO1026T",
-                            code: "R5CO1026T",
-                            title: "FRB 1: Probability & Statistics",
-                            credits: 2,
                             prereqs: [],
                         },
                         {
@@ -71,16 +64,23 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
+                            id: "R5CO1026T",
+                            code: "R5CO1026T",
+                            title: "Probability and Statistics",
+                            credits: 2,
+                            prereqs: [],
+                        },
+                        {
                             id: "R5CO1027T",
                             code: "R5CO1027T",
-                            title: "FRB 2: Digital Logic Design",
+                            title: "Digital Logic Design",
                             credits: 2,
                             prereqs: [],
                         },
                         {
                             id: "R5CO1028L",
                             code: "R5CO1028L",
-                            title: "Department Specific Workshop",
+                            title: "Computer Engineering Workshop",
                             credits: 1.5,
                             prereqs: [],
                         },
@@ -94,7 +94,7 @@ export const IT_PROGRAM: Program = {
                         {
                             id: "R5CO1030L",
                             code: "R5CO1030L",
-                            title: "Co-Curricular Course",
+                            title: "Co-curricular Course",
                             credits: 1.5,
                             prereqs: [],
                         },
@@ -104,6 +104,13 @@ export const IT_PROGRAM: Program = {
                     id: "y1s2",
                     label: "Semester II",
                     courses: [
+                        {
+                            id: "R5MA1014T",
+                            code: "R5MA1014T",
+                            title: "Mathematics II",
+                            credits: 3,
+                            prereqs: [],
+                        },
                         {
                             id: "R5PH1011T",
                             code: "R5PH1011T",
@@ -116,13 +123,6 @@ export const IT_PROGRAM: Program = {
                             code: "R5PH1011L",
                             title: "Physics II Laboratory",
                             credits: 1,
-                            prereqs: [],
-                        },
-                        {
-                            id: "R5MA1014T",
-                            code: "R5MA1014T",
-                            title: "Mathematics-II",
-                            credits: 3,
                             prereqs: [],
                         },
                         {
@@ -142,7 +142,7 @@ export const IT_PROGRAM: Program = {
                         {
                             id: "R5CO1021T",
                             code: "R5CO1021T",
-                            title: "Computer Organisation",
+                            title: "Computer Organization",
                             credits: 3,
                             prereqs: [],
                         },
@@ -170,14 +170,14 @@ export const IT_PROGRAM: Program = {
                         {
                             id: "R5HS1001L",
                             code: "R5HS1001L",
-                            title: "Ability Enhancement Course (Business & Technical Communication)",
+                            title: "Business and Technical Communication",
                             credits: 2,
                             prereqs: [],
                         },
                         {
                             id: "R5CO1025L",
                             code: "R5CO1025L",
-                            title: "Sports and Yoga or NSS/NCC",
+                            title: "Co-curricular Course",
                             credits: 1.5,
                             prereqs: [],
                         },
@@ -201,6 +201,13 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
+                            id: "MDM-I-IT",
+                            code: "MDM-I",
+                            title: "Multiisciplinary Minor I",
+                            credits: 2,
+                            prereqs: [],
+                        },
+                        {
                             id: "R5IT2001T",
                             code: "R5IT2001T",
                             title: "Discrete Mathematics",
@@ -210,50 +217,29 @@ export const IT_PROGRAM: Program = {
                         {
                             id: "R5IT2002T",
                             code: "R5IT2002T",
-                            title: "Design & Analysis of Algorithm",
+                            title: "Design and Analysis of Algorithm",
                             credits: 3,
-                            prereqs: ["R5CO1022T"],
-                        },
-                        {
-                            id: "R5IT2003T",
-                            code: "R5IT2003T",
-                            title: "Operating System",
-                            credits: 3,
-                            prereqs: ["R5CO1021T"],
-                        },
-                        {
-                            id: "MDM-I-IT",
-                            code: "MDM-I",
-                            title: "Multi-disciplinary Minor-I",
-                            credits: 2,
-                            prereqs: [],
-                        },
-                        {
-                            id: "R5IT2005L",
-                            code: "R5IT2005L",
-                            title: "Program Development Laboratory",
-                            credits: 1,
-                            prereqs: ["R5CO1001T"],
+                            prereqs: ["R5CO1022T", "R5CO1023L"],
                         },
                         {
                             id: "R5IT2002L",
                             code: "R5IT2002L",
-                            title: "Algorithm Laboratory",
+                            title: "Design and Analysis of Algorithms Laboratory",
                             credits: 1,
-                            prereqs: ["R5CO1022T"],
+                            prereqs: ["R5CO1022T", "R5CO1023L"],
+                        },
+                        {
+                            id: "R5IT2003T",
+                            code: "R5IT2003T",
+                            title: "Operating Systems",
+                            credits: 3,
+                            prereqs: ["R5CO1021T"],
                         },
                         {
                             id: "R5IT2003L",
                             code: "R5IT2003L",
-                            title: "Operating System Laboratory",
+                            title: "Operating Systems Laboratory",
                             credits: 1,
-                            prereqs: [],
-                        },
-                        {
-                            id: "MIL-IT",
-                            code: "AEC",
-                            title: "Modern Indian Languages",
-                            credits: 2,
                             prereqs: [],
                         },
                         {
@@ -261,12 +247,26 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT2004L",
                             title: "Open Source Technology Laboratory",
                             credits: 1,
-                            prereqs: ["R5CO1022T"],
+                            prereqs: ["R5CO1022T", "R5CO1023L"],
+                        },
+                        {
+                            id: "R5IT2005L",
+                            code: "R5IT2005L",
+                            title: "Program Development Laboratory",
+                            credits: 1,
+                            prereqs: ["R5CO1001T", "R5CO1001L"],
                         },
                         {
                             id: "R5HS24010-IT",
                             code: "R5HS24010",
                             title: "Universal Human Values",
+                            credits: 2,
+                            prereqs: [],
+                        },
+                        {
+                            id: "MIL-IT",
+                            code: "AEC",
+                            title: "Modern Indian Language",
                             credits: 2,
                             prereqs: [],
                         },
@@ -277,39 +277,25 @@ export const IT_PROGRAM: Program = {
                     label: "Semester IV",
                     courses: [
                         {
+                            id: "MDM-II-IT",
+                            code: "MDM-II",
+                            title: "Multidisciplinary Minor II",
+                            credits: 2,
+                            prereqs: [],
+                        },
+                        {
                             id: "R5IT2006T",
                             code: "R5IT2006T",
                             title: "Automata Theory",
                             credits: 4,
-                            prereqs: ["R5CO1022T"],
+                            prereqs: ["R5CO1022T", "R5CO1023L"],
                         },
                         {
                             id: "R5IT2007T",
                             code: "R5IT2007T",
                             title: "Artificial Intelligence",
                             credits: 3,
-                            prereqs: ["R5IT2002T"],
-                        },
-                        {
-                            id: "R5IT2008T",
-                            code: "R5IT2008T",
-                            title: "Database Systems",
-                            credits: 3,
-                            prereqs: ["R5CO1022T"],
-                        },
-                        {
-                            id: "R5IT2009T",
-                            code: "R5IT2009T",
-                            title: "Computer Networks",
-                            credits: 3,
-                            prereqs: [],
-                        },
-                        {
-                            id: "MDM-II-IT",
-                            code: "MDM-II",
-                            title: "Multi-disciplinary Minor-II",
-                            credits: 2,
-                            prereqs: [],
+                            prereqs: ["R5IT2002T", "R5IT2002L"],
                         },
                         {
                             id: "R5IT2007L",
@@ -319,10 +305,24 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
+                            id: "R5IT2008T",
+                            code: "R5IT2008T",
+                            title: "Database Systems",
+                            credits: 3,
+                            prereqs: ["R5CO1022T", "R5CO1023L"],
+                        },
+                        {
                             id: "R5IT2008L",
                             code: "R5IT2008L",
                             title: "Database Systems Laboratory",
                             credits: 1,
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5IT2009T",
+                            code: "R5IT2009T",
+                            title: "Computer Networks",
+                            credits: 3,
                             prereqs: [],
                         },
                         {
@@ -366,81 +366,81 @@ export const IT_PROGRAM: Program = {
                     label: "Semester V",
                     courses: [
                         {
+                            id: "R5IT3201T",
+                            code: "R5IT3201T",
+                            title: "Multidisciplinary Minor III",
+                            credits: 3,
+                            prereqs: [],
+                        },
+                        {
                             id: "R5IT3001T",
                             code: "R5IT3001T",
                             title: "Machine Learning",
                             credits: 3,
-                            prereqs: ["Linear Algebra", "Probability", "Statistics"], // [cite: 2291]
+                            prereqs: ["R5MA2007T", "R5CO1026T"],
+                        },
+                        {
+                            id: "R5IT3003L",
+                            code: "R5IT3003L",
+                            title: "Machine Learning Laboratory",
+                            credits: 1,
+                            prereqs: [],
                         },
                         {
                             id: "R5IT3002T",
                             code: "R5IT3002T",
                             title: "Software Engineering",
                             credits: 3,
-                            prereqs: ["Programming", "basics of software engineering"], // [cite: 2306]
-                        },
-                        {
-                            id: "R5IT3003T",
-                            code: "R5IT3003T",
-                            title: "Parallel Computing",
-                            credits: 3,
-                            prereqs: ["DAA"], // [cite: 2328]
-                        },
-                        {
-                            id: "R5IT3004T",
-                            code: "R5IT3004T",
-                            title: "Cloud Computing",
-                            credits: 3,
-                            prereqs: [], // [cite: 2338]
-                        },
-                        {
-                            id: "R5IT3005T",
-                            code: "R5IT3005T",
-                            title: "Cryptography",
-                            credits: 2,
-                            prereqs: [], // [cite: 2348]
-                        },
-                        {
-                            id: "R5IT3201T",
-                            code: "R5IT3201T",
-                            title: "Multi-disciplinary Minor-III",
-                            credits: 3,
-                            prereqs: [], // [cite: 2265]
-                        },
-                        {
-                            id: "R5IT3101T",
-                            code: "R5IT3101T",
-                            title: "Program Elective -I",
-                            credits: 3,
-                            prereqs: [], // [cite: 2265]
-                        },
-                        {
-                            id: "R5IT3003L",
-                            code: "R5IT3003L",
-                            title: "Machine Learning Lab",
-                            credits: 1,
-                            prereqs: [], // [cite: 2365]
+                            prereqs: ["R5CO1001T", "R5CO1001L"],
                         },
                         {
                             id: "R5IT3002L",
                             code: "R5IT3002L",
                             title: "Software Engineering Laboratory",
                             credits: 1,
-                            prereqs: ["Computer & Software Fundamentals Laboratory"], // [cite: 2381]
+                            prereqs: ["R5CO1028L"],
                         },
                         {
-                            id: "R5IT3101L",
-                            code: "R5IT3101L",
-                            title: "Program Elective I Laboratory",
-                            credits: 1,
-                            prereqs: [], // [cite: 2265]
+                            id: "R5IT3003T",
+                            code: "R5IT3003T",
+                            title: "Parallel Computing",
+                            credits: 3,
+                            prereqs: ["R5IT2002T", "R5IT2002L"],
                         },
                         {
                             id: "R5IT3001L",
                             code: "R5IT3001L",
                             title: "Parallel Programming Laboratory",
                             credits: 1,
-                            prereqs: ["C/C++ programming", "Python"], // [cite: 2401]
+                            prereqs: ["R5CO1001T", "R5CO1001L", "R5IT2005L"],
+                        },
+                        {
+                            id: "R5IT3004T",
+                            code: "R5IT3004T",
+                            title: "Cloud Computing",
+                            credits: 3,
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5IT3005T",
+                            code: "R5IT3005T",
+                            title: "Cryptography",
+                            credits: 2,
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5IT3101T",
+                            code: "R5IT3101T",
+                            title: "Professional Elective I",
+                            credits: 3,
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5IT3101L",
+                            code: "R5IT3101L",
+                            title: "Professional Elective I Laboratory",
+                            credits: 1,
+                            prereqs: [],
                         },
                     ],
                 },
@@ -449,81 +449,88 @@ export const IT_PROGRAM: Program = {
                     label: "Semester VI",
                     courses: [
                         {
+                            id: "MDM-IV-IT",
+                            code: "R5IT3205T",
+                            title: "Multidisciplinary Minor IV",
+                            credits: 3,
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5IT3004L",
+                            code: "R5IT3004L",
+                            title: "DevOps Laboratory",
+                            credits: 1,
+                            prereqs: [
+                                "R5IT3002T",
+                                "R5IT3002L",
+                                "R5IT1024L",
+                                "R5IT3004T",
+                                "R5IT2009T",
+                                "R5IT2009L",
+                            ],
+                        },
+                        {
                             id: "R5IT3006T",
                             code: "R5IT3006T",
                             title: "System Security",
                             credits: 3,
-                            prereqs: [], // [cite: 2682]
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5IT3005L",
+                            code: "R5IT3005L",
+                            title: "System Security Laboratory",
+                            credits: 1,
+                            prereqs: [],
                         },
                         {
                             id: "R5IT3007T",
                             code: "R5IT3007T",
-                            title: "Wireless Network",
+                            title: "Wireless Networks",
                             credits: 3,
-                            prereqs: ["Operating system"], // [cite: 2692]
+                            prereqs: ["R5IT2003T", "R5IT2003L"],
+                        },
+                        {
+                            id: "R5IT3006L",
+                            code: "R5IT3006L",
+                            title: "Wireless Networks Laboratory",
+                            credits: 1,
+                            prereqs: ["R5IT2003T", "R5IT2003L"],
                         },
                         {
                             id: "R5IT3008T",
                             code: "R5IT3008T",
                             title: "Research Methodology",
                             credits: 2,
-                            prereqs: [], // [cite: 2704]
-                        },
-                        {
-                            id: "R5IT3301T",
-                            code: "R5IT3301T",
-                            title: "Open Elective",
-                            credits: 4,
-                            prereqs: [], // [cite: 2274]
+                            prereqs: [],
                         },
                         {
                             id: "FIN-MGMT-IT",
                             code: "HSSM",
                             title: "Financial Management",
                             credits: 2,
-                            prereqs: [], // [cite: 2720]
-                        },
-                        {
-                            id: "MDM-IV-IT",
-                            code: "R5IT3205T",
-                            title: "Multi-disciplinary Minor-IV",
-                            credits: 3,
-                            prereqs: [], // [cite: 2274]
+                            prereqs: [],
                         },
                         {
                             id: "R5IT3107T",
                             code: "R5IT3107T",
-                            title: "Program Elective - II",
+                            title: "Professional Elective II",
                             credits: 3,
-                            prereqs: [], // [cite: 2274]
-                        },
-                        {
-                            id: "R5IT3004L",
-                            code: "R5IT3004L",
-                            title: "Devops",
-                            credits: 1,
-                            prereqs: ["Software Engineering", "Web Development", "Cloud", "Networking"], // [cite: 2744]
-                        },
-                        {
-                            id: "R5IT3005L",
-                            code: "R5IT3005L",
-                            title: "System Security Lab",
-                            credits: 1,
-                            prereqs: [], // [cite: 2764]
-                        },
-                        {
-                            id: "R5IT3006L",
-                            code: "R5IT3006L",
-                            title: "Wireless Network Laboratory",
-                            credits: 1,
-                            prereqs: ["Operating system"], // [cite: 2774]
+                            prereqs: [],
                         },
                         {
                             id: "R5IT3107L",
                             code: "R5IT3107L",
-                            title: "Program Elective II Laboratory",
+                            title: "Professional Elective II Laboratory",
                             credits: 1,
-                            prereqs: [], // [cite: 2274]
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5IT3301T",
+                            code: "R5IT3301T",
+                            title: "Open Elective I",
+                            credits: 4,
+                            prereqs: [],
                         },
                     ],
                 },
