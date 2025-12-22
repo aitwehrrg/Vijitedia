@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { CourseCard, CourseStatus } from "@/components/course-card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
     Select,
     SelectContent,
@@ -13,11 +12,67 @@ import {
 import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 
+type Point = { x: number; y: number };
+type Connection = { start: Point; end: Point; type: "prereq" | "postreq" };
+
+const ConnectionLines = ({ connections }: { connections: Connection[] }) => {
+    return (
+        <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-50 overflow-visible">
+            <defs>
+                <marker
+                    id="arrow-prereq"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="9"
+                    refY="3"
+                    orient="auto"
+                >
+                    <path d="M0,0 L0,6 L9,3 z" fill="#f59e0b" />
+                </marker>
+                <marker
+                    id="arrow-postreq"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="9"
+                    refY="3"
+                    orient="auto"
+                >
+                    <path d="M0,0 L0,6 L9,3 z" fill="#3b82f6" />
+                </marker>
+            </defs>
+            {connections.map((conn, i) => {
+                const dx = conn.end.x - conn.start.x;
+                const dy = conn.end.y - conn.start.y;
+
+                // Curvature logic: If elements are far apart vertically, increase curve
+                const curveIntensity = Math.min(Math.abs(dx) * 0.5, 100);
+
+                const pathData = `M ${conn.start.x} ${conn.start.y} C ${conn.start.x + curveIntensity} ${conn.start.y}, ${conn.end.x - curveIntensity} ${conn.end.y}, ${conn.end.x} ${conn.end.y}`;
+                const color = conn.type === "prereq" ? "#f59e0b" : "#3b82f6";
+
+                return (
+                    <path
+                        key={i}
+                        d={pathData}
+                        fill="none"
+                        stroke={color}
+                        strokeWidth="2"
+                        strokeDasharray={conn.type === "prereq" ? "4,4" : "0"}
+                        markerEnd={`url(#arrow-${conn.type})`}
+                        className="opacity-80"
+                    />
+                );
+            })}
+        </svg>
+    );
+};
+
 export default function FlowsheetPage() {
     const [selectedProgramId, setSelectedProgramId] = useState(
         FLOWSHEET_DATA[0].id
     );
     const [hoveredCourseId, setHoveredCourseId] = useState<string | null>(null);
+    const [connections, setConnections] = useState<Connection[]>([]);
 
     const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
     const containerRef = useRef<HTMLDivElement>(null);
@@ -30,25 +85,38 @@ export default function FlowsheetPage() {
         [selectedProgramId]
     );
 
-    // 2. Flatten Courses for current program
-    const allCourses = useMemo(() => {
-        return currentProgram.years.flatMap((y) =>
-            y.semesters.flatMap((s) => s.courses)
-        );
-    }, [currentProgram]);
+    // 2. Flatten Semesters for Grid Columns
+    const flatSemesters = useMemo(
+        () => currentProgram.years.flatMap((y) => y.semesters),
+        [currentProgram]
+    );
 
-    // Reset connections when program changes
+    // 3. Determine Grid Rows (Max courses in any semester)
+    const maxRows = useMemo(
+        () => Math.max(...flatSemesters.map((s) => s.courses.length), 5), // Minimum 5 rows for aesthetics
+        [flatSemesters]
+    );
+
+    const allCourses = useMemo(
+        () => flatSemesters.flatMap((s) => s.courses),
+        [flatSemesters]
+    );
+
+    // Reset helpers
     useEffect(() => {
         setHoveredCourseId(null);
+        setConnections([]);
         cardRefs.current.clear();
     }, [selectedProgramId]);
 
-    // Calculate positions (Same logic as before, depends on allCourses)
+    // Calculate Lines
     useEffect(() => {
         if (!hoveredCourseId || !containerRef.current) {
+            setConnections([]);
             return;
         }
 
+        const newConnections: Connection[] = [];
         const containerRect = containerRef.current.getBoundingClientRect();
         const activeNode = cardRefs.current.get(hoveredCourseId);
 
@@ -56,18 +124,43 @@ export default function FlowsheetPage() {
         const activeRect = activeNode.getBoundingClientRect();
         const activeCourse = allCourses.find((c) => c.id === hoveredCourseId);
 
+        // Coordinate Helper
         const getCoords = (rect: DOMRect, side: "left" | "right") => ({
-            x:
-                (side === "left" ? rect.left : rect.right) -
-                containerRect.left +
-                (containerRef.current?.scrollLeft || 0),
+            x: (side === "left" ? rect.left : rect.right) - containerRect.left,
             y: rect.top - containerRect.top + rect.height / 2,
+        });
+
+        // Prereqs
+        activeCourse?.prereqs.forEach((prereqId) => {
+            const prereqNode = cardRefs.current.get(prereqId);
+            if (prereqNode) {
+                newConnections.push({
+                    start: getCoords(
+                        prereqNode.getBoundingClientRect(),
+                        "right"
+                    ),
+                    end: getCoords(activeRect, "left"),
+                    type: "prereq",
+                });
+            }
         });
 
         // Postreqs
         const postReqs = allCourses.filter((c) =>
             c.prereqs.includes(hoveredCourseId)
         );
+        postReqs.forEach((post) => {
+            const postNode = cardRefs.current.get(post.id);
+            if (postNode) {
+                newConnections.push({
+                    start: getCoords(activeRect, "right"),
+                    end: getCoords(postNode.getBoundingClientRect(), "left"),
+                    type: "postreq",
+                });
+            }
+        });
+
+        setConnections(newConnections);
     }, [hoveredCourseId, allCourses]);
 
     const getCourseStatus = (currentCourse: Course): CourseStatus => {
@@ -81,25 +174,24 @@ export default function FlowsheetPage() {
     };
 
     return (
-        <div className="p-6 w-full h-screen flex flex-col gap-6">
-            {/* HEADER WITH CONTROLS */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="min-h-screen w-full flex flex-col items-center bg-slate-50/50 p-8">
+            {/* HEADER CONTROLS */}
+            <div className="w-full max-w-7xl mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight">
-                        Academic Flowsheets
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+                        Academic Flowsheet
                     </h1>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-slate-500">
                         {currentProgram.department}
                     </p>
                 </div>
 
-                <div className="flex items-center gap-6">
-                    {/* Program Selector */}
+                <div className="flex items-center gap-6 bg-white p-2 rounded-lg border shadow-sm">
                     <Select
                         value={selectedProgramId}
                         onValueChange={setSelectedProgramId}
                     >
-                        <SelectTrigger className="w-[280px]">
+                        <SelectTrigger className="w-[240px] border-0 shadow-none focus:ring-0">
                             <SelectValue placeholder="Select Program" />
                         </SelectTrigger>
                         <SelectContent>
@@ -110,84 +202,121 @@ export default function FlowsheetPage() {
                             ))}
                         </SelectContent>
                     </Select>
-
-                    {/* Legend */}
-                    <div className="hidden md:flex gap-4 text-xs font-medium">
-                        <div className="flex items-center">
-                            <div className="w-3 h-3 bg-amber-100 border-l-2 border-amber-500 mr-2" />{" "}
+                    <div className="h-4 w-px bg-slate-200" />
+                    <div className="flex gap-4 text-xs font-medium pr-4">
+                        <div className="flex items-center text-slate-600">
+                            <div className="w-2 h-2 rounded-full bg-amber-500 mr-2" />{" "}
                             Prerequisite
                         </div>
-                        <div className="flex items-center">
-                            <div className="w-3 h-3 bg-blue-100 border-l-2 border-blue-500 mr-2" />{" "}
+                        <div className="flex items-center text-slate-600">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 mr-2" />{" "}
                             Post-requisite
                         </div>
                     </div>
                 </div>
             </div>
 
-            <ScrollArea
-                className="w-full whitespace-nowrap rounded-md border bg-slate-50/30 flex-1"
+            {/* MAIN FLOWSHEET CONTAINER */}
+            <div
+                className="relative w-full max-w-7xl bg-white rounded-xl shadow-xl border overflow-hidden p-6"
                 ref={containerRef}
             >
-                <div className="flex w-max min-w-full divide-x relative min-h-full">
+                {/* SVG Layer */}
+                <ConnectionLines connections={connections} />
 
+                {/* 1. YEAR HEADERS */}
+                <div
+                    className="grid w-full"
+                    style={{
+                        gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
+                    }}
+                >
                     {currentProgram.years.map((year) => (
                         <div
                             key={year.id}
-                            className="flex flex-col min-w-[350px]"
+                            className="col-span-2 text-center border-b border-slate-100 pb-2 mb-2"
                         >
-                            <div className="bg-slate-100 dark:bg-slate-800 p-3 text-center font-bold border-b sticky top-0 z-20">
+                            <span className="font-bold text-slate-800 text-sm">
                                 {year.label}
-                            </div>
-                            <div className="flex h-full divide-x">
-                                {year.semesters.map((semester) => (
-                                    <div
-                                        key={semester.id}
-                                        className="flex-1 min-w-[175px] flex flex-col p-2 gap-3 z-10"
-                                    >
-                                        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center mb-2">
-                                            {semester.label}
-                                        </div>
-
-                                        {semester.courses.map((course) => (
-                                            <div
-                                                key={course.id}
-                                                ref={(el) => {
-                                                    if (el)
-                                                        cardRefs.current.set(
-                                                            course.id,
-                                                            el
-                                                        );
-                                                    else
-                                                        cardRefs.current.delete(
-                                                            course.id
-                                                        );
-                                                }}
-                                                onMouseEnter={() =>
-                                                    setHoveredCourseId(
-                                                        course.id
-                                                    )
-                                                }
-                                                onMouseLeave={() =>
-                                                    setHoveredCourseId(null)
-                                                }
-                                            >
-                                                <CourseCard
-                                                    course={course}
-                                                    status={getCourseStatus(
-                                                        course
-                                                    )}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>
+                            </span>
                         </div>
                     ))}
                 </div>
-                <ScrollBar orientation="horizontal" />
-            </ScrollArea>
+
+                {/* 2. SEMESTER HEADERS */}
+                <div
+                    className="grid w-full mb-4 gap-2"
+                    style={{
+                        gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
+                    }}
+                >
+                    {flatSemesters.map((sem) => (
+                        <div
+                            key={sem.id}
+                            className="text-center text-[10px] uppercase font-bold text-slate-400 tracking-wider"
+                        >
+                            {sem.label}
+                        </div>
+                    ))}
+                </div>
+
+                {/* 3. COURSE GRID */}
+                {/* We map Row by Row, then Column by Column */}
+                <div className="flex flex-col gap-3 w-full relative z-10">
+                    {Array.from({ length: maxRows }).map((_, rowIndex) => (
+                        <div
+                            key={rowIndex}
+                            className="grid gap-4 w-full"
+                            style={{
+                                gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
+                            }}
+                        >
+                            {flatSemesters.map((semester) => {
+                                const course = semester.courses[rowIndex];
+
+                                if (!course) {
+                                    // Empty Cell
+                                    return (
+                                        <div
+                                            key={`empty-${semester.id}-${rowIndex}`}
+                                            className="aspect-4/3"
+                                        />
+                                    );
+                                }
+
+                                return (
+                                    <div
+                                        key={course.id}
+                                        className="aspect-4/3 w-full"
+                                        ref={(el) => {
+                                            if (el)
+                                                cardRefs.current.set(
+                                                    course.id,
+                                                    el
+                                                );
+                                            else
+                                                cardRefs.current.delete(
+                                                    course.id
+                                                );
+                                        }}
+                                        onMouseEnter={() =>
+                                            setHoveredCourseId(course.id)
+                                        }
+                                        onMouseLeave={() =>
+                                            setHoveredCourseId(null)
+                                        }
+                                    >
+                                        <CourseCard
+                                            course={course}
+                                            status={getCourseStatus(course)}
+                                        />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }

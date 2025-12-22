@@ -22,7 +22,7 @@ export function CourseCard({ course, status }: CourseCardProps) {
     const styles = {
         default: "border-l-transparent hover:border-l-slate-400 opacity-100",
         hovered:
-            "border-l-primary ring-1 ring-primary ring-offset-0 bg-slate-50 shadow-md scale-[1.02] z-10",
+            "border-l-primary ring-1 ring-primary ring-offset-1 bg-slate-50 shadow-sm scale-[1.02]",
         prereq: "border-l-amber-500 bg-amber-50/80 dashed-border",
         postreq: "border-l-blue-500 bg-blue-50/80",
     };
@@ -46,18 +46,18 @@ export function CourseCard({ course, status }: CourseCardProps) {
 
     return (
         <Card
-            className={`h-full border-l-[3px] transition-all duration-200 cursor-pointer ${styles[status]}`}
+            className={`h-full border-l-[3px] transition-all duration-200 cursor-pointer shadow-none ${styles[status]}`}
         >
-            <CardHeader className="p-2 pb-0 space-y-0">
-                <div className="flex justify-between items-start gap-1">
+            <CardHeader className="p-2 pb-1 space-y-0">
+                <div className="flex justify-between items-center">
                     <Badge
                         variant={status === "default" ? "outline" : "secondary"}
-                        className="font-mono font-bold text-[9px] h-4 px-1 flex items-center shrink-0"
+                        className="h-5 px-1 font-mono font-bold text-[9px] flex items-center"
                     >
                         <StatusIcon />
                         {course.code}
                     </Badge>
-                    <span className="text-[9px] text-muted-foreground font-mono shrink-0 pt-0.5">
+                    <span className="text-[9px] text-muted-foreground font-mono">
                         {course.credits}
                     </span>
                 </div>
