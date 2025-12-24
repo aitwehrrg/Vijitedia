@@ -1,0 +1,88 @@
+// components/elective-card.tsx
+import { useState } from "react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { Command, CommandItem, CommandList } from "@/components/ui/command";
+import { Badge } from "@/components/ui/badge";
+import { Layers, Pencil } from "lucide-react";
+import { Course, CourseOption } from "@/types/flowsheet";
+import { CourseCard } from "./course-card";
+
+interface ElectiveCardProps {
+    course: Course;
+    onSelect: (option: CourseOption) => void;
+    selectedOption: CourseOption | null;
+    status: "default" | "hovered" | "prereq" | "postreq";
+}
+
+export function ElectiveCard({
+    course,
+    onSelect,
+    selectedOption,
+    status,
+}: ElectiveCardProps) {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            {/* Radix Popover Root accepts children. We conditionally render the Trigger structure based on whether an option is selected. */}
+            {selectedOption ? (
+                <div className="relative h-full w-full group">
+                    <CourseCard course={selectedOption} status={status} />
+
+                    {/* Explicit Trigger Button */}
+                    <PopoverTrigger asChild>
+                        <button
+                            className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 shadow-sm transition-all"
+                            title="Change Elective"
+                        >
+                            <Pencil className="w-3 h-3" />
+                        </button>
+                    </PopoverTrigger>
+                </div>
+            ) : (
+                <PopoverTrigger asChild>
+                    <div
+                        className={`h-full border-2 border-dashed border-slate-300 p-2 flex flex-col justify-center items-center cursor-pointer hover:border-purple-400 hover:bg-purple-50 transition-colors`}
+                    >
+                        <Layers className="w-4 h-4 text-slate-400 mb-1" />
+                        <span className="text-xs font-semibold text-center text-slate-600 leading-tight">
+                            {course.label || "Elective"}
+                        </span>
+                        <Badge
+                            variant="secondary"
+                            className="mt-1 text-[9px] h-4"
+                        >
+                            Select
+                        </Badge>
+                    </div>
+                </PopoverTrigger>
+            )}
+
+            <PopoverContent className="w-64 p-0">
+                <Command>
+                    <CommandList>
+                        {course.options?.map((opt) => (
+                            <CommandItem
+                                key={opt.id}
+                                onSelect={() => {
+                                    onSelect(opt);
+                                    setOpen(false);
+                                }}
+                                className="text-xs"
+                            >
+                                <span className="font-bold font-mono mr-2">
+                                    {opt.code}
+                                </span>
+                                {opt.title}
+                            </CommandItem>
+                        ))}
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
+    );
+}

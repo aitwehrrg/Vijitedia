@@ -1,20 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-    ArrowLeftFromLine,
-    ArrowRightFromLine,
-    Circle,
-    Lock,
-} from "lucide-react";
+import { ArrowRightFromLine, Circle, Lock } from "lucide-react";
+// Import the central type definition
+import { Course } from "@/types/flowsheet";
 
 export type CourseStatus = "default" | "hovered" | "prereq" | "postreq";
 
 interface CourseCardProps {
-    course: {
-        code: string;
-        title: string;
-        credits: number;
-    };
+    course: Course; // Use the shared type instead of a hardcoded object
     status: CourseStatus;
 }
 
@@ -55,16 +48,17 @@ export function CourseCard({ course, status }: CourseCardProps) {
                         className="h-5 px-1 font-mono font-bold text-[9px] flex items-center"
                     >
                         <StatusIcon />
-                        {course.code}
+                        {/* Fallback to '??' if code is undefined (though it shouldn't be for core courses) */}
+                        {course.code || "??"}
                     </Badge>
                     <span className="text-[9px] text-muted-foreground font-mono">
-                        {course.credits}
+                        {course.credits || 0}
                     </span>
                 </div>
             </CardHeader>
             <CardContent className="p-2 pt-1">
                 <CardTitle className="text-xs font-medium leading-tight line-clamp-2">
-                    {course.title}
+                    {course.title || "Untitled Course"}
                 </CardTitle>
             </CardContent>
         </Card>

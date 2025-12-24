@@ -1,9 +1,36 @@
-export type Course = {
+export type CourseType = "core" | "elective" | "minor";
+
+export type Minor = {
+    id: string;
+    name: string;
+    // An ordered list of courses that this minor provides
+    courses: CourseOption[];
+};
+
+export type CourseOption = {
     id: string;
     code: string;
     title: string;
     credits: number;
-    prereqs: string[]; // IDs of prerequisite courses
+    prereqs: string[];
+};
+
+export type Course = {
+    id: string;
+    type?: CourseType;
+
+    // -- Core Fields --
+    code?: string;
+    title?: string;
+    credits?: number;
+    prereqs?: string[];
+
+    // -- Elective Fields --
+    label?: string;
+    options?: CourseOption[];
+
+    // -- Minor Fields --
+    minorIndex?: number;
 };
 
 export type Semester = {
