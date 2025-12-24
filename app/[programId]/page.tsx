@@ -14,8 +14,6 @@ import {
 import { ArrowLeftFromLine } from "lucide-react";
 import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
-import { MINORS } from "@/data/minors";
-import { Layers, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

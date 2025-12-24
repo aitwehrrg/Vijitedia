@@ -1,6 +1,5 @@
 // data/programs/it.ts
 import { Program } from "@/types/flowsheet";
-import { MINORS } from "@/data/minors";
 
 export const IT_PROGRAM: Program = {
     id: "btech-it",
