@@ -82,7 +82,7 @@ export const CE_PROGRAM: Program = {
                             id: "R5CO1027T",
                             type: "core",
                             code: "R5CO1027T",
-                            title: "FRB 2: Digital Logic Design",
+                            title: "Digital Logic Design",
                             credits: 2,
                             prereqs: [],
                         },
@@ -554,7 +554,7 @@ export const CE_PROGRAM: Program = {
                             ],
                         },
                         {
-                            id: "PE-I",
+                            id: "PE-I Lab",
                             type: "elective",
                             label: "Professional Elective I Laboratory",
                             options: [
