@@ -45,6 +45,18 @@ export default function FlowsheetLanding() {
                     ))}
                 </div>
             </div>
+            <footer className="flex items-center justify-center py-4">
+                <p className="text-sm text-muted-foreground">
+                    Built by{" "}
+                    <a
+                        href="https://github.com/aitwehrrg"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        @aitwehrrg
+                    </a>
+                </p>
+            </footer>
         </div>
     );
 }
