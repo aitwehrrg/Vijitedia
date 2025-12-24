@@ -226,88 +226,9 @@ export const IT_PROGRAM: Program = {
                         },
                         {
                             id: "MDM-I",
-                            type: "elective",
+                            type: "minor",
                             label: "Multidisciplinary Minor I",
-                            credits: 2,
-                            options: [
-                                {
-                                    id: "R5CE2201T",
-                                    code: "R5CE2201T",
-                                    title: "Understanding Incubation and Entrepreneurship",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5CE2202T",
-                                    code: "R5CE2202T",
-                                    title: "Legal Framework for Construction",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5CE2203T",
-                                    code: "R5CE2203T",
-                                    title: "Principles of Sustainability",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5EL2201T",
-                                    code: "R5EL2201T",
-                                    title: "Foundations of Cyber Security",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5EL2202T",
-                                    code: "R5EL2202T",
-                                    title: "Introduction to IoT Systems",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5EL2203T",
-                                    code: "R5EL2203T",
-                                    title: "Signals and Systems",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5EE2201T",
-                                    code: "R5EE2201T",
-                                    title: "Electromechanical Energy Conversion",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5ME2201T",
-                                    code: "R5ME2201T",
-                                    title: "Introduction to Robotics",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5ME2202T",
-                                    code: "R5ME2202T",
-                                    title: "Warfare Platforms and Systems",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5ME2203T",
-                                    code: "R5ME2203T",
-                                    title: "Introduction to Aerospace Engineering",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "R5IL2201T",
-                                    code: "R5IL2201T",
-                                    title: "Orientation Programme in Entrepreneurship",
-                                    credits: 2,
-                                    prereqs: [],
-                                },
-                            ],
+                            minorIndex: 0,
                         },
                         {
                             id: "R5IT2001T",
@@ -431,18 +352,9 @@ export const IT_PROGRAM: Program = {
                     courses: [
                         {
                             id: "MDM-II",
-                            type: "elective",
+                            type: "minor",
                             label: "Multidisciplinary Minor II",
-                            credits: 2,
-                            options: [
-                                {
-                                    id: "R5EL2204T",
-                                    code: "R5EL2204T",
-                                    title: "Digital Signal Processing",
-                                    credits: 2,
-                                    prereqs: ["R5EL2203T"],
-                                },
-                            ],
+                            minorIndex: 1,
                         },
                         {
                             id: "R5IT2006T",
@@ -538,18 +450,9 @@ export const IT_PROGRAM: Program = {
                     courses: [
                         {
                             id: "MDM-III",
-                            type: "elective",
+                            type: "minor",
                             label: "Multidisciplinary Minor III",
-                            credits: 2,
-                            options: [
-                                {
-                                    id: "R5EL2204T",
-                                    code: "R5EL2204T",
-                                    title: "Digital Image Processing",
-                                    credits: 2,
-                                    prereqs: ["R5EL2204T"],
-                                },
-                            ],
+                            minorIndex: 2,
                         },
                         {
                             id: "R5IT3001T",
@@ -657,48 +560,48 @@ export const IT_PROGRAM: Program = {
                                 },
                             ],
                         },
-                        {
-                            id: "HON-I",
-                            type: "elective",
-                            label: "Honors I",
-                            options: [
-                                {
-                                    id: "BLOCK1T",
-                                    code: "R5##3###T",
-                                    title: "Blockchain Foundations",
-                                    credits: 3,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "ARVR1T",
-                                    code: "R5##3###T",
-                                    title: "Computer Graphics",
-                                    credits: 3,
-                                    prereqs: [],
-                                },
-                            ],
-                        },
-                        {
-                            id: "HON-I Lab",
-                            type: "elective",
-                            label: "Honors I Laboratory",
-                            options: [
-                                {
-                                    id: "BLOCK1L",
-                                    code: "R5##3###T",
-                                    title: "Bitcoin Laboratory",
-                                    credits: 1,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "ARVR1L",
-                                    code: "R5##3###T",
-                                    title: "Computer Graphics Laboratory",
-                                    credits: 1,
-                                    prereqs: [],
-                                },
-                            ],
-                        },
+                        // {
+                        //     id: "HON-I",
+                        //     type: "elective",
+                        //     label: "Honors I",
+                        //     options: [
+                        //         {
+                        //             id: "BLOCK1T",
+                        //             code: "R5##3###T",
+                        //             title: "Blockchain Foundations",
+                        //             credits: 3,
+                        //             prereqs: [],
+                        //         },
+                        //         {
+                        //             id: "ARVR1T",
+                        //             code: "R5##3###T",
+                        //             title: "Computer Graphics",
+                        //             credits: 3,
+                        //             prereqs: [],
+                        //         },
+                        //     ],
+                        // },
+                        // {
+                        //     id: "HON-I Lab",
+                        //     type: "elective",
+                        //     label: "Honors I Laboratory",
+                        //     options: [
+                        //         {
+                        //             id: "BLOCK1L",
+                        //             code: "R5##3###T",
+                        //             title: "Bitcoin Laboratory",
+                        //             credits: 1,
+                        //             prereqs: [],
+                        //         },
+                        //         {
+                        //             id: "ARVR1L",
+                        //             code: "R5##3###T",
+                        //             title: "Computer Graphics Laboratory",
+                        //             credits: 1,
+                        //             prereqs: [],
+                        //         },
+                        //     ],
+                        // },
                     ],
                 },
                 {
@@ -707,18 +610,9 @@ export const IT_PROGRAM: Program = {
                     courses: [
                         {
                             id: "MDM-IV",
-                            type: "elective",
+                            type: "minor",
                             label: "Multidisciplinary Minor IV",
-                            credits: 2,
-                            options: [
-                                {
-                                    id: "R5EL2204T",
-                                    code: "R5EL2204T",
-                                    title: "Pattern Recognition",
-                                    credits: 2,
-                                    prereqs: ["R5EL2203T", "R5EL2204T"],
-                                },
-                            ],
+                            minorIndex: 3,
                         },
                         {
                             id: "R5IT3004L",
@@ -804,34 +698,34 @@ export const IT_PROGRAM: Program = {
                             credits: 4,
                             options: [],
                         },
-                        {
-                            id: "HON-II",
-                            type: "elective",
-                            label: "Honors II",
-                            options: [
-                                {
-                                    id: "BLOCK2T",
-                                    code: "R5##3###T",
-                                    title: "Ethereum Blockchain",
-                                    credits: 3,
-                                    prereqs: [],
-                                },
-                            ],
-                        },
-                        {
-                            id: "HON-II Lab",
-                            type: "elective",
-                            label: "Honors II Laboratory",
-                            options: [
-                                {
-                                    id: "BLOCK2L",
-                                    code: "R5##3###T",
-                                    title: "Ethereum Laboratory",
-                                    credits: 1,
-                                    prereqs: [],
-                                },
-                            ],
-                        },
+                        // {
+                        //     id: "HON-II",
+                        //     type: "elective",
+                        //     label: "Honors II",
+                        //     options: [
+                        //         {
+                        //             id: "BLOCK2T",
+                        //             code: "R5##3###T",
+                        //             title: "Ethereum Blockchain",
+                        //             credits: 3,
+                        //             prereqs: [],
+                        //         },
+                        //     ],
+                        // },
+                        // {
+                        //     id: "HON-II Lab",
+                        //     type: "elective",
+                        //     label: "Honors II Laboratory",
+                        //     options: [
+                        //         {
+                        //             id: "BLOCK2L",
+                        //             code: "R5##3###T",
+                        //             title: "Ethereum Laboratory",
+                        //             credits: 1,
+                        //             prereqs: [],
+                        //         },
+                        //     ],
+                        // },
                     ],
                 },
             ],
@@ -840,16 +734,16 @@ export const IT_PROGRAM: Program = {
         //     id: "y4s1",
         //     label: "Final Year",
         //     semesters: [
-        //         // {
-        //         //     id: "y4s1",
-        //         //     label: "Semester VII",
-        //         //     courses: [],
-        //         // },
-        //         // {
-        //         //     id: "y4s2",
-        //         //     label: "Semester VIII",
-        //         //     courses: [],
-        //         // },
+        //         {
+        //             id: "y4s1",
+        //             label: "Semester VII",
+        //             courses: [],
+        //         },
+        //         {
+        //             id: "y4s2",
+        //             label: "Semester VIII",
+        //             courses: [],
+        //         },
         //     ],
         // },
     ],

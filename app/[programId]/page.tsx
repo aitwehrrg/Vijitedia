@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CourseCard, CourseStatus } from "@/components/course-card";
-import { ElectiveCard } from "@/components/elective-card"; // Import the new component
+import { ElectiveCard } from "@/components/elective-card";
 import {
     Select,
     SelectContent,
@@ -11,9 +11,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeftFromLine } from "lucide-react";
+import { ArrowLeftFromLine, GraduationCap } from "lucide-react";
 import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
+import { MINORS } from "@/data/minors"; // Ensure this matches your data file
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -78,7 +79,8 @@ export default function FlowsheetPage() {
     const [selectedCourseId, setSelectedCourseId] = useState<string | null>(
         null
     );
-    const [selections, setSelections] = useState<Record<string, string>>({}); // Track elective picks
+    const [selections, setSelections] = useState<Record<string, string>>({}); // Electives
+    const [selectedMinorId, setSelectedMinorId] = useState<string | null>(null); // NEW: Minors
     const [connections, setConnections] = useState<Connection[]>([]);
 
     const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -107,29 +109,47 @@ export default function FlowsheetPage() {
         [flatSemesters]
     );
 
-    // 2. Calculate Effective Courses (Swapping slots with selected options)
-    // This ensures arrows point to the prerequisites of the *selected* elective
+    // 2. Calculate Effective Courses (Swapping slots with selected options or minors)
     const effectiveCourses = useMemo(() => {
         return allCourses.map((course) => {
-            // If it's an elective and we have a selection for it...
+            // A. Handle Electives (Local choice)
             if (course.type === "elective" && selections[course.id]) {
                 const selectedOpt = course.options?.find(
                     (o) => o.id === selections[course.id]
                 );
-                // Return merged object: Slot ID (for DOM ref) + Option Data (for Logic)
                 if (selectedOpt) {
                     return { ...course, ...selectedOpt, id: course.id };
                 }
             }
+
+            // B. NEW: Handle Minors (Global choice)
+            if (
+                course.type === "minor" &&
+                selectedMinorId &&
+                course.minorIndex !== undefined
+            ) {
+                const activeMinor = MINORS.find(
+                    (m) => m.id === selectedMinorId
+                );
+                // Get the specific course for this slot (e.g., 2nd course in the minor list)
+                const minorCourse = activeMinor?.courses[course.minorIndex];
+
+                if (minorCourse) {
+                    // Merge: Keep the slot ID so React doesn't re-mount, but swap data
+                    return { ...course, ...minorCourse, id: course.id };
+                }
+            }
+
             return course;
         });
-    }, [allCourses, selections]);
+    }, [allCourses, selections, selectedMinorId]);
 
     // Reset Interaction on Route Change
     useEffect(() => {
         setHoveredCourseId(null);
         setSelectedCourseId(null);
         setSelections({});
+        setSelectedMinorId(null); // Reset minor
         setConnections([]);
         cardRefs.current.clear();
     }, [programId]);
@@ -147,7 +167,6 @@ export default function FlowsheetPage() {
 
     // --- Logic Helpers ---
     const activeCourseId = hoveredCourseId || selectedCourseId;
-
     const handleProgramChange = (newId: string) => router.push(`/${newId}`);
 
     const handleCourseClick = (e: React.MouseEvent, courseId: string) => {
@@ -163,14 +182,11 @@ export default function FlowsheetPage() {
         if (!activeCourseId) return "default";
         if (currentCourse.id === activeCourseId) return "hovered";
 
-        // Use effectiveCourses for logic so arrows match selections
         const activeCourse = effectiveCourses.find(
             (c) => c.id === activeCourseId
         );
         if (!activeCourse) return "default";
 
-        // Use effectiveCourses to check relationships
-        // (If currentCourse is a slot, we need its effective version to check its prereqs)
         const effectiveCurrent =
             effectiveCourses.find((c) => c.id === currentCourse.id) ||
             currentCourse;
@@ -205,7 +221,6 @@ export default function FlowsheetPage() {
             y: rect.top - containerRect.top + rect.height / 2,
         });
 
-        // 1. Prereqs -> Active
         activeCourse?.prereqs?.forEach((prereqId) => {
             const prereqNode = cardRefs.current.get(prereqId);
             if (prereqNode) {
@@ -220,7 +235,6 @@ export default function FlowsheetPage() {
             }
         });
 
-        // 2. Active -> Postreqs
         const postReqs = effectiveCourses.filter((c) =>
             c.prereqs?.includes(activeCourseId)
         );
@@ -236,14 +250,14 @@ export default function FlowsheetPage() {
         });
 
         setConnections(newConnections);
-    }, [activeCourseId, effectiveCourses]); // Depend on effectiveCourses
+    }, [activeCourseId, effectiveCourses]);
 
     return (
         <div
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
             onClick={() => setSelectedCourseId(null)}
         >
-            {/* HEADER (Unchanged content, abbreviated for brevity) */}
+            {/* HEADER */}
             <div
                 className="w-full bg-white border-b px-4 py-4 md:px-8 sticky top-0 z-30 shadow-sm"
                 onClick={(e) => e.stopPropagation()}
@@ -269,12 +283,37 @@ export default function FlowsheetPage() {
                             </p>
                         </div>
                     </div>
+
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto">
+                        {/* NEW: Minor Selector */}
+                        <div className="flex items-center gap-2">
+                            <Select
+                                value={selectedMinorId || "none"}
+                                onValueChange={(v) =>
+                                    setSelectedMinorId(v === "none" ? null : v)
+                                }
+                            >
+                                <SelectTrigger className="w-[220px] h-9 border-dashed border-indigo-300 bg-indigo-50/50 text-indigo-700 text-xs">
+                                    <SelectValue placeholder="Add Minor..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="none">
+                                        No Minor
+                                    </SelectItem>
+                                    {MINORS.map((m) => (
+                                        <SelectItem key={m.id} value={m.id}>
+                                            {m.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
                         <Select
                             value={programId}
                             onValueChange={handleProgramChange}
                         >
-                            <SelectTrigger className="w-full md:w-[240px]">
+                            <SelectTrigger className="w-full md:w-[220px] h-9 text-xs">
                                 <SelectValue placeholder="Select Program" />
                             </SelectTrigger>
                             <SelectContent>
@@ -287,11 +326,11 @@ export default function FlowsheetPage() {
                         </Select>
                         <div className="flex gap-4 text-xs font-medium">
                             <div className="flex items-center text-slate-600">
-                                <div className="w-2 h-2 rounded-full bg-amber-500 mr-2" />{" "}
+                                <div className="w-2 h-2 rounded-full bg-amber-500 mr-2" />
                                 Prereq
                             </div>
                             <div className="flex items-center text-slate-600">
-                                <div className="w-2 h-2 rounded-full bg-blue-500 mr-2" />{" "}
+                                <div className="w-2 h-2 rounded-full bg-blue-500 mr-2" />
                                 Postreq
                             </div>
                         </div>
@@ -311,7 +350,7 @@ export default function FlowsheetPage() {
                 >
                     <ConnectionLines connections={connections} />
 
-                    {/* Grid Headers (Years/Semesters) - Unchanged */}
+                    {/* Grid Headers */}
                     <div
                         className="grid w-full mb-2"
                         style={{
@@ -391,8 +430,42 @@ export default function FlowsheetPage() {
                                                 handleCourseClick(e, course.id)
                                             }
                                         >
-                                            {/* CONDITIONAL RENDERING FOR ELECTIVES */}
-                                            {course.type === "elective" ? (
+                                            {/* 1. MINOR SLOTS */}
+                                            {course.type === "minor" ? (
+                                                selectedMinorId ? (
+                                                    // Minor Selected: Render as a styled CourseCard
+                                                    <div className="h-full relative group">
+                                                        <div className="absolute -top-1 -right-1 z-10 bg-white rounded-full p-0.5 shadow-sm">
+                                                            <GraduationCap className="w-3 h-3 text-indigo-600" />
+                                                        </div>
+                                                        <CourseCard
+                                                            // Pass the 'effective' merged data so the title/code is correct
+                                                            course={
+                                                                effectiveCourses.find(
+                                                                    (c) =>
+                                                                        c.id ===
+                                                                        course.id
+                                                                ) || course
+                                                            }
+                                                            status={getCourseStatus(
+                                                                course
+                                                            )}
+                                                        />
+                                                        <div className="absolute inset-0 border-2 border-indigo-500/30 pointer-events-none rounded-lg" />
+                                                    </div>
+                                                ) : (
+                                                    // No Minor: Render Placeholder
+                                                    <div className="h-full border-2 border-dashed border-slate-200 rounded-lg p-2 flex flex-col justify-center items-center bg-slate-50 text-slate-400">
+                                                        <GraduationCap className="w-5 h-5 mb-1 opacity-40" />
+                                                        <span className="text-[9px] font-bold uppercase tracking-wider text-center">
+                                                            Minor Slot{" "}
+                                                            {course.minorIndex! +
+                                                                1}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            ) : course.type === "elective" ? (
+                                                // 2. ELECTIVE SLOTS
                                                 <ElectiveCard
                                                     course={course}
                                                     selectedOption={
@@ -415,6 +488,7 @@ export default function FlowsheetPage() {
                                                     )}
                                                 />
                                             ) : (
+                                                // 3. CORE COURSES
                                                 <CourseCard
                                                     course={course}
                                                     status={getCourseStatus(
@@ -430,6 +504,18 @@ export default function FlowsheetPage() {
                     </div>
                 </div>
             </div>
+            <footer className="flex items-center justify-center py-4">
+                <p className="text-sm text-muted-foreground">
+                    Built by{" "}
+                    <a
+                        href="https://github.com/aitwehrrg"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        @aitwehrrg
+                    </a>
+                </p>
+            </footer>
         </div>
     );
 }
