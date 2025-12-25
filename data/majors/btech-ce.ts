@@ -810,6 +810,7 @@ export const CE_PROGRAM: Program = {
                             id: "PE-I",
                             type: "elective",
                             label: "Professional Elective I",
+                            linkedSlotId: "PE-I Lab",
                             options: [
                                 {
                                     id: "R5CO3101T",
@@ -817,6 +818,7 @@ export const CE_PROGRAM: Program = {
                                     title: "Optimization Techniques",
                                     credits: 3,
                                     prereqs: ["R5MA2007T"],
+                                    linkedOptionId: "R5CO3101L",
                                 },
                                 {
                                     id: "R5CO3102T",
@@ -824,6 +826,7 @@ export const CE_PROGRAM: Program = {
                                     title: "Image Processing",
                                     credits: 3,
                                     prereqs: [],
+                                    linkedOptionId: "R5CO3102L",
                                 },
                             ],
                         },
@@ -831,6 +834,7 @@ export const CE_PROGRAM: Program = {
                             id: "PE-I Lab",
                             type: "elective",
                             label: "Professional Elective I Laboratory",
+                            linkedSlotId: "PE-I",
                             options: [
                                 {
                                     id: "R5CO3101L",
@@ -838,6 +842,7 @@ export const CE_PROGRAM: Program = {
                                     title: "Optimization Techniques Laboratory",
                                     credits: 1,
                                     prereqs: ["R5MA2007T"],
+                                    linkedOptionId: "R5CO3101T",
                                 },
                                 {
                                     id: "R5CO3102L",
@@ -845,6 +850,7 @@ export const CE_PROGRAM: Program = {
                                     title: "Image Processing Laboratory",
                                     credits: 1,
                                     prereqs: [],
+                                    linkedOptionId: "R5CO3102T",
                                 },
                             ],
                         },
