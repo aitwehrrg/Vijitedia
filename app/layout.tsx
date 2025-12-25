@@ -35,7 +35,7 @@ export default function RootLayout({
               className={`cmu-tt bg-neutral-50 text-neutral-900 antialiased`}
           >
               {children}
-              <footer className="flex items-center justify-center pb-4">
+              <footer className="flex items-center justify-center p-4">
                   <p className="text-sm text-muted-foreground">
                       Built by{" "}
                       <a
