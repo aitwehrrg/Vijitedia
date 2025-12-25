@@ -106,6 +106,7 @@ export const CE_PROGRAM: Program = {
                             id: "R5CO1030L",
                             type: "elective",
                             code: "R5CO1030L",
+                            title: "Co-curricular Course",
                             label: "Co-curricular Course",
                             credits: 1.5,
                             options: [
@@ -337,6 +338,7 @@ export const CE_PROGRAM: Program = {
                             id: "R5CO1025L",
                             type: "elective",
                             code: "R5CO1025L",
+                            title: "Co-curricular Course",
                             label: "Co-curricular Course",
                             credits: 1.5,
                             options: [
@@ -501,7 +503,10 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-I",
                             type: "minor",
+                            code: "R5__2___T",
+                            title: "Multidisciplinary Minor I",
                             label: "Multidisciplinary Minor I",
+                            credits: 2,
                             minorIndex: 0,
                         },
                         {
@@ -571,6 +576,8 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MIL",
                             type: "elective",
+                            code: "R5HS250_O",
+                            title: "Modern Indian Language",
                             label: "Modern Indian Language",
                             credits: 2,
                             options: [
@@ -627,7 +634,10 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-II",
                             type: "minor",
+                            code: "R5__2___T",
+                            title: "Multidisciplinary Minor II",
                             label: "Multidisciplinary Minor II",
+                            credits: 2,
                             minorIndex: 1,
                         },
                         {
@@ -725,7 +735,10 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-III",
                             type: "minor",
+                            code: "R5__3___T",
+                            title: "Multidisciplinary Minor III",
                             label: "Multidisciplinary Minor III",
+                            credits: 3,
                             minorIndex: 2,
                         },
                         {
@@ -809,8 +822,11 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "PE-I",
                             type: "elective",
+                            code: "R5CO310_T",
+                            title: "Professional Elective I",
                             label: "Professional Elective I",
-                            linkedSlotId: "PE-I Lab",
+                            linkedSlotId: "PE-I-Lab",
+                            credits: 3,
                             options: [
                                 {
                                     id: "R5CO3101T",
@@ -831,10 +847,13 @@ export const CE_PROGRAM: Program = {
                             ],
                         },
                         {
-                            id: "PE-I Lab",
+                            id: "PE-I-Lab",
                             type: "elective",
+                            code: "R5CO310_L",
+                            title: "Professional Elective I Laboratory",
                             label: "Professional Elective I Laboratory",
                             linkedSlotId: "PE-I",
+                            credits: 1,
                             options: [
                                 {
                                     id: "R5CO3101L",
@@ -861,14 +880,14 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK1T",
-                        //             code: "R5##3###T",
+                        //             code: "R5__3___T",
                         //             title: "Blockchain Foundations",
                         //             credits: 3,
                         //             prereqs: [],
                         //         },
                         //         {
                         //             id: "ARVR1T",
-                        //             code: "R5##3###T",
+                        //             code: "R5__3___T",
                         //             title: "Computer Graphics",
                         //             credits: 3,
                         //             prereqs: [],
@@ -882,14 +901,14 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK1L",
-                        //             code: "R5##3###T",
+                        //             code: "R5__3___T",
                         //             title: "Bitcoin Laboratory",
                         //             credits: 1,
                         //             prereqs: [],
                         //         },
                         //         {
                         //             id: "ARVR1L",
-                        //             code: "R5##3###T",
+                        //             code: "R5__3___T",
                         //             title: "Computer Graphics Laboratory",
                         //             credits: 1,
                         //             prereqs: [],
@@ -905,7 +924,10 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-IV",
                             type: "minor",
+                            code: "R5__3___T",
+                            title: "Multidisciplinary Minor IV",
                             label: "Multidisciplinary Minor IV",
+                            credits: 3,
                             minorIndex: 3,
                         },
                         {
@@ -975,20 +997,28 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "PE-II",
                             type: "elective",
+                            code: "R5CO31__T",
+                            title: "Professional Elective II",
                             label: "Professional Elective II",
+                            linkedSlotId: "PE-II-Lab",
                             credits: 3,
                             options: [],
                         },
                         {
                             id: "PE-II Lab",
                             type: "elective",
+                            code: "R5CO31__L",
+                            title: "Professional Elective II Laboratory",
                             label: "Professional Elective II Laboratory",
+                            linkedSlotId: "PE-II",
                             credits: 1,
                             options: [],
                         },
                         {
                             id: "OE-I",
                             type: "elective",
+                            code: "R5__3___T",
+                            title: "Open Elective I",
                             label: "Open Elective I",
                             credits: 4,
                             options: [],
@@ -1000,7 +1030,7 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK2T",
-                        //             code: "R5##3###T",
+                        //             code: "R5__3___T",
                         //             title: "Ethereum Blockchain",
                         //             credits: 3,
                         //             prereqs: [],
@@ -1014,7 +1044,7 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK2L",
-                        //             code: "R5##3###T",
+                        //             code: "R5__3___T",
                         //             title: "Ethereum Laboratory",
                         //             credits: 1,
                         //             prereqs: [],
