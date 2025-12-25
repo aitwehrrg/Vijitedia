@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vijitedia
 
-## Getting Started
+**Vijitedia** is an interactive academic planning tool designed for engineering students at the **Veermata Jijabai Technological Institute (VJTI)**. It features a dynamic curriculum flowsheet for visualizing course dependencies and a robust CGPA calculator with predictive capabilities.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Project Structure
+
+```text
+app
+├── calculator
+│   ├── [programId]
+│   │   └── page.tsx      # Client-side calculator logic
+│   └── page.tsx          # Calculator landing page
+├── flowsheet
+│   ├── [programId]
+│   │   └── page.tsx      # Interactive flowsheet canvas
+│   └── page.tsx          # Flowsheet landing page
+├── favicon.ico
+├── globals.css
+├── layout.tsx
+└── page.tsx              # Main landing page
+components
+├── ui/                   # ShadCN components (badge, button, etc.)
+├── course-card.tsx       # Renders individual course blocks
+└── elective-card.tsx     # Renders interactive elective slots
+data
+├── majors/               # Degree specific data
+├── grades.ts             # Grade point mapping (AA = 10.0)
+├── minors.ts             # Minor definitions
+└── programs.ts           # Main curriculum data structure
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How it works
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Prerequisite & Postrequisite Visualization
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The flowsheet treats the curriculum as a directed graph where nodes are courses and edges are dependencies.
+- **Prerequisites**: These are defined explicitly in the `data/programs.ts` file. Each course has a `prereqs` array containing the IDs of courses that must be taken first.
+- **Postrequisites**: These are calculated inversely at runtime. The system scans all courses to see which ones list the current course as a prerequisite.
+- **Visualization**: The app uses SVG lines to connect these courses. It calculates the exact screen coordinates of the HTML elements (using `getBoundingClientRect`) to draw smooth Bézier curves between dependent cards.
 
-## Learn More
+### 2. CGPA Calculation
 
-To learn more about Next.js, take a look at the following resources:
+The Cumulative Grade Point Average (CGPA) is calculated using a standard credit-weighted mean.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+$$ \text{CGPA} = \frac{\sum (G_i \times C_i)}{\sum C_i} $$
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Where:
+- $G_i$​ = Grade points earned in a specific course (e.g., A = 4.0, B = 3.0).
+- $C_i$​ = The credit value of that course.
 
-## Deploy on Vercel
+The calculator runs entirely on the client side and persists data using the browser's `localStorage` so users don't lose their inputs on refresh.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. CGPA Prediction
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The predictor helps students understand what grades they need in the future to hit a specific goal. It solves for the **Required Average** based on the total credits defined in the degree program.
+
+$$ \text{Required Avg} = \frac{(\text{Target} \times C_{\text{total}}) - P_{\text{earned}}}{C_{\text{remaining}}} $$
+
+Where:
+- $C_{\text{total}}$​ = Total credits in the entire degree program.
+- $P_{\text{earned}}$​ = Total grade points currently accumulated.
+- $C_{\text{remaining}}$​ = Credits left to complete.
+
+If the result is >10.0 or <0.0, the interface marks the target as mathematically impossible.
+
+---
