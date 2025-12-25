@@ -13,6 +13,7 @@ export type CourseOption = {
     title: string;
     credits: number;
     prereqs: string[];
+    linkedOptionId?: string;
 };
 
 export type Course = {
@@ -28,6 +29,7 @@ export type Course = {
     // -- Elective Fields --
     label?: string;
     options?: CourseOption[];
+    linkedSlotId?: string;
 
     // -- Minor Fields --
     minorIndex?: number;

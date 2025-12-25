@@ -175,8 +175,29 @@ export default function FlowsheetPage() {
     };
 
     const handleElectiveSelect = (slotId: string, optionId: string) => {
-        setSelections((prev) => ({ ...prev, [slotId]: optionId }));
-    };
+        // 1. Find the slot object
+        const currentSlot = allCourses.find((c) => c.id === slotId);
+        if (!currentSlot || !currentSlot.options) return;
+
+        // 2. Find the selected option object
+        const selectedOption = currentSlot.options.find(
+            (o) => o.id === optionId
+        );
+
+        // 3. Prepare the updates
+        const updates: Record<string, string> = {};
+
+        // Update the current slot
+        updates[slotId] = optionId;
+
+        // 4. CHECK FOR LINKS: If this choice is linked to another slot/option, update that too
+        if (currentSlot.linkedSlotId && selectedOption?.linkedOptionId) {
+            updates[currentSlot.linkedSlotId] = selectedOption.linkedOptionId;
+        }
+
+        // 5. Apply all updates at once
+        setSelections((prev) => ({ ...prev, ...updates }));
+    };;
 
     const getCourseStatus = (currentCourse: Course): CourseStatus => {
         if (!activeCourseId) return "default";
