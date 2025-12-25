@@ -16,6 +16,7 @@ interface ElectiveCardProps {
     onSelect: (option: CourseOption) => void;
     selectedOption: CourseOption | null;
     status: "default" | "hovered" | "prereq" | "postreq";
+    disabledOptionIds?: Set<string>;
 }
 
 export function ElectiveCard({
@@ -23,6 +24,7 @@ export function ElectiveCard({
     onSelect,
     selectedOption,
     status,
+    disabledOptionIds,
 }: ElectiveCardProps) {
     const [open, setOpen] = useState(false);
 
@@ -65,21 +67,43 @@ export function ElectiveCard({
             <PopoverContent className="w-64 p-0">
                 <Command>
                     <CommandList>
-                        {course.options?.map((opt) => (
-                            <CommandItem
-                                key={opt.id}
-                                onSelect={() => {
-                                    onSelect(opt);
-                                    setOpen(false);
-                                }}
-                                className="text-xs"
-                            >
-                                <span className="font-bold font-mono mr-2">
-                                    {opt.code}
-                                </span>
-                                {opt.title}
-                            </CommandItem>
-                        ))}
+                        {course.options?.map((opt) => {
+                            const isDisabled = disabledOptionIds?.has(opt.id);
+                            return (
+                                <CommandItem
+                                    key={opt.id}
+                                    value={opt.code + opt.title} // Ensure searchable by both
+                                    disabled={isDisabled} // ShadCN CommandItem handles styling automatically
+                                    onSelect={() => {
+                                        if (!isDisabled) {
+                                            onSelect(opt);
+                                            setOpen(false);
+                                        }
+                                    }}
+                                    className={
+                                        isDisabled
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }
+                                >
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center">
+                                            <span className="font-bold font-mono mr-2">
+                                                {opt.code}
+                                            </span>
+                                            {isDisabled && (
+                                                <span className="text-[9px] text-red-500 font-bold uppercase ml-2">
+                                                    (Conflict)
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-xs text-muted-foreground">
+                                            {opt.title}
+                                        </span>
+                                    </div>
+                                </CommandItem>
+                            );
+                        })}
                     </CommandList>
                 </Command>
             </PopoverContent>

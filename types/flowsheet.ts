@@ -14,6 +14,7 @@ export type CourseOption = {
     credits: number;
     prereqs: string[];
     linkedOptionId?: string;
+    mutexIds?: string[];
 };
 
 export type Course = {

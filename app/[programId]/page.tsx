@@ -12,7 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeftFromLine, GraduationCap } from "lucide-react";
-import { Course } from "@/types/flowsheet";
+import { Course, CourseOption } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors"; // Ensure this matches your data file
 import { Button } from "@/components/ui/button";
@@ -144,6 +144,31 @@ export default function FlowsheetPage() {
         });
     }, [allCourses, selections, selectedMinorId]);
 
+    const allOptionsMap = useMemo(() => {
+        const map = new Map<string, CourseOption>();
+        allCourses.forEach((c) => {
+            if (c.type === "elective" && c.options) {
+                c.options.forEach((opt) => map.set(opt.id, opt));
+            }
+        });
+        return map;
+    }, [allCourses]);
+
+    const disabledOptionIds = useMemo(() => {
+        const disabled = new Set<string>();
+
+        // Iterate over every currently selected option
+        Object.values(selections).forEach((selectedId) => {
+            const option = allOptionsMap.get(selectedId);
+            // If this option has mutexIds, add them to the disabled set
+            if (option && option.mutexIds) {
+                option.mutexIds.forEach((mutexId) => disabled.add(mutexId));
+            }
+        });
+
+        return disabled;
+    }, [selections, allOptionsMap]);
+
     // Reset Interaction on Route Change
     useEffect(() => {
         setHoveredCourseId(null);
@@ -197,7 +222,7 @@ export default function FlowsheetPage() {
 
         // 5. Apply all updates at once
         setSelections((prev) => ({ ...prev, ...updates }));
-    };;
+    };
 
     const getCourseStatus = (currentCourse: Course): CourseStatus => {
         if (!activeCourseId) return "default";
@@ -507,6 +532,9 @@ export default function FlowsheetPage() {
                                                     status={getCourseStatus(
                                                         course
                                                     )}
+                                                    disabledOptionIds={
+                                                        disabledOptionIds
+                                                    } // <--- PASS THIS PROP
                                                 />
                                             ) : (
                                                 // 3. CORE COURSES
