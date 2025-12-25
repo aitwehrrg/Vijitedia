@@ -6,12 +6,18 @@ import {
     CardDescription,
 } from "@/components/ui/card";
 import { FLOWSHEET_DATA } from "@/data/programs";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Workflow } from "lucide-react";
+import { Metadata } from "next";
 
 export default function FlowsheetLanding() {
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8">
             <div className="max-w-2xl w-full space-y-8">
+                <div className="flex justify-center mb-4">
+                    <div className="p-3 bg-indigo-100 rounded-full">
+                        <Workflow className="w-8 h-8 text-indigo-600" />
+                    </div>
+                </div>
                 <div className="text-center space-y-2">
                     <h1 className="text-3xl font-bold tracking-tight text-slate-900">
                         Academic Flowsheets
@@ -44,7 +50,20 @@ export default function FlowsheetLanding() {
                         </Link>
                     ))}
                 </div>
+
+                <div className="text-center">
+                    <Link
+                        href="/calculator"
+                        className="text-sm text-slate-400 hover:text-indigo-600 hover:underline"
+                    >
+                        Go to CGPA Calculator
+                    </Link>
+                </div>
             </div>
         </div>
     );
 }
+
+export const metadata: Metadata = {
+    title: "Academic Flowsheets",
+};

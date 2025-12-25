@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { Calculator, ArrowRight } from "lucide-react";
+import { Metadata } from "next";
 
 export default function CalculatorLanding() {
     return (
@@ -55,10 +56,14 @@ export default function CalculatorLanding() {
                         href="/flowsheet"
                         className="text-sm text-slate-400 hover:text-indigo-600 hover:underline"
                     >
-                        Back to Flowsheets
+                        Go to Flowsheets
                     </Link>
                 </div>
             </div>
         </div>
     );
 }
+
+export const metadata: Metadata = {
+    title: "CGPA Calculators",
+};
