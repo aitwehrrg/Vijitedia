@@ -33,12 +33,59 @@ data
 
 ## How it works
 
-### 1. Prerequisite & Postrequisite Visualization
+### 1. Data Structures
 
-The flowsheet treats the curriculum as a directed graph where nodes are courses and edges are dependencies.
-- **Prerequisites**: These are defined explicitly in the `data/programs.ts` file. Each course has a `prereqs` array containing the IDs of courses that must be taken first.
-- **Postrequisites**: These are calculated inversely at runtime. The system scans all courses to see which ones list the current course as a prerequisite.
-- **Visualization**: The app uses SVG lines to connect these courses. It calculates the exact screen coordinates of the HTML elements (using `getBoundingClientRect`) to draw smooth Bézier curves between dependent cards.
+The curriculum is modeled as a **Directed Acyclic Graph (DAG)**.
+- **Nodes**: Represent Courses (Core, Electives, or Minor slots).
+- **Edges**: Represent Dependencies (Prerequisites).
+
+The data is stored in a normalized JSON structure within `data/programs.ts`:
+```ts
+interface Course {
+  id: string;
+  code: string;
+  title: string;
+  credits: number;
+  prereqs?: string[];
+  type: "core" | "elective" | "minor";
+  // ...
+}
+```
+
+### 2. Flowsheet
+
+The visualization logic in `flowsheet/[programId]/page.tsx` handles the graph traversal and rendering.
+
+#### A. Dependency Resolution
+
+The graph relationships are determined at runtime:
+- **Prerequisites (Incoming Edges)**: Defined explicitly in the `prereqs` array of a course object.
+- **Postrequisites (Outgoing Edges)**: Calculated via an inverted index lookup. The system iterates through the course map to find which nodes list the _current_ node as a prerequisite.
+
+#### B. Dynamic Node Swapping
+
+To handle Electives and Minors without re-rendering the entire DOM, the application uses a **Map-based "Effective Course" lookup**:
+- Instead of an $\mathcal{O}(N)$ array search on every hover, the app builds a `Map<string, Course>` on mount.
+- When a user selects a specific Elective option or Minor, the Map is updated to swap the generic "Slot Node" with the specific "Course Node" (inheriting the specific course's prerequisites).
+- This allows for $\mathcal{O}(1)$ access time during hover events, ensuring 60fps performance even with complex graphs.
+
+#### C. Bézier Curve Rendering
+
+Connections are drawn using an SVG overlay that sits on top of the HTML grid.
+1. **Coordinate Mapping**: The app uses `getBoundingClientRect()` to find the exact DOM position of the Source (Prereq) and Target (Current) cards relative to the container.
+2. **Path Calculation**: A Cubic Bézier curve is generated: $$B(t) = (1-t)^3 P_0 + 3(1-t)^2 t P_1 + 3(1-t) t^2 P_2 + t^3 P_3$$
+- $P_0$​: Right edge of the Prerequisite card.
+- $P_3$​: Left edge of the Target card.
+- $P_1$​, $P_2$​ (Control Points): Calculated dynamically based on the horizontal distance ($\Delta x$) between cards to create a smooth "S" shape.
+
+```ts
+// Simplified logic for control points
+const intensity = Math.min(Math.abs(dx) * 0.5, 120);
+const path = `M ${start.x} ${start.y} 
+              C ${start.x + intensity} ${start.y}, 
+                ${end.x - intensity} ${end.y}, 
+                ${end.x} ${end.y}`;
+```
 
 ### 2. CGPA Calculation
 

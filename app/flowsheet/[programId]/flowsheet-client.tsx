@@ -305,14 +305,16 @@ export default function FlowsheetPage() {
         >
             {/* HEADER */}
             <div
-                className="w-full bg-white border-b px-4 py-4 md:px-8 sticky top-0 z-30 shadow-sm"
+                className="w-full bg-white border-b px-3 py-2 md:px-8 md:py-4 sticky top-0 z-30 shadow-sm"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-4">
+                    {/* TOP ROW: Title & Back Button */}
+                    <div className="flex items-center gap-3 w-full md:w-auto">
                         <Button
                             variant="ghost"
                             size="icon"
+                            className="h-8 w-8 -ml-1 md:ml-0"
                             asChild
                         >
                             <Link href="/flowsheet">
@@ -320,25 +322,27 @@ export default function FlowsheetPage() {
                             </Link>
                         </Button>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+                            <h1 className="text-lg md:text-2xl font-bold tracking-tight text-slate-900 leading-tight">
                                 Academic Flowsheet
                             </h1>
-                            <p className="text-xs md:text-sm text-slate-500">
+                            <p className="text-[10px] md:text-sm text-slate-500 line-clamp-1">
                                 {currentProgram.department}
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto">
-                        {/* NEW: Minor Selector */}
-                        <div className="flex items-center gap-2">
+                    {/* BOTTOM ROW (Mobile) / RIGHT SIDE (Desktop): Controls */}
+                    <div className="w-full md:w-auto flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+                        {/* Inputs: Grid on mobile (side-by-side), Flex on desktop */}
+                        <div className="grid grid-cols-2 gap-2 w-full md:flex md:w-auto md:gap-4">
+                            {/* Minor Selector */}
                             <Select
                                 value={selectedMinorId || "none"}
                                 onValueChange={(v) =>
                                     setSelectedMinorId(v === "none" ? null : v)
                                 }
                             >
-                                <SelectTrigger className="w-[220px] h-9 border-dashed border-indigo-300 bg-indigo-50/50 text-indigo-700 text-xs">
+                                <SelectTrigger className="w-full md:w-[220px] h-8 md:h-9 border-dashed border-indigo-300 bg-indigo-50/50 text-indigo-700 text-xs">
                                     <SelectValue placeholder="Add Minor..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -352,30 +356,36 @@ export default function FlowsheetPage() {
                                     ))}
                                 </SelectContent>
                             </Select>
+
+                            {/* Program Selector */}
+                            <Select
+                                value={programId}
+                                onValueChange={handleProgramChange}
+                            >
+                                <SelectTrigger className="w-full md:w-[220px] h-8 md:h-9 text-xs">
+                                    <SelectValue placeholder="Select Program" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {FLOWSHEET_DATA.map((prog) => (
+                                        <SelectItem
+                                            key={prog.id}
+                                            value={prog.id}
+                                        >
+                                            {prog.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
-                        <Select
-                            value={programId}
-                            onValueChange={handleProgramChange}
-                        >
-                            <SelectTrigger className="w-full md:w-[220px] h-9 text-xs">
-                                <SelectValue placeholder="Select Program" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {FLOWSHEET_DATA.map((prog) => (
-                                    <SelectItem key={prog.id} value={prog.id}>
-                                        {prog.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <div className="flex gap-4 text-xs font-medium">
+                        {/* Legend */}
+                        <div className="flex gap-3 text-[10px] md:text-xs font-medium justify-end md:justify-start pt-1 md:pt-0">
                             <div className="flex items-center text-slate-600">
-                                <div className="w-2 h-2 rounded-full bg-amber-500 mr-2" />
+                                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-amber-500 mr-1.5 md:mr-2" />
                                 Prereq
                             </div>
                             <div className="flex items-center text-slate-600">
-                                <div className="w-2 h-2 rounded-full bg-blue-500 mr-2" />
+                                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-blue-500 mr-1.5 md:mr-2" />
                                 Postreq
                             </div>
                         </div>

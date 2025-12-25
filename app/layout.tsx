@@ -32,21 +32,9 @@ export default function RootLayout({
   return (
       <html lang="en">
           <body
-              className={`cmu-tt bg-neutral-50 text-neutral-900 antialiased`}
+              className={`cmu-tt antialiased`}
           >
               {children}
-              <footer className="flex items-center justify-center p-4">
-                  <p className="text-sm text-muted-foreground">
-                      Built by{" "}
-                      <a
-                          href="https://github.com/aitwehrrg"
-                          target="_blank"
-                          rel="noreferrer"
-                      >
-                          @aitwehrrg
-                      </a>
-                  </p>
-              </footer>
           </body>
       </html>
   );
