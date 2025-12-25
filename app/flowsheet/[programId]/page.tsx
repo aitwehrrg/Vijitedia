@@ -192,7 +192,7 @@ export default function FlowsheetPage() {
 
     // --- Logic Helpers ---
     const activeCourseId = hoveredCourseId || selectedCourseId;
-    const handleProgramChange = (newId: string) => router.push(`/${newId}`);
+    const handleProgramChange = (newId: string) => router.push(`/flowsheet/${newId}`);
 
     const handleCourseClick = (e: React.MouseEvent, courseId: string) => {
         e.stopPropagation();
@@ -316,7 +316,7 @@ export default function FlowsheetPage() {
                             asChild
                             className="hidden md:flex"
                         >
-                            <Link href="/">
+                            <Link href="/flowsheet">
                                 <ArrowLeftFromLine className="w-4 h-4" />
                             </Link>
                         </Button>
@@ -553,18 +553,6 @@ export default function FlowsheetPage() {
                     </div>
                 </div>
             </div>
-            <footer className="flex items-center justify-center py-4">
-                <p className="text-sm text-muted-foreground">
-                    Built by{" "}
-                    <a
-                        href="https://github.com/aitwehrrg"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        @aitwehrrg
-                    </a>
-                </p>
-            </footer>
         </div>
     );
 }

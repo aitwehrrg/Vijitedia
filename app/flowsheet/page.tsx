@@ -26,7 +26,7 @@ export default function FlowsheetLanding() {
                     {FLOWSHEET_DATA.map((program) => (
                         <Link
                             key={program.id}
-                            href={`/${program.id}`}
+                            href={`/flowsheet/${program.id}`}
                         >
                             <Card className="hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group">
                                 <CardHeader className="flex flex-row items-center justify-between p-6">
@@ -45,18 +45,6 @@ export default function FlowsheetLanding() {
                     ))}
                 </div>
             </div>
-            <footer className="flex items-center justify-center py-4">
-                <p className="text-sm text-muted-foreground">
-                    Built by{" "}
-                    <a
-                        href="https://github.com/aitwehrrg"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        @aitwehrrg
-                    </a>
-                </p>
-            </footer>
         </div>
     );
 }
