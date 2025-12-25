@@ -314,7 +314,6 @@ export default function FlowsheetPage() {
                             variant="ghost"
                             size="icon"
                             asChild
-                            className="hidden md:flex"
                         >
                             <Link href="/flowsheet">
                                 <ArrowLeftFromLine className="w-4 h-4" />
