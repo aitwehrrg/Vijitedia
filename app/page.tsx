@@ -34,7 +34,7 @@ export default function Home() {
                             <Link href="/calculator">Calculator</Link>
                         </Button>
                         <Button asChild>
-                            <Link href="https://github.com" target="_blank">
+                            <Link href="https://github.com/aitwehrrg/Vijitedia" target="_blank">
                                 GitHub
                             </Link>
                         </Button>

@@ -47,7 +47,7 @@ The Cumulative Grade Point Average (CGPA) is calculated using a standard credit-
 $$ \text{CGPA} = \frac{\sum (G_i \times C_i)}{\sum C_i} $$
 
 Where:
-- $G_i$​ = Grade points earned in a specific course (e.g., A = 4.0, B = 3.0).
+- $G_i$​ = Grade points earned in a specific course (e.g., AA = 10.0, AB = 9.0).
 - $C_i$​ = The credit value of that course.
 
 The calculator runs entirely on the client side and persists data using the browser's `localStorage` so users don't lose their inputs on refresh.
