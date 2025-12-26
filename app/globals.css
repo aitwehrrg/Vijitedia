@@ -141,11 +141,11 @@
 }
 
 .cmu-serif {
-    font-family: "CMU Serif", serif;
+    font-family: "CMU Serif", sans-serif;
 }
 
 .cmu-tt {
-    font-family: "CMU Typewriter", serif;
+    font-family: "CMU Typewriter", monospace;
 }
 
 .font-mono {
