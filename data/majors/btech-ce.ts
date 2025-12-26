@@ -503,7 +503,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-I",
                             type: "minor",
-                            code: "R5__2___T",
+                            code: "R5__220_T",
                             title: "Multidisciplinary Minor I",
                             label: "Multidisciplinary Minor I",
                             credits: 2,
@@ -634,7 +634,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-II",
                             type: "minor",
-                            code: "R5__2___T",
+                            code: "R5__220_T",
                             title: "Multidisciplinary Minor II",
                             label: "Multidisciplinary Minor II",
                             credits: 2,
@@ -735,7 +735,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-III",
                             type: "minor",
-                            code: "R5__3___T",
+                            code: "R5__320_T",
                             title: "Multidisciplinary Minor III",
                             label: "Multidisciplinary Minor III",
                             credits: 3,
@@ -924,7 +924,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-IV",
                             type: "minor",
-                            code: "R5__3___T",
+                            code: "R5__320_T",
                             title: "Multidisciplinary Minor IV",
                             label: "Multidisciplinary Minor IV",
                             credits: 3,
@@ -989,7 +989,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "HSSM",
                             type: "core",
-                            code: "HSSM",
+                            code: "R5__3___T",
                             title: "Financial Management",
                             credits: 2,
                             prereqs: [],
