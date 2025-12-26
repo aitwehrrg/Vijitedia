@@ -18,7 +18,23 @@ type Props = {
     params: { programId: string };
 };
 
-// ... generateMetadata ...
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { programId } = await Promise.resolve(params);
+
+    const program = FLOWSHEET_DATA.find((p) => p.id === programId);
+
+    if (!program) return { title: "Not Found" };
+
+    return {
+        title: program
+            ? `Academic Flowsheet: ${program.name}`
+            : "Academic Flowsheet",
+
+        description: program
+            ? `Interactive prerequisite map for ${program.name}.`
+            : "Academic Flowsheets",
+    };
+}
 
 export default async function FlowsheetPage({ params }: Props) {
     const { programId } = await Promise.resolve(params);
