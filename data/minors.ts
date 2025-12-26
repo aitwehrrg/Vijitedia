@@ -37,6 +37,41 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5ET2201",
+        dept: "Electronics and Telecommunication",
+        name: "Cybersecurity",
+        courses: [
+            {
+                id: "R5ET2201T",
+                code: "R5ET2201T",
+                title: "Fundamentals of Cybersecurity",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5ET2203T",
+                code: "R5ET2203T",
+                title: "Modern Cryptography",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5ET3201T",
+                code: "R5ET3201T",
+                title: "Network Security",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5ET3201T",
+                code: "R5ET3201T",
+                title: "IoT and Cloud Security",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5EL2203",
         dept: "Electronics Engineering",
         name: "Signal Processing and Imaging",
@@ -76,6 +111,41 @@ export const MINORS: Minor[] = [
             //     credits: 4,
             //     prereqs: ["R5EL2203T", "R5EL2204T", "R5EL3202T", "R5EL3204T"],
             // },
+        ],
+    },
+    {
+        id: "R5ME2201",
+        dept: "Mechanical Engineering",
+        name: "Robotics",
+        courses: [
+            {
+                id: "R5ME2201T",
+                code: "R5ME2201T",
+                title: "Introduction to Robotics",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5ME2204T",
+                code: "R5ME2204T",
+                title: "Mechanics of Robotics",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5EE3221T",
+                code: "R5EE3221T",
+                title: "Microprocessor and Embedded Systems",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5EE3222T",
+                code: "R5EE3222T",
+                title: "Control of Robotic Systems",
+                credits: 3,
+                prereqs: [],
+            },
         ],
     },
     {
