@@ -24,34 +24,42 @@ import { toRoman } from "@/utils/toRoman";
 type Point = { x: number; y: number };
 type Connection = { start: Point; end: Point; type: "prereq" | "postreq" };
 
+// --- IMPROVED CONNECTION LINES ---
 const ConnectionLines = ({ connections }: { connections: Connection[] }) => {
     return (
         <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-50 overflow-visible">
             <defs>
+                {/* PREREQ ARROW (Amber) */}
                 <marker
                     id="arrow-prereq"
-                    markerWidth="10"
-                    markerHeight="10"
-                    refX="9"
-                    refY="3"
-                    orient="auto"
+                    viewBox="0 0 12 12"
+                    refX="10" 
+                    refY="6"
+                    markerWidth="8"
+                    markerHeight="8"
+                    orient="auto-start-reverse"
                 >
-                    <path d="M0,0 L0,6 L9,3 z" fill="#f59e0b" />
+                    {/* Notched Arrowhead Shape */}
+                    <path d="M0,0 L12,6 L0,12 L3,6 z" fill="#f59e0b" />
                 </marker>
+
+                {/* POSTREQ ARROW (Blue) */}
                 <marker
                     id="arrow-postreq"
-                    markerWidth="10"
-                    markerHeight="10"
-                    refX="9"
-                    refY="3"
-                    orient="auto"
+                    viewBox="0 0 12 12"
+                    refX="10"
+                    refY="6"
+                    markerWidth="8"
+                    markerHeight="8"
+                    orient="auto-start-reverse"
                 >
-                    <path d="M0,0 L0,6 L9,3 z" fill="#3b82f6" />
+                    <path d="M0,0 L12,6 L0,12 L3,6 z" fill="#3b82f6" />
                 </marker>
             </defs>
             {connections.map((conn, i) => {
                 const dx = conn.end.x - conn.start.x;
-                const curveIntensity = Math.min(Math.abs(dx) * 0.5, 120);
+                // Clamp curve intensity to ensure lines don't look flat for close cards
+                const curveIntensity = Math.min(Math.max(Math.abs(dx) * 0.5, 40), 150);
                 const pathData = `M ${conn.start.x} ${conn.start.y} C ${conn.start.x + curveIntensity} ${conn.start.y}, ${conn.end.x - curveIntensity} ${conn.end.y}, ${conn.end.x} ${conn.end.y}`;
                 const color = conn.type === "prereq" ? "#f59e0b" : "#3b82f6";
                 return (
@@ -61,7 +69,7 @@ const ConnectionLines = ({ connections }: { connections: Connection[] }) => {
                         fill="none"
                         stroke={color}
                         strokeWidth="2"
-                        strokeDasharray={conn.type === "prereq" ? "4,4" : "0"}
+                        strokeDasharray={conn.type === "prereq" ? "5,5" : "0"}
                         markerEnd={`url(#arrow-${conn.type})`}
                         className="opacity-80 transition-all duration-300"
                     />
@@ -133,12 +141,15 @@ export default function FlowsheetPage() {
                 const activeMinor = MINORS.find(
                     (m) => m.id === selectedMinorId
                 );
-                // Get the specific course for this slot (e.g., 2nd course in the minor list)
                 const minorCourse = activeMinor?.courses[course.minorIndex];
 
                 if (minorCourse) {
-                    // Merge: Keep the slot ID so React doesn't re-mount, but swap data
-                    return { ...course, ...minorCourse, id: course.id };
+                    return {
+                        ...course,
+                        ...minorCourse,
+                        id: course.id, // Keep Slot ID for Grid
+                        originalId: minorCourse.id, // <--- NEW: Store ID for Dependencies
+                    };
                 }
             }
 
@@ -247,58 +258,95 @@ export default function FlowsheetPage() {
         return "default";
     };
 
-    // --- Connection Line Logic ---
+    // --- CONNECTION LOGIC ---
     useEffect(() => {
-        if (!activeCourseId || !contentRef.current) {
-            setConnections([]);
-            return;
-        }
-
-        const newConnections: Connection[] = [];
-        const containerRect = contentRef.current.getBoundingClientRect();
-        const activeNode = cardRefs.current.get(activeCourseId);
-
-        if (!activeNode) return;
-
-        const activeRect = activeNode.getBoundingClientRect();
-        const activeCourse = effectiveCourses.find(
-            (c) => c.id === activeCourseId
-        );
-
-        const getCoords = (rect: DOMRect, side: "left" | "right") => ({
-            x: (side === "left" ? rect.left : rect.right) - containerRect.left,
-            y: rect.top - containerRect.top + rect.height / 2,
-        });
-
-        activeCourse?.prereqs?.forEach((prereqId) => {
-            const prereqNode = cardRefs.current.get(prereqId);
-            if (prereqNode) {
-                newConnections.push({
-                    start: getCoords(
-                        prereqNode.getBoundingClientRect(),
-                        "right"
-                    ),
-                    end: getCoords(activeRect, "left"),
-                    type: "prereq",
-                });
+        // Helper to calculate and set connections
+        const updateConnections = () => {
+            if (!activeCourseId || !contentRef.current) {
+                setConnections([]);
+                return;
             }
-        });
 
-        const postReqs = effectiveCourses.filter((c) =>
-            c.prereqs?.includes(activeCourseId)
-        );
-        postReqs.forEach((post) => {
-            const postNode = cardRefs.current.get(post.id);
-            if (postNode) {
-                newConnections.push({
-                    start: getCoords(activeRect, "right"),
-                    end: getCoords(postNode.getBoundingClientRect(), "left"),
-                    type: "postreq",
-                });
-            }
-        });
+            const newConnections: Connection[] = [];
+            const containerRect = contentRef.current.getBoundingClientRect();
 
-        setConnections(newConnections);
+            const getNodeRef = (targetId: string) => {
+                if (cardRefs.current.has(targetId)) {
+                    return cardRefs.current.get(targetId);
+                }
+                const hiddenCourse = effectiveCourses.find(
+                    (c) => (c as any).originalId === targetId
+                );
+                if (hiddenCourse && cardRefs.current.has(hiddenCourse.id)) {
+                    return cardRefs.current.get(hiddenCourse.id);
+                }
+                return null;
+            };
+
+            const activeNode = cardRefs.current.get(activeCourseId);
+            if (!activeNode) return;
+
+            const activeRect = activeNode.getBoundingClientRect();
+            const activeCourse = effectiveCourses.find(
+                (c) => c.id === activeCourseId
+            );
+
+            // Calculate offset relative to the container
+            const getCoords = (rect: DOMRect, side: "left" | "right") => ({
+                x:
+                    (side === "left" ? rect.left : rect.right) -
+                    containerRect.left,
+                y: rect.top - containerRect.top + rect.height / 2,
+            });
+
+            // 1. UPSTREAM (Prereqs)
+            activeCourse?.prereqs?.forEach((prereqId) => {
+                const prereqNode = getNodeRef(prereqId);
+                if (prereqNode) {
+                    newConnections.push({
+                        start: getCoords(
+                            prereqNode.getBoundingClientRect(),
+                            "right"
+                        ),
+                        end: getCoords(activeRect, "left"),
+                        type: "prereq",
+                    });
+                }
+            });
+
+            // 2. DOWNSTREAM (Postreqs)
+            const postReqs = effectiveCourses.filter((c) => {
+                const prereqs = c.prereqs || [];
+                return (
+                    prereqs.includes(activeCourseId) ||
+                    ((activeCourse as any).originalId &&
+                        prereqs.includes((activeCourse as any).originalId))
+                );
+            });
+
+            postReqs.forEach((post) => {
+                const postNode = cardRefs.current.get(post.id);
+                if (postNode) {
+                    newConnections.push({
+                        start: getCoords(activeRect, "right"),
+                        end: getCoords(
+                            postNode.getBoundingClientRect(),
+                            "left"
+                        ),
+                        type: "postreq",
+                    });
+                }
+            });
+
+            setConnections(newConnections);
+        };
+
+        // Run immediately
+        updateConnections();
+
+        // Run on window resize (fixes grid location shifts)
+        window.addEventListener("resize", updateConnections);
+        return () => window.removeEventListener("resize", updateConnections);
     }, [activeCourseId, effectiveCourses]);
 
     const shouldShowSeparator = (index: number) => {

@@ -88,14 +88,14 @@ export function MinorSlot({
                                 <div className="flex flex-col">
                                     <div className="flex items-center">
                                         <span className="font-bold font-mono mr-2">
-                                            {m.dept}
+                                            {m.name}
                                         </span>
                                         {selectedMinorId === m.id && (
                                             <Check className="w-4 h-4 text-indigo-600 ml-2 right-2 absolute" />
                                         )}
                                     </div>
                                     <span className="text-xs font-medium text-slate-700">
-                                        {m.name}
+                                        {m.dept}
                                     </span>
                                 </div>
                             </CommandItem>
