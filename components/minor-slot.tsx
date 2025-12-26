@@ -72,7 +72,7 @@ export function MinorSlot({
             )}
 
             {/* 3. POPOVER LIST */}
-            <PopoverContent className="w-[280px] p-0" align="start">
+            <PopoverContent className="w-[290px] p-0" align="start">
                 <Command>
                     <CommandList>
                         {/* List of Available Minors */}

@@ -37,6 +37,41 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5CE2202",
+        dept: "Civil Engineering",
+        name: "Contract Law, Arbitration and Valuation",
+        courses: [
+            {
+                id: "R5CE2202T",
+                code: "R5CE2202T",
+                title: "Legal Framework for Construction",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5CE2205T",
+                code: "R5CE2205T",
+                title: "Contracts, Claims and Dispute Management",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5CE3202T",
+                code: "R5CE3202T",
+                title: "Project Accounting and Cost Management",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5CE3205T",
+                code: "R5CE3205T",
+                title: "Construction Safety, Quality and Risk Management",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5ET2201",
         dept: "Electronics and Telecommunication",
         name: "Cybersecurity",
