@@ -11,7 +11,6 @@ interface CourseCardProps {
 }
 
 export function CourseCard({ course, status }: CourseCardProps) {
-    // Enhanced styles for better visual feedback and contrast
     const styles = {
         default: "border-l-transparent hover:border-l-slate-400 opacity-100",
         hovered:
@@ -39,11 +38,11 @@ export function CourseCard({ course, status }: CourseCardProps) {
 
     return (
         <Card
-            className={`h-full flex flex-col justify-between border-l-[4px] transition-all duration-200 cursor-pointer shadow-sm ${styles[status]}`}
+            // Added overflow-hidden to prevent spill
+            className={`h-full flex flex-col justify-between border-l-[4px] transition-all duration-200 cursor-pointer shadow-sm overflow-hidden ${styles[status]}`}
         >
-            <CardHeader className="p-3 pb-2 space-y-0">
+            <CardHeader className="p-3 pb-2 space-y-0 shrink-0">
                 <div className="flex justify-between items-start gap-2">
-                    {/* Course Code Badge - Larger and clearer */}
                     <Badge
                         variant={status === "default" ? "outline" : "secondary"}
                         className="h-6 px-2 font-mono text-xs font-bold tracking-tight flex items-center shrink-0"
@@ -52,7 +51,6 @@ export function CourseCard({ course, status }: CourseCardProps) {
                         {course.code || "??"}
                     </Badge>
 
-                    {/* Credits - Increased size and contrast */}
                     <div className="flex flex-col items-end shrink-0">
                         <span className="text-xs font-bold text-slate-700 font-mono bg-slate-100 px-1.5 py-0.5 rounded-md border border-slate-200">
                             {course.credits || 0}
@@ -61,11 +59,12 @@ export function CourseCard({ course, status }: CourseCardProps) {
                 </div>
             </CardHeader>
 
-            <CardContent className="p-3 pt-0 flex-grow flex items-center">
-                {/* Title - Increased legibility and line height */}
+            {/* Added min-h-0 to allow flex child to shrink for line-clamp */}
+            <CardContent className="p-3 pt-0 flex-grow flex items-center min-h-0">
                 <CardTitle
-                    className="text-sm font-medium leading-snug text-slate-800 line-clamp-3"
-                    title={course.title} // Native tooltip for truncated text
+                    // Adjusted text size for mobile (text-xs) vs desktop (text-sm)
+                    className="text-xs sm:text-sm font-medium leading-snug text-slate-800 line-clamp-3"
+                    title={course.title}
                 >
                     {course.title || "Untitled Course"}
                 </CardTitle>
