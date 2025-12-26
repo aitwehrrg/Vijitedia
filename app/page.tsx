@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, GitBranch, Calculator, Network } from "lucide-react";
+import { ArrowRight, GitBranch, Calculator, Github, Network } from "lucide-react";
 
 export default function Home() {
     return (
@@ -97,7 +97,7 @@ export default function Home() {
                                 href="https://github.com/aitwehrrg/Vijitedia"
                                 target="_blank"
                             >
-                                GitHub
+                                <Github /> GitHub
                             </Link>
                         </Button>
                     </div>
