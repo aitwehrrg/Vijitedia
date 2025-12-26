@@ -980,7 +980,7 @@ export const IT_PROGRAM: Program = {
                         {
                             id: "HSSM",
                             type: "core",
-                            code: "R5__3___T",
+                            code: "HSSM",
                             title: "Financial Management",
                             credits: 2,
                             prereqs: [],
