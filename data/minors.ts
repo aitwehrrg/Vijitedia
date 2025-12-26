@@ -63,8 +63,8 @@ export const MINORS: Minor[] = [
                 prereqs: [],
             },
             {
-                id: "R5ET3201T",
-                code: "R5ET3201T",
+                id: "R5ET3203T",
+                code: "R5ET3203T",
                 title: "IoT and Cloud Security",
                 credits: 3,
                 prereqs: [],
