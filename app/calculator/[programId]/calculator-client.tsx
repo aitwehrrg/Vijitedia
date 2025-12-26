@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback, memo } from "react";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { GRADE_POINTS, GRADE_OPTIONS } from "@/data/grades";
@@ -262,7 +262,7 @@ export default function CalculatorPage() {
         };
     }, [targetCGPA, activeCourses, globalStats]);
 
-    if (!currentProgram) return <div>Program not found</div>;
+    if (!currentProgram) notFound();
 
     const renderPredictionMessage = () => {
         if (!prediction) return null;
