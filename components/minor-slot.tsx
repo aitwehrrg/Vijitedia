@@ -87,7 +87,7 @@ export function MinorSlot({
                             >
                                 <div className="flex flex-col">
                                     <div className="flex items-center">
-                                        <span className="font-bold font-mono mr-2">
+                                        <span className="font-bold mr-2">
                                             {m.name}
                                         </span>
                                         {selectedMinorId === m.id && (
