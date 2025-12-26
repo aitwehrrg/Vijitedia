@@ -4,25 +4,21 @@ import { MINORS } from "@/data/minors";
 import { notFound } from "next/navigation";
 import FlowsheetClient from "./flowsheet-client";
 
+// 1. Define a specific type for the flattened SEO data
+type SeoCourse = {
+    code: string;
+    title: string;
+    credits: number;
+    prereqs: string[];
+    category: string;
+    dept: string;
+};
+
 type Props = {
     params: { programId: string };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { programId } = await Promise.resolve(params);
-    const program = FLOWSHEET_DATA.find((p) => p.id === programId);
-
-    if (!program) return { title: "Not Found" };
-
-    return {
-        title: program
-            ? `Academic Flowsheet: ${program.name}`
-            : "Academic Flowsheet",
-        description: program
-            ? `Interactive prerequisite map for ${program.name}.`
-            : "Academic Flowsheets",
-    };
-}
+// ... generateMetadata ...
 
 export default async function FlowsheetPage({ params }: Props) {
     const { programId } = await Promise.resolve(params);
@@ -30,34 +26,57 @@ export default async function FlowsheetPage({ params }: Props) {
 
     if (!program) return notFound();
 
-    // 1. FLATTEN DATA
-    const coreAndElectives = program.years.flatMap((y) =>
+    // 2. FLATTEN CORE & ELECTIVES -> SeoCourse[]
+    const coreAndElectives: SeoCourse[] = program.years.flatMap((y) =>
         y.semesters.flatMap((s) =>
             s.courses.flatMap((c) => {
-                if (c.type === "elective" && c.options) return c.options;
-                if (c.type === "minor") return [];
+                // Case A: Elective (Map options to SeoCourse)
+                if (c.type === "elective" && c.options) {
+                    return c.options.map((opt) => ({
+                        code: opt.code,
+                        title: opt.title,
+                        credits: opt.credits,
+                        prereqs: opt.prereqs,
+                        category: "Elective Option",
+                        dept: program.department, // Default to program dept for electives
+                    }));
+                }
+
+                // Case B: Core Course (Map single slot to SeoCourse)
                 if (c.code && c.title) {
                     return [
                         {
-                            id: c.id,
                             code: c.code,
                             title: c.title,
                             credits: c.credits || 0,
                             prereqs: c.prereqs || [],
+                            category: "Core Requirement",
+                            dept: program.department,
                         },
                     ];
                 }
+
                 return [];
             })
         )
     );
 
-    const allMinorCourses = MINORS.flatMap((m) => m.courses);
+    // 3. FLATTEN MINORS -> SeoCourse[]
+    const minorCourses: SeoCourse[] = MINORS.flatMap((m) =>
+        m.courses.map((c) => ({
+            code: c.code,
+            title: c.title,
+            credits: c.credits,
+            prereqs: c.prereqs,
+            category: `Minor in ${m.name}`,
+            dept: m.dept, // Use the Minor's specific department
+        }))
+    );
 
-    // Combine for rendering
-    const fullCourseList = [...coreAndElectives, ...allMinorCourses];
+    // 4. MERGE
+    const fullCourseList = [...coreAndElectives, ...minorCourses];
 
-    // 2. BUILD JSON-LD (Schema.org)
+    // 5. JSON-LD
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "ItemList",
@@ -68,10 +87,11 @@ export default async function FlowsheetPage({ params }: Props) {
                 "@type": "Course",
                 courseCode: course.code,
                 name: course.title,
-                description: `Credits: ${course.credits}. Prereqs: ${course.prereqs?.join(", ") || "None"}`,
+                description: `Type: ${course.category}. Dept: ${course.dept}. Credits: ${course.credits}.`,
                 provider: {
                     "@type": "CollegeOrUniversity",
                     name: "Veermata Jijabai Technological Institute",
+                    department: course.dept,
                 },
             },
         })),
@@ -79,26 +99,23 @@ export default async function FlowsheetPage({ params }: Props) {
 
     return (
         <>
-            {/* 1. SCHEMA.ORG DATA (Google/Search) */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            {/* 2. SEMANTIC TEXT DATA (LLMs/Scrapers/Screen Readers) */}
-            {/* 'sr-only' hides this from visual UI but keeps it in the DOM text stream */}
             <div className="sr-only">
                 <h1>Full Course Catalog: {program.name}</h1>
-                <p>
-                    The following is a complete text list of all courses
-                    associated with this program, including core requirements,
-                    electives, and available minors.
-                </p>
                 <ul>
                     {fullCourseList.map((c, i) => (
                         <li key={`${c.code}-${i}`}>
-                            <strong>{c.code}</strong>: {c.title}. Credits:{" "}
-                            {c.credits}. Prerequisites:{" "}
+                            <span>
+                                [{c.category} - {c.dept} Dept]{" "}
+                            </span>
+                            <strong>
+                                {c.code}: {c.title}
+                            </strong>
+                            . Credits: {c.credits}. Prerequisites:{" "}
                             {c.prereqs && c.prereqs.length > 0
                                 ? c.prereqs.join(", ")
                                 : "None"}
@@ -108,7 +125,6 @@ export default async function FlowsheetPage({ params }: Props) {
                 </ul>
             </div>
 
-            {/* 3. VISUAL APP */}
             <FlowsheetClient />
         </>
     );
