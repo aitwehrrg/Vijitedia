@@ -2,8 +2,8 @@ export type CourseType = "core" | "elective" | "minor";
 
 export type Minor = {
     id: string;
+    dept: string;
     name: string;
-    // An ordered list of courses that this minor provides
     courses: CourseOption[];
 };
 
