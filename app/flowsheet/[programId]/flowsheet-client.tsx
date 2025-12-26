@@ -4,6 +4,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CourseCard, CourseStatus } from "@/components/course-card";
 import { ElectiveCard } from "@/components/elective-card";
+import { MinorSlot } from "@/components/minor-slot";
 import {
     Select,
     SelectContent,
@@ -17,6 +18,7 @@ import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors"; // Ensure this matches your data file
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toRoman } from "@/utils/toRoman";
 
 // --- CONNECTION LINES COMPONENT (Unchanged) ---
 type Point = { x: number; y: number };
@@ -192,7 +194,8 @@ export default function FlowsheetPage() {
 
     // --- Logic Helpers ---
     const activeCourseId = hoveredCourseId || selectedCourseId;
-    const handleProgramChange = (newId: string) => router.push(`/flowsheet/${newId}`);
+    const handleProgramChange = (newId: string) =>
+        router.push(`/flowsheet/${newId}`);
 
     const handleCourseClick = (e: React.MouseEvent, courseId: string) => {
         e.stopPropagation();
@@ -298,6 +301,10 @@ export default function FlowsheetPage() {
         setConnections(newConnections);
     }, [activeCourseId, effectiveCourses]);
 
+    const shouldShowSeparator = (index: number) => {
+        return (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
+    };
+
     return (
         <div
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
@@ -335,28 +342,6 @@ export default function FlowsheetPage() {
                     <div className="w-full md:w-auto flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
                         {/* Inputs: Grid on mobile (side-by-side), Flex on desktop */}
                         <div className="grid grid-cols-2 gap-2 w-full md:flex md:w-auto md:gap-4">
-                            {/* Minor Selector */}
-                            <Select
-                                value={selectedMinorId || "none"}
-                                onValueChange={(v) =>
-                                    setSelectedMinorId(v === "none" ? null : v)
-                                }
-                            >
-                                <SelectTrigger className="w-full md:w-[220px] h-8 md:h-9 border-dashed border-indigo-300 bg-indigo-50/50 text-indigo-700 text-xs">
-                                    <SelectValue placeholder="Add Minor..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="none">
-                                        No Minor
-                                    </SelectItem>
-                                    {MINORS.map((m) => (
-                                        <SelectItem key={m.id} value={m.id}>
-                                            {m.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-
                             {/* Program Selector */}
                             <Select
                                 value={programId}
@@ -405,7 +390,7 @@ export default function FlowsheetPage() {
                 >
                     <ConnectionLines connections={connections} />
 
-                    {/* Grid Headers */}
+                    {/* 1. YEAR HEADERS (Unchanged) */}
                     <div
                         className="grid w-full mb-2"
                         style={{
@@ -424,23 +409,28 @@ export default function FlowsheetPage() {
                         ))}
                     </div>
 
+                    {/* 2. SEMESTER LABELS (Updated with Separator) */}
                     <div
                         className="grid w-full mb-4 gap-4"
                         style={{
                             gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
                         }}
                     >
-                        {flatSemesters.map((sem) => (
+                        {flatSemesters.map((sem, i) => (
                             <div
                                 key={sem.id}
-                                className="text-center text-[10px] uppercase font-bold text-slate-400 tracking-wider"
+                                className="text-center text-[10px] uppercase font-bold text-slate-400 tracking-wider relative"
                             >
                                 {sem.label}
+                                {/* Vertical Separator Line */}
+                                {shouldShowSeparator(i) && (
+                                    <div className="absolute -right-2 top-0 h-full w-px bg-slate-200" />
+                                )}
                             </div>
                         ))}
                     </div>
 
-                    {/* COURSE GRID */}
+                    {/* 3. COURSE GRID (Updated with Separator) */}
                     <div className="flex flex-col gap-4 w-full relative z-10">
                         {Array.from({ length: maxRows }).map((_, rowIndex) => (
                             <div
@@ -450,20 +440,29 @@ export default function FlowsheetPage() {
                                     gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
                                 }}
                             >
-                                {flatSemesters.map((semester) => {
+                                {flatSemesters.map((semester, semIndex) => {
                                     const course = semester.courses[rowIndex];
+                                    const showSep =
+                                        shouldShowSeparator(semIndex);
+                                    const wrapperClass =
+                                        "aspect-4/3 w-full relative";
+
                                     if (!course)
                                         return (
                                             <div
                                                 key={`empty-${semester.id}-${rowIndex}`}
-                                                className="aspect-4/3"
-                                            />
+                                                className={wrapperClass}
+                                            >
+                                                {showSep && (
+                                                    <div className="absolute -right-2 -top-2 -bottom-2 w-px bg-slate-200" />
+                                                )}
+                                            </div>
                                         );
 
                                     return (
                                         <div
                                             key={course.id}
-                                            className="aspect-4/3 w-full"
+                                            className={wrapperClass}
                                             ref={(el) => {
                                                 if (el)
                                                     cardRefs.current.set(
@@ -485,42 +484,33 @@ export default function FlowsheetPage() {
                                                 handleCourseClick(e, course.id)
                                             }
                                         >
-                                            {/* 1. MINOR SLOTS */}
+                                            {showSep && (
+                                                <div className="absolute -right-2 -top-2 -bottom-2 w-px bg-slate-200 pointer-events-none" />
+                                            )}
+
+                                            {/* --- RENDER LOGIC --- */}
                                             {course.type === "minor" ? (
-                                                selectedMinorId ? (
-                                                    // Minor Selected: Render as a styled CourseCard
-                                                    <div className="h-full relative group">
-                                                        <div className="absolute -top-1 -right-1 z-10 bg-white rounded-full p-0.5 shadow-sm">
-                                                            <GraduationCap className="w-3 h-3 text-indigo-600" />
-                                                        </div>
-                                                        <CourseCard
-                                                            // Pass the 'effective' merged data so the title/code is correct
-                                                            course={
-                                                                effectiveCourses.find(
-                                                                    (c) =>
-                                                                        c.id ===
-                                                                        course.id
-                                                                ) || course
-                                                            }
-                                                            status={getCourseStatus(
-                                                                course
-                                                            )}
-                                                        />
-                                                        <div className="absolute inset-0 border-2 border-indigo-500/30 pointer-events-none rounded-lg" />
-                                                    </div>
-                                                ) : (
-                                                    // No Minor: Render Placeholder
-                                                    <div className="h-full border-2 border-dashed border-slate-200 rounded-lg p-2 flex flex-col justify-center items-center bg-slate-50 text-slate-400">
-                                                        <GraduationCap className="w-5 h-5 mb-1 opacity-40" />
-                                                        <span className="text-[9px] font-bold uppercase tracking-wider text-center">
-                                                            Minor Slot{" "}
-                                                            {course.minorIndex! +
-                                                                1}
-                                                        </span>
-                                                    </div>
-                                                )
+                                                // NEW: MinorSlot Component
+                                                <MinorSlot
+                                                    course={course}
+                                                    selectedMinorId={
+                                                        selectedMinorId
+                                                    }
+                                                    onSelectMinor={
+                                                        setSelectedMinorId
+                                                    }
+                                                    effectiveCourse={
+                                                        effectiveCourses.find(
+                                                            (c) =>
+                                                                c.id ===
+                                                                course.id
+                                                        ) || course
+                                                    }
+                                                    status={getCourseStatus(
+                                                        course
+                                                    )}
+                                                />
                                             ) : course.type === "elective" ? (
-                                                // 2. ELECTIVE SLOTS
                                                 <ElectiveCard
                                                     course={course}
                                                     selectedOption={
@@ -543,10 +533,9 @@ export default function FlowsheetPage() {
                                                     )}
                                                     disabledOptionIds={
                                                         disabledOptionIds
-                                                    } // <--- PASS THIS PROP
+                                                    }
                                                 />
                                             ) : (
-                                                // 3. CORE COURSES
                                                 <CourseCard
                                                     course={course}
                                                     status={getCourseStatus(

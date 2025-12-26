@@ -1,36 +1,36 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRightFromLine, Circle, Lock } from "lucide-react";
-// Import the central type definition
 import { Course } from "@/types/flowsheet";
 
 export type CourseStatus = "default" | "hovered" | "prereq" | "postreq";
 
 interface CourseCardProps {
-    course: Course; // Use the shared type instead of a hardcoded object
+    course: Course;
     status: CourseStatus;
 }
 
 export function CourseCard({ course, status }: CourseCardProps) {
+    // Enhanced styles for better visual feedback and contrast
     const styles = {
         default: "border-l-transparent hover:border-l-slate-400 opacity-100",
         hovered:
-            "border-l-primary ring-1 ring-primary ring-offset-1 bg-slate-50 shadow-sm scale-[1.02]",
-        prereq: "border-l-amber-500 bg-amber-50/80 dashed-border",
-        postreq: "border-l-blue-500 bg-blue-50/80",
+            "border-l-primary ring-1 ring-primary ring-offset-2 bg-slate-50 shadow-md scale-[1.03] z-10",
+        prereq: "border-l-amber-500 bg-amber-50 ring-1 ring-amber-200 dashed-border",
+        postreq: "border-l-blue-500 bg-blue-50 ring-1 ring-blue-200",
     };
 
     const StatusIcon = () => {
         switch (status) {
             case "prereq":
-                return <Lock className="w-2.5 h-2.5 text-amber-600 mr-1" />;
+                return <Lock className="w-3 h-3 text-amber-600 mr-1.5" />;
             case "postreq":
                 return (
-                    <ArrowRightFromLine className="w-2.5 h-2.5 text-blue-600 mr-1" />
+                    <ArrowRightFromLine className="w-3 h-3 text-blue-600 mr-1.5" />
                 );
             case "hovered":
                 return (
-                    <Circle className="w-2.5 h-2.5 text-primary fill-primary mr-1" />
+                    <Circle className="w-3 h-3 text-primary fill-primary mr-1.5" />
                 );
             default:
                 return null;
@@ -39,25 +39,34 @@ export function CourseCard({ course, status }: CourseCardProps) {
 
     return (
         <Card
-            className={`h-full border-l-[3px] transition-all duration-200 cursor-pointer shadow-none ${styles[status]}`}
+            className={`h-full flex flex-col justify-between border-l-[4px] transition-all duration-200 cursor-pointer shadow-sm ${styles[status]}`}
         >
-            <CardHeader className="p-2 pb-1 space-y-0">
-                <div className="flex justify-between items-center">
+            <CardHeader className="p-3 pb-2 space-y-0">
+                <div className="flex justify-between items-start gap-2">
+                    {/* Course Code Badge - Larger and clearer */}
                     <Badge
                         variant={status === "default" ? "outline" : "secondary"}
-                        className="h-5 px-1 font-mono font-bold text-[9px] flex items-center"
+                        className="h-6 px-2 font-mono text-xs font-bold tracking-tight flex items-center shrink-0"
                     >
                         <StatusIcon />
-                        {/* Fallback to '??' if code is undefined (though it shouldn't be for core courses) */}
                         {course.code || "??"}
                     </Badge>
-                    <span className="text-[9px] text-muted-foreground font-mono">
-                        {course.credits || 0}
-                    </span>
+
+                    {/* Credits - Increased size and contrast */}
+                    <div className="flex flex-col items-end shrink-0">
+                        <span className="text-xs font-bold text-slate-700 font-mono bg-slate-100 px-1.5 py-0.5 rounded-md border border-slate-200">
+                            {course.credits || 0}
+                        </span>
+                    </div>
                 </div>
             </CardHeader>
-            <CardContent className="p-2 pt-1">
-                <CardTitle className="text-xs font-medium leading-tight line-clamp-2">
+
+            <CardContent className="p-3 pt-0 flex-grow flex items-center">
+                {/* Title - Increased legibility and line height */}
+                <CardTitle
+                    className="text-sm font-medium leading-snug text-slate-800 line-clamp-3"
+                    title={course.title} // Native tooltip for truncated text
+                >
                     {course.title || "Untitled Course"}
                 </CardTitle>
             </CardContent>

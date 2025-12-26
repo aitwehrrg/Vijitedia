@@ -51,12 +51,12 @@ export function ElectiveCard({
                         className={`h-full border-2 border-dashed border-slate-300 p-2 flex flex-col justify-center items-center cursor-pointer hover:border-purple-400 hover:bg-purple-50 transition-colors`}
                     >
                         <Layers className="w-4 h-4 text-slate-400 mb-1" />
-                        <span className="text-xs font-semibold text-center text-slate-600 leading-tight">
+                        <span className="text-sm font-semibold text-center text-slate-600 leading-tight">
                             {course.label || "Elective"}
                         </span>
                         <Badge
                             variant="secondary"
-                            className="mt-1 text-[9px] h-4"
+                            className="mt-1 text-[12px] h-4"
                         >
                             Select
                         </Badge>
