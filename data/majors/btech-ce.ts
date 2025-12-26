@@ -503,7 +503,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-I",
                             type: "minor",
-                            code: "R5__220_T",
+                            code: "R5XX220XT",
                             title: "Multidisciplinary Minor I",
                             label: "Multidisciplinary Minor I",
                             credits: 2,
@@ -576,7 +576,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MIL",
                             type: "elective",
-                            code: "R5HS250_O",
+                            code: "R5HS250XO",
                             title: "Modern Indian Language",
                             label: "Modern Indian Language",
                             credits: 2,
@@ -634,7 +634,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-II",
                             type: "minor",
-                            code: "R5__220_T",
+                            code: "R5XX220XT",
                             title: "Multidisciplinary Minor II",
                             label: "Multidisciplinary Minor II",
                             credits: 2,
@@ -735,7 +735,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-III",
                             type: "minor",
-                            code: "R5__320_T",
+                            code: "R5XX32XXT",
                             title: "Multidisciplinary Minor III",
                             label: "Multidisciplinary Minor III",
                             credits: 3,
@@ -822,7 +822,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "PE-I",
                             type: "elective",
-                            code: "R5CO310_T",
+                            code: "R5CO310XT",
                             title: "Professional Elective I",
                             label: "Professional Elective I",
                             linkedSlotId: "PE-I-Lab",
@@ -849,7 +849,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "PE-I-Lab",
                             type: "elective",
-                            code: "R5CO310_L",
+                            code: "R5CO310XL",
                             title: "Professional Elective I Laboratory",
                             label: "Professional Elective I Laboratory",
                             linkedSlotId: "PE-I",
@@ -880,14 +880,14 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK1T",
-                        //             code: "R5__3___T",
+                        //             code: "R5XX3XXXT",
                         //             title: "Blockchain Foundations",
                         //             credits: 3,
                         //             prereqs: [],
                         //         },
                         //         {
                         //             id: "ARVR1T",
-                        //             code: "R5__3___T",
+                        //             code: "R5XX3XXXT",
                         //             title: "Computer Graphics",
                         //             credits: 3,
                         //             prereqs: [],
@@ -901,14 +901,14 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK1L",
-                        //             code: "R5__3___T",
+                        //             code: "R5XX3XXXT",
                         //             title: "Bitcoin Laboratory",
                         //             credits: 1,
                         //             prereqs: [],
                         //         },
                         //         {
                         //             id: "ARVR1L",
-                        //             code: "R5__3___T",
+                        //             code: "R5XX3XXXT",
                         //             title: "Computer Graphics Laboratory",
                         //             credits: 1,
                         //             prereqs: [],
@@ -924,7 +924,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "MDM-IV",
                             type: "minor",
-                            code: "R5__320_T",
+                            code: "R5XX32XXT",
                             title: "Multidisciplinary Minor IV",
                             label: "Multidisciplinary Minor IV",
                             credits: 3,
@@ -987,9 +987,9 @@ export const CE_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "HSSM",
+                            id: "FIN",
                             type: "core",
-                            code: "HSSM",
+                            code: "R5XX3XXXT",
                             title: "Financial Management",
                             credits: 2,
                             prereqs: [],
@@ -997,7 +997,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "PE-II",
                             type: "elective",
-                            code: "R5CO31__T",
+                            code: "R5CO31XXT",
                             title: "Professional Elective II",
                             label: "Professional Elective II",
                             linkedSlotId: "PE-II-Lab",
@@ -1007,7 +1007,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "PE-II Lab",
                             type: "elective",
-                            code: "R5CO31__L",
+                            code: "R5CO31XXL",
                             title: "Professional Elective II Laboratory",
                             label: "Professional Elective II Laboratory",
                             linkedSlotId: "PE-II",
@@ -1017,7 +1017,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "OE-I",
                             type: "elective",
-                            code: "R5__3___T",
+                            code: "R5XX3XXXT",
                             title: "Open Elective I",
                             label: "Open Elective I",
                             credits: 4,
@@ -1030,7 +1030,7 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK2T",
-                        //             code: "R5__3___T",
+                        //             code: "R5XX3XXXT",
                         //             title: "Ethereum Blockchain",
                         //             credits: 3,
                         //             prereqs: [],
@@ -1044,7 +1044,7 @@ export const CE_PROGRAM: Program = {
                         //     options: [
                         //         {
                         //             id: "BLOCK2L",
-                        //             code: "R5__3___T",
+                        //             code: "R5XX3XXXT",
                         //             title: "Ethereum Laboratory",
                         //             credits: 1,
                         //             prereqs: [],
