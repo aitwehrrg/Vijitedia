@@ -7,7 +7,14 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { Command, CommandItem, CommandList } from "@/components/ui/command";
+import {
+    Command,
+    CommandItem,
+    CommandList,
+    CommandInput,
+    CommandGroup,
+    CommandEmpty,
+} from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap, Pencil, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -74,32 +81,43 @@ export function MinorSlot({
             {/* 3. POPOVER LIST */}
             <PopoverContent className="w-[290px] p-0" align="start">
                 <Command>
-                    <CommandList>
-                        {/* List of Available Minors */}
-                        {MINORS.map((m) => (
-                            <CommandItem
-                                key={m.id}
-                                value={m.name}
-                                onSelect={() => {
-                                    onSelectMinor(m.id);
-                                    setOpen(false);
-                                }}
-                            >
-                                <div className="flex flex-col">
-                                    <div className="flex items-center">
-                                        <span className="font-bold mr-2">
-                                            {m.name}
+                    {/* QoL: Input for desktop arrow-key nav; Hidden wrapper for mobile */}
+                    <div className="hidden sm:block">
+                        <CommandInput
+                            placeholder="Search minors..."
+                            className="h-9"
+                        />
+                    </div>
+
+                    <CommandList className="overscroll-contain">
+                        <CommandEmpty>No minor found.</CommandEmpty>
+                        <CommandGroup>
+                            {/* List of Available Minors */}
+                            {MINORS.map((m) => (
+                                <CommandItem
+                                    key={m.id}
+                                    value={m.name + " " + m.dept} // Search by Name or Dept
+                                    onSelect={() => {
+                                        onSelectMinor(m.id);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center">
+                                            <span className="font-bold mr-2">
+                                                {m.name}
+                                            </span>
+                                            {selectedMinorId === m.id && (
+                                                <Check className="w-4 h-4 text-indigo-600 ml-2 right-2 absolute" />
+                                            )}
+                                        </div>
+                                        <span className="text-xs font-medium text-slate-700">
+                                            {m.dept}
                                         </span>
-                                        {selectedMinorId === m.id && (
-                                            <Check className="w-4 h-4 text-indigo-600 ml-2 right-2 absolute" />
-                                        )}
                                     </div>
-                                    <span className="text-xs font-medium text-slate-700">
-                                        {m.dept}
-                                    </span>
-                                </div>
-                            </CommandItem>
-                        ))}
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
                     </CommandList>
                 </Command>
             </PopoverContent>

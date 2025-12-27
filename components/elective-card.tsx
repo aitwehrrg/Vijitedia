@@ -5,7 +5,14 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { Command, CommandItem, CommandList } from "@/components/ui/command";
+import {
+    Command,
+    CommandItem,
+    CommandList,
+    CommandInput,
+    CommandGroup,
+    CommandEmpty,
+} from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { Layers, Pencil } from "lucide-react";
 import { Course, CourseOption } from "@/types/flowsheet";
@@ -30,12 +37,10 @@ export function ElectiveCard({
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            {/* Radix Popover Root accepts children. We conditionally render the Trigger structure based on whether an option is selected. */}
+            {/* Trigger Logic */}
             {selectedOption ? (
                 <div className="relative h-full w-full group">
                     <CourseCard course={selectedOption} status={status} />
-
-                    {/* Explicit Trigger Button */}
                     <PopoverTrigger asChild>
                         <button
                             className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 shadow-sm transition-all"
@@ -66,44 +71,56 @@ export function ElectiveCard({
 
             <PopoverContent className="w-64 p-0">
                 <Command>
-                    <CommandList>
-                        {course.options?.map((opt) => {
-                            const isDisabled = disabledOptionIds?.has(opt.id);
-                            return (
-                                <CommandItem
-                                    key={opt.id}
-                                    value={opt.code + opt.title} // Ensure searchable by both
-                                    disabled={isDisabled} // ShadCN CommandItem handles styling automatically
-                                    onSelect={() => {
-                                        if (!isDisabled) {
-                                            onSelect(opt);
-                                            setOpen(false);
+                    {/* Input captures focus, enabling arrow key navigation */}
+                    <div className="hidden sm:block">
+                        <CommandInput
+                            placeholder="Search options..."
+                            className="h-9 hidden sm:flex"
+                        />
+                    </div>
+                    <CommandList className="overscroll-contain">
+                        <CommandEmpty>No options found.</CommandEmpty>
+                        <CommandGroup>
+                            {course.options?.map((opt) => {
+                                const isDisabled = disabledOptionIds?.has(
+                                    opt.id
+                                );
+                                return (
+                                    <CommandItem
+                                        key={opt.id}
+                                        value={opt.code + " " + opt.title}
+                                        disabled={isDisabled}
+                                        onSelect={() => {
+                                            if (!isDisabled) {
+                                                onSelect(opt);
+                                                setOpen(false);
+                                            }
+                                        }}
+                                        className={
+                                            isDisabled
+                                                ? "opacity-50 cursor-not-allowed"
+                                                : ""
                                         }
-                                    }}
-                                    className={
-                                        isDisabled
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : ""
-                                    }
-                                >
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center">
-                                            <span className="font-bold font-mono mr-2">
-                                                {opt.code}
-                                            </span>
-                                            {isDisabled && (
-                                                <span className="text-[9px] text-red-500 font-bold uppercase ml-2">
-                                                    (Conflict)
+                                    >
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <span className="font-bold font-mono mr-2">
+                                                    {opt.code}
                                                 </span>
-                                            )}
+                                                {isDisabled && (
+                                                    <span className="text-[9px] text-red-500 font-bold uppercase ml-2">
+                                                        (Conflict)
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span className="text-xs text-muted-foreground">
+                                                {opt.title}
+                                            </span>
                                         </div>
-                                        <span className="text-xs text-muted-foreground">
-                                            {opt.title}
-                                        </span>
-                                    </div>
-                                </CommandItem>
-                            );
-                        })}
+                                    </CommandItem>
+                                );
+                            })}
+                        </CommandGroup>
                     </CommandList>
                 </Command>
             </PopoverContent>
