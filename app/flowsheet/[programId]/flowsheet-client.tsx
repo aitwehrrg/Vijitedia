@@ -330,6 +330,50 @@ export default function FlowsheetPage() {
         return (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
     };
 
+    const handleKeyDown = (
+        e: React.KeyboardEvent,
+        rowIndex: number,
+        colIndex: number,
+        courseId: string
+    ) => {
+        // Helper to attempt focus on a target cell
+        const focusCell = (r: number, c: number) => {
+            const targetSemester = flatSemesters[c];
+            // Check if semester and course at that row exist
+            if (targetSemester && targetSemester.courses[r]) {
+                const targetId = targetSemester.courses[r].id;
+                cardRefs.current.get(targetId)?.focus();
+            }
+        };
+
+        switch (e.key) {
+            case "ArrowUp":
+                e.preventDefault();
+                focusCell(rowIndex - 1, colIndex);
+                break;
+            case "ArrowDown":
+                e.preventDefault();
+                focusCell(rowIndex + 1, colIndex);
+                break;
+            case "ArrowLeft":
+                e.preventDefault();
+                focusCell(rowIndex, colIndex - 1);
+                break;
+            case "ArrowRight":
+                e.preventDefault();
+                focusCell(rowIndex, colIndex + 1);
+                break;
+            case "Enter":
+            case " ":
+                e.preventDefault();
+                // Replicates the onClick logic for selection
+                setSelectedCourseId((prev) =>
+                    prev === courseId ? null : courseId
+                );
+                break;
+        }
+    };
+
     return (
         <div
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
@@ -466,7 +510,7 @@ export default function FlowsheetPage() {
                                     const showSep =
                                         shouldShowSeparator(semIndex);
                                     const wrapperClass =
-                                        "aspect-4/3 w-full relative";
+                                        "aspect-4/3 w-full relative rounded-lg";
 
                                     if (!course)
                                         return (
@@ -483,7 +527,17 @@ export default function FlowsheetPage() {
                                     return (
                                         <div
                                             key={course.id}
-                                            className={wrapperClass}
+                                            className={`${wrapperClass} outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-shadow`} // Added focus styles
+                                            role="button" // Accessibility
+                                            tabIndex={0} // Make focusable
+                                            onKeyDown={(e) =>
+                                                handleKeyDown(
+                                                    e,
+                                                    rowIndex,
+                                                    semIndex,
+                                                    course.id
+                                                )
+                                            } // Attach Handler
                                             ref={(el) => {
                                                 if (el)
                                                     cardRefs.current.set(
