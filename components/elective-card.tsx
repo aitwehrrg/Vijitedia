@@ -1,4 +1,5 @@
-// components/elective-card.tsx
+"use client";
+
 import { useState } from "react";
 import {
     Popover,
@@ -45,6 +46,8 @@ export function ElectiveCard({
                         <button
                             className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 shadow-sm transition-all"
                             title="Change Elective"
+                            // Prevent clicking the button from selecting the underlying grid cell
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <Pencil className="w-3 h-3" />
                         </button>
@@ -69,9 +72,12 @@ export function ElectiveCard({
                 </PopoverTrigger>
             )}
 
-            <PopoverContent className="w-64 p-0">
+            {/* KEY FIX: onKeyDown stopPropagation prevents grid navigation */}
+            <PopoverContent
+                className="w-64 p-0"
+                onKeyDown={(e) => e.stopPropagation()}
+            >
                 <Command>
-                    {/* Input captures focus, enabling arrow key navigation */}
                     <div className="hidden sm:block">
                         <CommandInput
                             placeholder="Search options..."

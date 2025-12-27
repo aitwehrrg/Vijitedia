@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap, Pencil, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { toRoman } from "@/utils/toRoman";
 import { MINORS } from "@/data/minors";
 import { Course } from "@/types/flowsheet";
@@ -41,12 +40,10 @@ export function MinorSlot({
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            {/* 1. SELECTED STATE: Render CourseCard + Edit Button */}
             {selectedMinorId ? (
                 <div className="relative h-full w-full group">
                     <CourseCard course={effectiveCourse} status={status} />
 
-                    {/* Trigger Button (Hidden until hover) */}
                     <PopoverTrigger asChild>
                         <button
                             className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 shadow-sm transition-all"
@@ -57,11 +54,9 @@ export function MinorSlot({
                         </button>
                     </PopoverTrigger>
 
-                    {/* Optional Indigo Border Ring to denote it is a Minor */}
                     <div className="absolute inset-0 border-2 border-indigo-500/10 pointer-events-none rounded-lg" />
                 </div>
             ) : (
-                /* 2. EMPTY STATE: Render Dashed Placeholder (Indigo Theme) */
                 <PopoverTrigger asChild>
                     <div className="h-full border-2 border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
                         <GraduationCap className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 mb-1 transition-colors" />
@@ -78,10 +73,13 @@ export function MinorSlot({
                 </PopoverTrigger>
             )}
 
-            {/* 3. POPOVER LIST */}
-            <PopoverContent className="w-[300px] p-0" align="start">
+            {/* KEY FIX: onKeyDown stopPropagation */}
+            <PopoverContent
+                className="w-[300px] p-0"
+                align="start"
+                onKeyDown={(e) => e.stopPropagation()}
+            >
                 <Command>
-                    {/* QoL: Input for desktop arrow-key nav; Hidden wrapper for mobile */}
                     <div className="hidden sm:block">
                         <CommandInput
                             placeholder="Search minors..."
@@ -92,11 +90,10 @@ export function MinorSlot({
                     <CommandList className="overscroll-contain">
                         <CommandEmpty>No minor found.</CommandEmpty>
                         <CommandGroup>
-                            {/* List of Available Minors */}
                             {MINORS.map((m) => (
                                 <CommandItem
                                     key={m.id}
-                                    value={m.name + " " + m.dept} // Search by Name or Dept
+                                    value={m.name + " " + m.dept}
                                     onSelect={() => {
                                         onSelectMinor(m.id);
                                         setOpen(false);
