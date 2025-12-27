@@ -3,8 +3,8 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CourseCard, CourseStatus } from "@/components/course-card";
-import { ElectiveCard } from "@/components/elective-card";
-import { MinorSlot } from "@/components/minor-slot";
+import { ElectiveCard, ElectiveCardHandle } from "@/components/elective-card";
+import { MinorSlot, MinorSlotHandle } from "@/components/minor-slot";
 import {
     Select,
     SelectContent,
@@ -220,6 +220,10 @@ export default function FlowsheetPage() {
         }
 
         setSelections((prev) => ({ ...prev, ...updates }));
+
+        setTimeout(() => {
+            cardRefs.current.get(slotId)?.focus();
+        }, 0);
     };
 
     const getCourseStatus = (currentCourse: Course): CourseStatus => {
@@ -330,16 +334,17 @@ export default function FlowsheetPage() {
         return (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
     };
 
+    const electiveRefs = useRef<Map<string, ElectiveCardHandle>>(new Map());
+    const minorRefs = useRef<Map<string, MinorSlotHandle>>(new Map());
     const handleKeyDown = (
         e: React.KeyboardEvent,
         rowIndex: number,
         colIndex: number,
-        courseId: string
+        course: Course
     ) => {
         // Helper to attempt focus on a target cell
         const focusCell = (r: number, c: number) => {
             const targetSemester = flatSemesters[c];
-            // Check if semester and course at that row exist
             if (targetSemester && targetSemester.courses[r]) {
                 const targetId = targetSemester.courses[r].id;
                 cardRefs.current.get(targetId)?.focus();
@@ -348,27 +353,56 @@ export default function FlowsheetPage() {
 
         switch (e.key) {
             case "ArrowUp":
+            case "w":
+            case "i":
                 e.preventDefault();
                 focusCell(rowIndex - 1, colIndex);
                 break;
             case "ArrowDown":
+            case "s":
+            case "k":
                 e.preventDefault();
                 focusCell(rowIndex + 1, colIndex);
                 break;
             case "ArrowLeft":
+            case "a":
+            case "j":
                 e.preventDefault();
                 focusCell(rowIndex, colIndex - 1);
                 break;
             case "ArrowRight":
+            case "d":
+            case "l":
                 e.preventDefault();
                 focusCell(rowIndex, colIndex + 1);
                 break;
+
             case "Enter":
             case " ":
                 e.preventDefault();
-                // Replicates the onClick logic for selection
+
+                // 1. ELECTIVE LOGIC
+                if (course.type === "elective") {
+                    const isSelected = selections[course.id];
+                    // Only trigger dropdown if NOTHING is selected
+                    if (!isSelected && electiveRefs.current.has(course.id)) {
+                        electiveRefs.current.get(course.id)?.trigger();
+                        return;
+                    }
+                }
+
+                // 2. MINOR LOGIC
+                if (course.type === "minor") {
+                    // Only trigger dropdown if NO global minor is active
+                    if (!selectedMinorId && minorRefs.current.has(course.id)) {
+                        minorRefs.current.get(course.id)?.trigger();
+                        return;
+                    }
+                }
+
+                // 3. DEFAULT: Toggle Card Highlight
                 setSelectedCourseId((prev) =>
-                    prev === courseId ? null : courseId
+                    prev === course.id ? null : course.id
                 );
                 break;
         }
@@ -535,7 +569,7 @@ export default function FlowsheetPage() {
                                                     e,
                                                     rowIndex,
                                                     semIndex,
-                                                    course.id
+                                                    course
                                                 )
                                             } // Attach Handler
                                             ref={(el) => {
@@ -565,13 +599,29 @@ export default function FlowsheetPage() {
 
                                             {course.type === "minor" ? (
                                                 <MinorSlot
+                                                    ref={(el) => {
+                                                        if (el)
+                                                            minorRefs.current.set(
+                                                                course.id,
+                                                                el
+                                                            );
+                                                        else
+                                                            minorRefs.current.delete(
+                                                                course.id
+                                                            );
+                                                    }}
                                                     course={course}
                                                     selectedMinorId={
                                                         selectedMinorId
                                                     }
-                                                    onSelectMinor={
-                                                        setSelectedMinorId
-                                                    }
+                                                    onSelectMinor={(id) => {
+                                                        setSelectedMinorId(id);
+                                                        setTimeout(() => {
+                                                            cardRefs.current
+                                                                .get(course.id)
+                                                                ?.focus();
+                                                        }, 0);
+                                                    }}
                                                     effectiveCourse={
                                                         effectiveCourses.find(
                                                             (c) =>
@@ -585,6 +635,17 @@ export default function FlowsheetPage() {
                                                 />
                                             ) : course.type === "elective" ? (
                                                 <ElectiveCard
+                                                    ref={(el) => {
+                                                        if (el)
+                                                            electiveRefs.current.set(
+                                                                course.id,
+                                                                el
+                                                            );
+                                                        else
+                                                            electiveRefs.current.delete(
+                                                                course.id
+                                                            );
+                                                    }}
                                                     course={course}
                                                     selectedOption={
                                                         course.options?.find(
