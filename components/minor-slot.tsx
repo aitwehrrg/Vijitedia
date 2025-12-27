@@ -79,7 +79,7 @@ export function MinorSlot({
             )}
 
             {/* 3. POPOVER LIST */}
-            <PopoverContent className="w-[290px] p-0" align="start">
+            <PopoverContent className="w-[300px] p-0" align="start">
                 <Command>
                     {/* QoL: Input for desktop arrow-key nav; Hidden wrapper for mobile */}
                     <div className="hidden sm:block">
@@ -108,7 +108,7 @@ export function MinorSlot({
                                                 {m.name}
                                             </span>
                                             {selectedMinorId === m.id && (
-                                                <Check className="w-4 h-4 text-indigo-600 ml-2 right-2 absolute" />
+                                                <Check className="w-4 h-4 text-indigo-600 ml-2 right-1 absolute" />
                                             )}
                                         </div>
                                         <span className="text-xs font-medium text-slate-700">
