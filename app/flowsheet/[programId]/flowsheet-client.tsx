@@ -544,7 +544,7 @@ export default function FlowsheetPage() {
                                     const showSep =
                                         shouldShowSeparator(semIndex);
                                     const wrapperClass =
-                                        "aspect-4/3 w-full relative rounded-lg";
+                                        "aspect-4/3 w-full relative rounded-lg scroll-mt-36 md:scroll-mt-24";
 
                                     if (!course)
                                         return (
