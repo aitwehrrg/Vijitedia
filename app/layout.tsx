@@ -3,8 +3,8 @@ import { Geist_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -15,22 +15,38 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Vijitedia",
-  description: "Academic flowsheets for VJTI engineering programmes",
+    title: "Vijitedia",
+    description:
+        "Vijitedia is an interactive academic planning tool designed for engineering students at VJTI. It features a dynamic curriculum flowsheet for visualizing course dependencies.",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-      <html lang="en">
-          <body
-              className={`cmu-tt antialiased`}
-          >
-              {children}
-          </body>
-      </html>
-  );
+    return (
+        <html lang="en">
+            <head>
+                <meta
+                    property="og:image"
+                    content="public/thumbnail.jpeg"
+                ></meta>
+                <meta
+                    property="og:site_name"
+                    content="Vijitedia"
+                ></meta>
+                <meta property="og:title" content="Vijitedia"></meta>
+                <meta
+                    property="og:description"
+                    content="Vijitedia is an interactive academic planning tool designed for engineering students at VJTI. It features a dynamic curriculum flowsheet for visualizing course dependencies."
+                />
+                <meta
+                    property="og:url"
+                    content="https://vijitedia.vercel.app/"
+                ></meta>
+            </head>
+            <body className={`cmu-tt antialiased`}>{children}</body>
+        </html>
+    );
 }
