@@ -30,7 +30,7 @@ export default function RootLayout({
             <head>
                 <meta
                     property="og:image"
-                    content="public/thumbnail.jpeg"
+                    content="/thumbnail.jpeg"
                 ></meta>
                 <meta
                     property="og:site_name"
