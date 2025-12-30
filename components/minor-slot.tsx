@@ -56,9 +56,8 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                                 title="Change Minor"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setOpen(true); // Redundant if using Trigger, but ensures logic
+                                    setOpen(true); 
                                 }}
-                                // KEY FIX: Stop propagation here too
                                 onKeyDown={(e) => e.stopPropagation()}
                             >
                                 <Pencil className="w-3 h-3" />

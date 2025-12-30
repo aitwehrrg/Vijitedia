@@ -16,7 +16,7 @@ const ROMAN_MAP: [number, string][] = [
 
 export function toRoman(num: number): string {
     if (num <= 0 || num >= 4000) {
-        return ""; // Or throw an error depending on your error handling policy
+        return ""; 
     }
 
     let result = "";

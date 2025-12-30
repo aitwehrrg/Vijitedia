@@ -24,8 +24,6 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
-// --- OPTIMIZED COMPONENT: CourseRow ---
-// Isolates updates so only the modified row re-renders
 const CourseRow = memo(
     ({
         course,
@@ -83,7 +81,6 @@ const CourseRow = memo(
         );
     },
     (prev, next) => {
-        // Custom comparison to ensure strict performance
         return (
             prev.grade === next.grade &&
             prev.isDisabled === next.isDisabled &&
@@ -93,7 +90,6 @@ const CourseRow = memo(
 );
 CourseRow.displayName = "CourseRow";
 
-// --- HELPER: Stats Calculation ---
 const calculateStats = (courses: Course[], grades: Record<string, string>) => {
     let totalPoints = 0;
     let totalCredits = 0;
@@ -130,7 +126,6 @@ export default function CalculatorPage() {
         [programId]
     );
 
-    // Initial Load
     useEffect(() => {
         const savedGrades = localStorage.getItem(`cgpa_${programId}_grades`);
         const savedExcluded = localStorage.getItem(
@@ -143,7 +138,6 @@ export default function CalculatorPage() {
         setIsLoaded(true);
     }, [programId]);
 
-    // Save Effects
     useEffect(() => {
         if (isLoaded) {
             localStorage.setItem(
@@ -157,7 +151,6 @@ export default function CalculatorPage() {
         }
     }, [grades, excludedSemesters, programId, isLoaded]);
 
-    // --- STABLE HANDLERS ---
     const handleGradeChange = useCallback(
         (courseId: string, gradeKey: string) => {
             setGrades((prev) => ({
@@ -190,7 +183,6 @@ export default function CalculatorPage() {
         setGrades({});
     }, []);
 
-    // --- CALCULATIONS ---
     const activeCourses = useMemo(() => {
         if (!currentProgram) return [];
         return currentProgram.years.flatMap((y) =>
@@ -309,7 +301,7 @@ export default function CalculatorPage() {
 
     return (
         <div className="min-h-screen bg-slate-50/50 flex flex-col">
-            {/* HEADER */}
+            {}
             <div className="bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-30 shadow-sm">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-3 w-full md:w-auto">
@@ -403,7 +395,7 @@ export default function CalculatorPage() {
                 </div>
             </div>
 
-            {/* CONTENT GRID */}
+            {}
             <div className="max-w-7xl mx-auto w-full p-4 md:p-8 space-y-8">
                 {currentProgram.years.map((year) => (
                     <div key={year.id} className="space-y-4">
@@ -416,9 +408,6 @@ export default function CalculatorPage() {
                                 const isExcluded = excludedSemesters.includes(
                                     semester.id
                                 );
-                                // Note: We calculate semStats here for display.
-                                // Since this is cheap (loops 6-8 items), we don't need intense memoization for the container,
-                                // but the CourseRows inside are protected.
                                 const semStats = calculateStats(
                                     semester.courses,
                                     grades

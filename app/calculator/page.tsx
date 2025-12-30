@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function CalculatorLanding() {
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8 relative overflow-hidden selection:bg-emerald-100 selection:text-emerald-900">
-            {/* --- GRAPH THEME BACKGROUND (Light Mode) --- */}
+            {}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]">
                 <svg
                     className="w-full h-full"
@@ -68,7 +68,7 @@ export default function CalculatorLanding() {
                         className="opacity-50"
                     />
                 </svg>
-                {/* Lighter noise for texture */}
+                {}
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-multiply"></div>
                 <div
                     className="absolute inset-0"

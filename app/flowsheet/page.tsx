@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function FlowsheetLanding() {
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8 relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
-            {/* --- GRAPH THEME BACKGROUND (Indigo - Light) --- */}
+            {}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]">
                 <svg
                     className="w-full h-full"

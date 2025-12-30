@@ -6,9 +6,7 @@ type Props = {
     params: { programId: string };
 };
 
-// 1. Generate Metadata (Runs on Server)
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    // Await params if you are on Next.js 15+, otherwise access directly
     const { programId } = await Promise.resolve(params);
 
     const program = FLOWSHEET_DATA.find((p) => p.id === programId);
@@ -23,7 +21,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-// 2. Render the Client Component
 export default function Page() {
     return <CalculatorClient />;
 }

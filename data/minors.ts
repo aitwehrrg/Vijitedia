@@ -139,13 +139,6 @@ export const MINORS: Minor[] = [
                 credits: 3,
                 prereqs: ["R5EL2203T", "R5EL2204T"],
             },
-            // {
-            //     id: "R5EL4202T",
-            //     code: "R5EL4202T",
-            //     title: "Applications of Signal and Image Processing",
-            //     credits: 4,
-            //     prereqs: ["R5EL2203T", "R5EL2204T", "R5EL3202T", "R5EL3204T"],
-            // },
         ],
     },
     {

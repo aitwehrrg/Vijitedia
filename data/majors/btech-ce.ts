@@ -1,4 +1,3 @@
-// data/programs/ce.ts
 import { Program } from "@/types/flowsheet";
 
 export const CE_PROGRAM: Program = {
@@ -873,48 +872,6 @@ export const CE_PROGRAM: Program = {
                                 },
                             ],
                         },
-                        // {
-                        //     id: "HON-I",
-                        //     type: "elective",
-                        //     label: "Honors I",
-                        //     options: [
-                        //         {
-                        //             id: "BLOCK1T",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Blockchain Foundations",
-                        //             credits: 3,
-                        //             prereqs: [],
-                        //         },
-                        //         {
-                        //             id: "ARVR1T",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Computer Graphics",
-                        //             credits: 3,
-                        //             prereqs: [],
-                        //         },
-                        //     ],
-                        // },
-                        // {
-                        //     id: "HON-I Lab",
-                        //     type: "elective",
-                        //     label: "Honors I Laboratory",
-                        //     options: [
-                        //         {
-                        //             id: "BLOCK1L",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Bitcoin Laboratory",
-                        //             credits: 1,
-                        //             prereqs: [],
-                        //         },
-                        //         {
-                        //             id: "ARVR1L",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Computer Graphics Laboratory",
-                        //             credits: 1,
-                        //             prereqs: [],
-                        //         },
-                        //     ],
-                        // },
                     ],
                 },
                 {
@@ -1023,53 +980,9 @@ export const CE_PROGRAM: Program = {
                             credits: 4,
                             options: [],
                         },
-                        // {
-                        //     id: "HON-II",
-                        //     type: "elective",
-                        //     label: "Honors II",
-                        //     options: [
-                        //         {
-                        //             id: "BLOCK2T",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Ethereum Blockchain",
-                        //             credits: 3,
-                        //             prereqs: [],
-                        //         },
-                        //     ],
-                        // },
-                        // {
-                        //     id: "HON-II Lab",
-                        //     type: "elective",
-                        //     label: "Honors II Laboratory",
-                        //     options: [
-                        //         {
-                        //             id: "BLOCK2L",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Ethereum Laboratory",
-                        //             credits: 1,
-                        //             prereqs: [],
-                        //         },
-                        //     ],
-                        // },
                     ],
                 },
             ],
         },
-        // {
-        //     id: "y4s1",
-        //     label: "Final Year",
-        //     semesters: [
-        //         {
-        //             id: "y4s1",
-        //             label: "Semester VII",
-        //             courses: [],
-        //         },
-        //         {
-        //             id: "y4s2",
-        //             label: "Semester VIII",
-        //             courses: [],
-        //         },
-        //     ],
-        // },
     ],
 };

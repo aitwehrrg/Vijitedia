@@ -5,7 +5,7 @@ import { FileQuestion, ArrowLeft } from "lucide-react";
 export default function NotFound() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-center p-4 relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
-            {/* --- GRAPH THEME BACKGROUND (Light Mode) --- */}
+            {}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.3]">
                 <svg
                     className="w-full h-full"
@@ -62,17 +62,17 @@ export default function NotFound() {
                 ></div>
             </div>
 
-            {/* --- AMBIENT GLOW EFFECT --- */}
+            {}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-indigo-500/20 via-purple-500/20 to-blue-500/20 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
-            {/* Content Card */}
+            {}
             <div className="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 max-w-md w-full flex flex-col items-center space-y-6 relative z-10">
-                {/* Icon */}
+                {}
                 <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center border border-indigo-100 shadow-inner">
                     <FileQuestion className="w-8 h-8 text-indigo-500" />
                 </div>
 
-                {/* Text */}
+                {}
                 <div className="space-y-2">
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
                         Page Not Found
@@ -83,7 +83,7 @@ export default function NotFound() {
                     </p>
                 </div>
 
-                {/* Actions */}
+                {}
                 <div className="grid grid-cols-1 w-full gap-3">
                     <Button
                         asChild

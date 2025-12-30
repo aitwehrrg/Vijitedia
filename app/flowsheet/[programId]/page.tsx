@@ -4,7 +4,6 @@ import { MINORS } from "@/data/minors";
 import { notFound } from "next/navigation";
 import FlowsheetClient from "./flowsheet-client";
 
-// 1. Define a specific type for the flattened SEO data
 type SeoCourse = {
     code: string;
     title: string;
@@ -42,11 +41,9 @@ export default async function FlowsheetPage({ params }: Props) {
 
     if (!program) return notFound();
 
-    // 2. FLATTEN CORE & ELECTIVES -> SeoCourse[]
     const coreAndElectives: SeoCourse[] = program.years.flatMap((y) =>
         y.semesters.flatMap((s) =>
             s.courses.flatMap((c) => {
-                // Case A: Elective (Map options to SeoCourse)
                 if (c.type === "elective" && c.options) {
                     return c.options.map((opt) => ({
                         code: opt.code,
@@ -54,11 +51,10 @@ export default async function FlowsheetPage({ params }: Props) {
                         credits: opt.credits,
                         prereqs: opt.prereqs,
                         category: "Elective Option",
-                        dept: program.department, // Default to program dept for electives
+                        dept: program.department, 
                     }));
                 }
 
-                // Case B: Core Course (Map single slot to SeoCourse)
                 if (c.code && c.title) {
                     return [
                         {
@@ -77,7 +73,6 @@ export default async function FlowsheetPage({ params }: Props) {
         )
     );
 
-    // 3. FLATTEN MINORS -> SeoCourse[]
     const minorCourses: SeoCourse[] = MINORS.flatMap((m) =>
         m.courses.map((c) => ({
             code: c.code,
@@ -85,14 +80,12 @@ export default async function FlowsheetPage({ params }: Props) {
             credits: c.credits,
             prereqs: c.prereqs,
             category: `Minor in ${m.name}`,
-            dept: m.dept, // Use the Minor's specific department
+            dept: m.dept, 
         }))
     );
 
-    // 4. MERGE
     const fullCourseList = [...coreAndElectives, ...minorCourses];
 
-    // 5. JSON-LD
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "ItemList",

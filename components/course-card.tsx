@@ -38,7 +38,6 @@ export function CourseCard({ course, status }: CourseCardProps) {
 
     return (
         <Card
-            // Added overflow-hidden to prevent spill
             className={`h-full flex flex-col justify-between border-l-[4px] transition-all duration-200 cursor-pointer shadow-sm overflow-hidden ${styles[status]}`}
         >
             <CardHeader className="p-3 pb-2 space-y-0 shrink-0">
@@ -59,10 +58,9 @@ export function CourseCard({ course, status }: CourseCardProps) {
                 </div>
             </CardHeader>
 
-            {/* Added min-h-0 to allow flex child to shrink for line-clamp */}
+            {}
             <CardContent className="p-3 pt-0 flex-grow flex items-center min-h-0">
                 <CardTitle
-                    // Adjusted text size for mobile (text-xs) vs desktop (text-sm)
                     className="text-xs sm:text-sm font-medium leading-snug text-slate-800 line-clamp-3"
                     title={course.title}
                 >

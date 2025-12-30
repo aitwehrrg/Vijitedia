@@ -20,13 +20,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toRoman } from "@/utils/toRoman";
 
-// --- CONNECTION LINES COMPONENT ---
 type Point = { x: number; y: number };
 type Connection = { start: Point; end: Point; type: "prereq" | "postreq" };
 
 const ConnectionLines = ({ connections }: { connections: Connection[] }) => {
     return (
-        // CHANGED: z-index lowered from 50 to 20 to sit below Header (z-50) but above Cards (z-10)
         <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-20 overflow-visible">
             <defs>
                 <marker
@@ -83,7 +81,6 @@ export default function FlowsheetPage() {
     const router = useRouter();
     const programId = params.programId as string;
 
-    // Interaction State
     const [hoveredCourseId, setHoveredCourseId] = useState<string | null>(null);
     const [selectedCourseId, setSelectedCourseId] = useState<string | null>(
         null
@@ -96,7 +93,6 @@ export default function FlowsheetPage() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
-    // 1. Get Active Program Data
     const currentProgram = useMemo(
         () => FLOWSHEET_DATA.find((p) => p.id === programId),
         [programId]
@@ -118,7 +114,6 @@ export default function FlowsheetPage() {
         [flatSemesters]
     );
 
-    // 2. Calculate Effective Courses
     const effectiveCourses = useMemo(() => {
         return allCourses.map((course) => {
             if (course.type === "elective" && selections[course.id]) {
@@ -246,7 +241,6 @@ export default function FlowsheetPage() {
         return "default";
     };
 
-    // --- CONNECTION LOGIC ---
     useEffect(() => {
         const updateConnections = () => {
             if (!activeCourseId || !contentRef.current) {
@@ -342,7 +336,6 @@ export default function FlowsheetPage() {
         colIndex: number,
         course: Course
     ) => {
-        // Helper to attempt focus on a target cell
         const focusCell = (r: number, c: number) => {
             const targetSemester = flatSemesters[c];
             if (targetSemester && targetSemester.courses[r]) {
@@ -381,26 +374,21 @@ export default function FlowsheetPage() {
             case " ":
                 e.preventDefault();
 
-                // 1. ELECTIVE LOGIC
                 if (course.type === "elective") {
                     const isSelected = selections[course.id];
-                    // Only trigger dropdown if NOTHING is selected
                     if (!isSelected && electiveRefs.current.has(course.id)) {
                         electiveRefs.current.get(course.id)?.trigger();
                         return;
                     }
                 }
 
-                // 2. MINOR LOGIC
                 if (course.type === "minor") {
-                    // Only trigger dropdown if NO global minor is active
                     if (!selectedMinorId && minorRefs.current.has(course.id)) {
                         minorRefs.current.get(course.id)?.trigger();
                         return;
                     }
                 }
 
-                // 3. DEFAULT: Toggle Card Highlight
                 setSelectedCourseId((prev) =>
                     prev === course.id ? null : course.id
                 );
@@ -413,14 +401,13 @@ export default function FlowsheetPage() {
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
             onClick={() => setSelectedCourseId(null)}
         >
-            {/* HEADER */}
+            {}
             <div
-                // CHANGED: z-index increased to 50 to stay above everything
                 className="w-full bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-50 shadow-sm"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-4">
-                    {/* TOP ROW: Title & Back Button */}
+                    {}
                     <div className="flex items-center gap-3 w-full md:w-auto">
                         <Button
                             variant="ghost"
@@ -442,7 +429,7 @@ export default function FlowsheetPage() {
                         </div>
                     </div>
 
-                    {/* BOTTOM ROW (Mobile) / RIGHT SIDE (Desktop) */}
+                    {}
                     <div className="w-full md:w-auto flex flex-row items-center justify-between gap-3 md:gap-4">
                         <div className="flex-1 min-w-0 md:flex-none md:w-[220px]">
                             <Select
@@ -454,7 +441,7 @@ export default function FlowsheetPage() {
                                 </SelectTrigger>
                                 <SelectContent className="z-[60]">
                                     {" "}
-                                    {/* ensure dropdown is above header */}
+                                    {}
                                     {FLOWSHEET_DATA.map((prog) => (
                                         <SelectItem
                                             key={prog.id}
@@ -481,7 +468,7 @@ export default function FlowsheetPage() {
                 </div>
             </div>
 
-            {/* SCROLLABLE CONTAINER */}
+            {}
             <div
                 className="flex-1 w-full overflow-x-auto p-4 md:p-8"
                 ref={scrollContainerRef}
@@ -561,9 +548,9 @@ export default function FlowsheetPage() {
                                     return (
                                         <div
                                             key={course.id}
-                                            className={`${wrapperClass} outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-shadow`} // Added focus styles
-                                            role="button" // Accessibility
-                                            tabIndex={0} // Make focusable
+                                            className={`${wrapperClass} outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-shadow`} 
+                                            role="button" 
+                                            tabIndex={0} 
                                             onKeyDown={(e) =>
                                                 handleKeyDown(
                                                     e,
@@ -571,7 +558,7 @@ export default function FlowsheetPage() {
                                                     semIndex,
                                                     course
                                                 )
-                                            } // Attach Handler
+                                            } 
                                             ref={(el) => {
                                                 if (el)
                                                     cardRefs.current.set(

@@ -5,7 +5,7 @@ import { ArrowRight, GitBranch, Calculator, Github, Network } from "lucide-react
 export default function Home() {
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
-            {/* --- GRAPH THEME BACKGROUND (Light Mode) --- */}
+            {}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]">
                 <svg
                     className="w-full h-full"
@@ -82,7 +82,7 @@ export default function Home() {
                 ></div>
             </div>
 
-            {/* HEADER */}
+            {}
             <header className="relative z-10 border-b border-slate-200 bg-white/50 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2 font-bold text-xl tracking-tighter text-slate-900">
@@ -104,9 +104,9 @@ export default function Home() {
                 </div>
             </header>
 
-            {/* HERO SECTION */}
+            {}
             <main className="flex-1 relative z-10 flex flex-col items-center justify-center p-6 text-center">
-                {/* Hero Text */}
+                {}
                 <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1] text-slate-900 text-left">
                     Visualize Your <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-gradient-x">
@@ -120,7 +120,7 @@ export default function Home() {
                     in real-time.
                 </p>
 
-                {/* Primary Action (Flowsheet) */}
+                {}
                 <div className="group relative inline-flex shadow-xl shadow-indigo-500/20">
                     <div className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
                     <Link href="/flowsheet">
@@ -135,7 +135,7 @@ export default function Home() {
                     </Link>
                 </div>
 
-                {/* Secondary Feature (Addon) */}
+                {}
                 <div className="mt-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
                     <div className="h-12 w-px bg-gradient-to-b from-transparent via-slate-300 to-transparent"></div>
 
@@ -161,7 +161,7 @@ export default function Home() {
                 </div>
             </main>
 
-            {/* FOOTER */}
+            {}
             <footer className="w-full py-6 text-center text-sm text-slate-400 border-t border-slate-200 bg-slate-50 relative z-10">
                 <p>
                     Built by {" "}

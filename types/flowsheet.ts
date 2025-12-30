@@ -21,30 +21,27 @@ export type Course = {
     id: string;
     type?: CourseType;
 
-    // -- Core Fields --
     code?: string;
     title?: string;
     credits?: number;
     prereqs?: string[];
 
-    // -- Elective Fields --
     label?: string;
     options?: CourseOption[];
     linkedSlotId?: string;
 
-    // -- Minor Fields --
     minorIndex?: number;
 };
 
 export type Semester = {
     id: string;
-    label: string; // e.g., "Fall", "Spring"
+    label: string; 
     courses: Course[];
 };
 
 export type Year = {
     id: string;
-    label: string; // e.g., "Year 1"
+    label: string; 
     semesters: Semester[];
 };
 

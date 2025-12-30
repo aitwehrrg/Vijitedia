@@ -1,4 +1,3 @@
-// data/programs/it.ts
 import { Program } from "@/types/flowsheet";
 
 export const IT_PROGRAM: Program = {
@@ -859,54 +858,6 @@ export const IT_PROGRAM: Program = {
                                 },
                             ],
                         },
-                        // {
-                        //     id: "HON-I",
-                        //     type: "elective",
-                        //     label: "Honors I",
-                        //     linkedSlotId: "HON-I Lab",
-                        //     options: [
-                        //         {
-                        //             id: "BLOCK1T",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Blockchain Foundations",
-                        //             credits: 3,
-                        //             prereqs: [],
-                        //             linkedOptionId: "BLOCK1L",
-                        //         },
-                        //         {
-                        //             id: "ARVR1T",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Computer Graphics",
-                        //             credits: 3,
-                        //             prereqs: [],
-                        //             linkedOptionId: "ARVR1L",
-                        //         },
-                        //     ],
-                        // },
-                        // {
-                        //     id: "HON-I Lab",
-                        //     type: "elective",
-                        //     label: "Honors I Laboratory",
-                        //     linkedSlotId: "HON-I",
-                        //     options: [
-                        //         {
-                        //             id: "BLOCK1L",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Bitcoin Laboratory",
-                        //             credits: 1,
-                        //             prereqs: [],
-                        //             linkedOptionId: "BLOCK1T",
-                        //         },
-                        //         {
-                        //             id: "ARVR1L",
-                        //             code: "R5XX3XXXT",
-                        //             title: "Computer Graphics Laboratory",
-                        //             credits: 1,
-                        //             prereqs: [],
-                        //             linkedOptionId: "ARVR1T",
-                        //         },
-                        //     ],
-                        // },
                     ],
                 },
                 {
@@ -1014,57 +965,9 @@ export const IT_PROGRAM: Program = {
                             credits: 4,
                             options: [],
                         },
-                        //         {
-                        //             id: "HON-II",
-                        //             type: "elective",
-                        //             label: "Honors II",
-                        //             linkedSlotId: "HON-I",
-                        //             options: [
-                        //                 {
-                        //                     id: "BLOCK2T",
-                        //                     code: "R5XX3XXXT",
-                        //                     title: "Ethereum Blockchain",
-                        //                     credits: 3,
-                        //                     prereqs: [],
-                        //                     linkedOptionId: "BLOCK1T",
-                        //                 },
-                        //             ],
-                        //         },
-                        //         {
-                        //             id: "HON-II Lab",
-                        //             type: "elective",
-                        //             label: "Honors II Laboratory",
-                        //             linkedSlotId: "HON-I Lab",
-                        //             options: [
-                        //                 {
-                        //                     id: "BLOCK2L",
-                        //                     code: "R5XX3XXXT",
-                        //                     title: "Ethereum Laboratory",
-                        //                     credits: 1,
-                        //                     prereqs: [],
-                        //                     linkedOptionId: "BLOCK1L",
-                        //                 },
-                        //             ],
-                        //         },
                     ],
                 },
             ],
         },
-        // {
-        //     id: "y4s1",
-        //     label: "Final Year",
-        //     semesters: [
-        //         {
-        //             id: "y4s1",
-        //             label: "Semester VII",
-        //             courses: [],
-        //         },
-        //         {
-        //             id: "y4s2",
-        //             label: "Semester VIII",
-        //             courses: [],
-        //         },
-        //     ],
-        // },
     ],
 };
