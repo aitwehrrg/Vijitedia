@@ -15,7 +15,7 @@ import {
     CommandEmpty,
 } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
-import { Layers, Pencil } from "lucide-react";
+import { Layers, Pencil, Check } from "lucide-react";
 import { Course, CourseOption } from "@/types/flowsheet";
 import { CourseCard } from "./course-card";
 
@@ -90,9 +90,12 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                             <CommandEmpty>No options found.</CommandEmpty>
                             <CommandGroup>
                                 {course.options?.map((opt) => {
-                                    const isDisabled = disabledOptionIds?.has(
-                                        opt.id
-                                    );
+                                    const isSelected =
+                                        selectedOption?.id === opt.id;
+                                    const isDisabled =
+                                        disabledOptionIds?.has(opt.id) &&
+                                        !isSelected;
+
                                     return (
                                         <CommandItem
                                             key={opt.id}
@@ -110,15 +113,20 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                                                     : ""
                                             }
                                         >
-                                            <div className="flex flex-col">
-                                                <div className="flex items-center">
-                                                    <span className="font-bold font-mono mr-2">
-                                                        {opt.code}
-                                                    </span>
-                                                    {isDisabled && (
-                                                        <span className="text-[9px] text-red-500 font-bold uppercase ml-2">
-                                                            (Conflict)
+                                            <div className="flex flex-col w-full">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center">
+                                                        <span className="font-bold font-mono mr-2">
+                                                            {opt.code}
                                                         </span>
+                                                        {isDisabled && (
+                                                            <span className="text-[9px] text-red-500 font-bold uppercase ml-2">
+                                                                (Conflict)
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {isSelected && (
+                                                        <Check className="w-4 h-4 text-purple-600" />
                                                     )}
                                                 </div>
                                                 <span className="text-xs text-muted-foreground">
