@@ -16,7 +16,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeftFromLine, RotateCcw, Target } from "lucide-react";
+import { ArrowLeftFromLine, RotateCcw, Target, Network } from "lucide-react";
 import Link from "next/link";
 import {
     Popover,
@@ -301,7 +301,6 @@ export default function CalculatorPage() {
 
     return (
         <div className="min-h-screen bg-slate-50/50 flex flex-col">
-            {}
             <div className="bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-30 shadow-sm">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-3 w-full md:w-auto">
@@ -326,6 +325,20 @@ export default function CalculatorPage() {
                     </div>
 
                     <div className="w-full md:w-auto flex items-center justify-between gap-3 md:gap-6">
+                        <Button
+                            asChild
+                            variant="outline"
+                            className="h-10 md:h-9 text-xs md:text-sm gap-2"
+                        >
+                            <Link href={`/flowsheet/${programId}`}>
+                                <Network className="w-3.5 h-3.5" />
+                                <span className="hidden sm:inline">
+                                    Flowsheet
+                                </span>
+                                <span className="inline sm:hidden">View</span>
+                            </Link>
+                        </Button>
+
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
@@ -395,7 +408,6 @@ export default function CalculatorPage() {
                 </div>
             </div>
 
-            {}
             <div className="max-w-7xl mx-auto w-full p-4 md:p-8 space-y-8">
                 {currentProgram.years.map((year) => (
                     <div key={year.id} className="space-y-4">

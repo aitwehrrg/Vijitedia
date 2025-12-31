@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeftFromLine } from "lucide-react";
+import { ArrowLeftFromLine, Calculator } from "lucide-react";
 import { Course, CourseOption } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
@@ -169,7 +169,7 @@ export default function FlowsheetPage() {
             for (const course of minor.courses) {
                 if (takenCoursesBase.has(course.id)) {
                     disabled.add(minor.id);
-                    break; 
+                    break;
                 }
 
                 if (course.mutexIds) {
@@ -477,6 +477,20 @@ export default function FlowsheetPage() {
                     </div>
 
                     <div className="w-full md:w-auto flex flex-row items-center justify-between gap-3 md:gap-4">
+                        <Button
+                            asChild
+                            variant="outline"
+                            size="sm"
+                            className="shrink-0 gap-2 h-10 md:h-9"
+                        >
+                            <Link href={`/calculator/${programId}`}>
+                                <Calculator className="w-4 h-4" />
+                                <span className="hidden sm:inline">
+                                    Calculator
+                                </span>
+                            </Link>
+                        </Button>
+
                         <div className="flex-1 min-w-0 md:flex-none md:w-[220px]">
                             <Select
                                 value={programId}
