@@ -12,13 +12,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeftFromLine, GraduationCap } from "lucide-react";
+import { ArrowLeftFromLine } from "lucide-react";
 import { Course, CourseOption } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { toRoman } from "@/utils/toRoman";
 
 type Point = { x: number; y: number };
 type Connection = { start: Point; end: Point; type: "prereq" | "postreq" };
@@ -149,26 +148,45 @@ export default function FlowsheetPage() {
         });
     }, [allCourses, selections, selectedMinorId]);
 
-    const allOptionsMap = useMemo(() => {
-        const map = new Map<string, CourseOption>();
-        allCourses.forEach((c) => {
-            if (c.type === "elective" && c.options) {
-                c.options.forEach((opt) => map.set(opt.id, opt));
-            }
-        });
-        return map;
-    }, [allCourses]);
-
     const disabledOptionIds = useMemo(() => {
         const disabled = new Set<string>();
-        Object.values(selections).forEach((selectedId) => {
-            const option = allOptionsMap.get(selectedId);
-            if (option && option.mutexIds) {
-                option.mutexIds.forEach((mutexId) => disabled.add(mutexId));
+
+        const takenCourseIds = new Set<string>();
+
+        allCourses.forEach((course) => {
+            if (course.type === "core") {
+                takenCourseIds.add(course.id);
             }
         });
+
+        if (selectedMinorId) {
+            const activeMinor = MINORS.find((m) => m.id === selectedMinorId);
+            activeMinor?.courses.forEach((c) => takenCourseIds.add(c.id));
+        }
+
+        Object.values(selections).forEach((selId) => takenCourseIds.add(selId));
+
+        allCourses.forEach((course) => {
+            if (course.type === "elective" && course.options) {
+                course.options.forEach((option) => {
+                    if (takenCourseIds.has(option.id)) {
+                        disabled.add(option.id);
+                    }
+
+                    if (option.mutexIds) {
+                        const hasConflict = option.mutexIds.some((mutexId) =>
+                            takenCourseIds.has(mutexId)
+                        );
+                        if (hasConflict) {
+                            disabled.add(option.id);
+                        }
+                    }
+                });
+            }
+        });
+
         return disabled;
-    }, [selections, allOptionsMap]);
+    }, [allCourses, selectedMinorId, selections]);
 
     useEffect(() => {
         setHoveredCourseId(null);
@@ -401,13 +419,11 @@ export default function FlowsheetPage() {
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
             onClick={() => setSelectedCourseId(null)}
         >
-            {}
             <div
                 className="w-full bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-50 shadow-sm"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-4">
-                    {}
                     <div className="flex items-center gap-3 w-full md:w-auto">
                         <Button
                             variant="ghost"
@@ -429,7 +445,6 @@ export default function FlowsheetPage() {
                         </div>
                     </div>
 
-                    {}
                     <div className="w-full md:w-auto flex flex-row items-center justify-between gap-3 md:gap-4">
                         <div className="flex-1 min-w-0 md:flex-none md:w-[220px]">
                             <Select
@@ -440,8 +455,6 @@ export default function FlowsheetPage() {
                                     <SelectValue placeholder="Select Program" />
                                 </SelectTrigger>
                                 <SelectContent className="z-[60]">
-                                    {" "}
-                                    {}
                                     {FLOWSHEET_DATA.map((prog) => (
                                         <SelectItem
                                             key={prog.id}
@@ -468,7 +481,6 @@ export default function FlowsheetPage() {
                 </div>
             </div>
 
-            {}
             <div
                 className="flex-1 w-full overflow-x-auto p-4 md:p-8"
                 ref={scrollContainerRef}
@@ -548,9 +560,9 @@ export default function FlowsheetPage() {
                                     return (
                                         <div
                                             key={course.id}
-                                            className={`${wrapperClass} outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-shadow`} 
-                                            role="button" 
-                                            tabIndex={0} 
+                                            className={`${wrapperClass} outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-shadow`}
+                                            role="button"
+                                            tabIndex={0}
                                             onKeyDown={(e) =>
                                                 handleKeyDown(
                                                     e,
@@ -558,7 +570,7 @@ export default function FlowsheetPage() {
                                                     semIndex,
                                                     course
                                                 )
-                                            } 
+                                            }
                                             ref={(el) => {
                                                 if (el)
                                                     cardRefs.current.set(
