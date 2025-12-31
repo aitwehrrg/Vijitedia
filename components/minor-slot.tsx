@@ -31,11 +31,19 @@ interface MinorSlotProps {
     onSelectMinor: (id: string | null) => void;
     effectiveCourse: Course;
     status: CourseStatus;
+    disabledMinorIds?: Set<string>;
 }
 
 export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
     (
-        { course, selectedMinorId, onSelectMinor, effectiveCourse, status },
+        {
+            course,
+            selectedMinorId,
+            onSelectMinor,
+            effectiveCourse,
+            status,
+            disabledMinorIds,
+        },
         ref
     ) => {
         const [open, setOpen] = useState(false);
@@ -56,7 +64,7 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                                 title="Change Minor"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setOpen(true); 
+                                    setOpen(true);
                                 }}
                                 onKeyDown={(e) => e.stopPropagation()}
                             >
@@ -99,30 +107,51 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                         <CommandList className="overscroll-contain">
                             <CommandEmpty>No minor found.</CommandEmpty>
                             <CommandGroup>
-                                {MINORS.map((m) => (
-                                    <CommandItem
-                                        key={m.id}
-                                        value={m.name + " " + m.dept}
-                                        onSelect={() => {
-                                            onSelectMinor(m.id);
-                                            setOpen(false);
-                                        }}
-                                    >
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center">
-                                                <span className="font-bold mr-2">
-                                                    {m.name}
+                                {MINORS.map((m) => {
+                                    const isDisabled = disabledMinorIds?.has(
+                                        m.id
+                                    );
+
+                                    return (
+                                        <CommandItem
+                                            key={m.id}
+                                            value={m.name + " " + m.dept}
+                                            disabled={isDisabled}
+                                            onSelect={() => {
+                                                if (!isDisabled) {
+                                                    onSelectMinor(m.id);
+                                                    setOpen(false);
+                                                }
+                                            }}
+                                            className={
+                                                isDisabled
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : ""
+                                            }
+                                        >
+                                            <div className="flex flex-col w-full">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-bold mr-2">
+                                                        {m.name}
+                                                    </span>
+                                                    {isDisabled ? (
+                                                        <span className="text-[9px] text-red-500 font-bold uppercase ml-2">
+                                                            (Conflict)
+                                                        </span>
+                                                    ) : (
+                                                        selectedMinorId ===
+                                                            m.id && (
+                                                            <Check className="w-4 h-4 text-indigo-600 ml-2" />
+                                                        )
+                                                    )}
+                                                </div>
+                                                <span className="text-xs font-medium text-slate-700">
+                                                    {m.dept}
                                                 </span>
-                                                {selectedMinorId === m.id && (
-                                                    <Check className="w-4 h-4 text-indigo-600 ml-2 right-1 absolute" />
-                                                )}
                                             </div>
-                                            <span className="text-xs font-medium text-slate-700">
-                                                {m.dept}
-                                            </span>
-                                        </div>
-                                    </CommandItem>
-                                ))}
+                                        </CommandItem>
+                                    );
+                                })}
                             </CommandGroup>
                         </CommandList>
                     </Command>

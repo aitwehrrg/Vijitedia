@@ -148,34 +148,65 @@ export default function FlowsheetPage() {
         });
     }, [allCourses, selections, selectedMinorId]);
 
-    const disabledOptionIds = useMemo(() => {
-        const disabled = new Set<string>();
-
-        const takenCourseIds = new Set<string>();
+    const takenCoursesBase = useMemo(() => {
+        const taken = new Set<string>();
 
         allCourses.forEach((course) => {
             if (course.type === "core") {
-                takenCourseIds.add(course.id);
+                taken.add(course.id);
             }
         });
 
+        Object.values(selections).forEach((selId) => taken.add(selId));
+
+        return taken;
+    }, [allCourses, selections]);
+
+    const disabledMinorIds = useMemo(() => {
+        const disabled = new Set<string>();
+
+        MINORS.forEach((minor) => {
+            for (const course of minor.courses) {
+                if (takenCoursesBase.has(course.id)) {
+                    disabled.add(minor.id);
+                    break; 
+                }
+
+                if (course.mutexIds) {
+                    const hasMutexConflict = course.mutexIds.some((mutexId) =>
+                        takenCoursesBase.has(mutexId)
+                    );
+                    if (hasMutexConflict) {
+                        disabled.add(minor.id);
+                        break;
+                    }
+                }
+            }
+        });
+
+        return disabled;
+    }, [takenCoursesBase]);
+
+    const disabledOptionIds = useMemo(() => {
+        const disabled = new Set<string>();
+
+        const takenForElectives = new Set(takenCoursesBase);
+
         if (selectedMinorId) {
             const activeMinor = MINORS.find((m) => m.id === selectedMinorId);
-            activeMinor?.courses.forEach((c) => takenCourseIds.add(c.id));
+            activeMinor?.courses.forEach((c) => takenForElectives.add(c.id));
         }
-
-        Object.values(selections).forEach((selId) => takenCourseIds.add(selId));
 
         allCourses.forEach((course) => {
             if (course.type === "elective" && course.options) {
                 course.options.forEach((option) => {
-                    if (takenCourseIds.has(option.id)) {
+                    if (takenForElectives.has(option.id)) {
                         disabled.add(option.id);
                     }
 
                     if (option.mutexIds) {
                         const hasConflict = option.mutexIds.some((mutexId) =>
-                            takenCourseIds.has(mutexId)
+                            takenForElectives.has(mutexId)
                         );
                         if (hasConflict) {
                             disabled.add(option.id);
@@ -186,7 +217,7 @@ export default function FlowsheetPage() {
         });
 
         return disabled;
-    }, [allCourses, selectedMinorId, selections]);
+    }, [allCourses, takenCoursesBase, selectedMinorId]);
 
     useEffect(() => {
         setHoveredCourseId(null);
@@ -612,6 +643,9 @@ export default function FlowsheetPage() {
                                                     course={course}
                                                     selectedMinorId={
                                                         selectedMinorId
+                                                    }
+                                                    disabledMinorIds={
+                                                        disabledMinorIds
                                                     }
                                                     onSelectMinor={(id) => {
                                                         setSelectedMinorId(id);
