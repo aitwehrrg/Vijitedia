@@ -1023,7 +1023,7 @@ export const IT_PROGRAM: Program = {
                                 },
                                 {
                                     id: "OE-I-I",
-                                    code: "R5NP31XXT",
+                                    code: "R5NP3XXXT",
                                     title: "Principles of Management",
                                     credits: 4,
                                     prereqs: [],
