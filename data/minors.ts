@@ -214,7 +214,7 @@ export const MINORS: Minor[] = [
     {
         id: "R5IL2201",
         dept: "E-Cell",
-        name: "Entrepreneurship and Start-up",
+        name: "Entrepreneurship and Startup",
         courses: [
             {
                 id: "R5IL2201T",
@@ -241,7 +241,7 @@ export const MINORS: Minor[] = [
             {
                 id: "R5IL3202T",
                 code: "R5IL3202T",
-                title: "Translating Business Model into Start-up",
+                title: "Translating Business Model into Startup",
                 credits: 3,
                 prereqs: [],
             },
