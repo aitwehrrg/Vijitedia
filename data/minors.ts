@@ -213,7 +213,7 @@ export const MINORS: Minor[] = [
     },
     {
         id: "R5IL2201",
-        dept: "E-Cell",
+        dept: "Entrepreneurship-Cell",
         name: "Entrepreneurship and Startup",
         courses: [
             {
