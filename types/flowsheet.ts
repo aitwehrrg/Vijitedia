@@ -29,6 +29,7 @@ export type Course = {
     label?: string;
     options?: CourseOption[];
     linkedSlotId?: string;
+    mutexIds?: string[];
 
     minorIndex?: number;
 };

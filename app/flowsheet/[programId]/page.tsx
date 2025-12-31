@@ -9,6 +9,7 @@ type SeoCourse = {
     title: string;
     credits: number;
     prereqs: string[];
+    mutexIds: string[]; 
     category: string;
     dept: string;
 };
@@ -19,7 +20,6 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { programId } = await Promise.resolve(params);
-
     const program = FLOWSHEET_DATA.find((p) => p.id === programId);
 
     if (!program) return { title: "Not Found" };
@@ -28,7 +28,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: program
             ? `Academic Flowsheet: ${program.name}`
             : "Academic Flowsheet",
-
         description: program
             ? `Interactive prerequisite map for ${program.name}.`
             : "Academic Flowsheets",
@@ -49,9 +48,10 @@ export default async function FlowsheetPage({ params }: Props) {
                         code: opt.code,
                         title: opt.title,
                         credits: opt.credits,
-                        prereqs: opt.prereqs,
+                        prereqs: opt.prereqs || [],
+                        mutexIds: opt.mutexIds || [], 
                         category: "Elective Option",
-                        dept: program.department, 
+                        dept: program.department,
                     }));
                 }
 
@@ -62,6 +62,7 @@ export default async function FlowsheetPage({ params }: Props) {
                             title: c.title,
                             credits: c.credits || 0,
                             prereqs: c.prereqs || [],
+                            mutexIds: c.mutexIds || [], 
                             category: "Core Requirement",
                             dept: program.department,
                         },
@@ -78,9 +79,10 @@ export default async function FlowsheetPage({ params }: Props) {
             code: c.code,
             title: c.title,
             credits: c.credits,
-            prereqs: c.prereqs,
+            prereqs: c.prereqs || [],
+            mutexIds: c.mutexIds || [], 
             category: `Minor in ${m.name}`,
-            dept: m.dept, 
+            dept: m.dept,
         }))
     );
 
@@ -89,21 +91,28 @@ export default async function FlowsheetPage({ params }: Props) {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        itemListElement: fullCourseList.map((course, index) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            item: {
-                "@type": "Course",
-                courseCode: course.code,
-                name: course.title,
-                description: `Type: ${course.category}. Dept: ${course.dept}. Credits: ${course.credits}.`,
-                provider: {
-                    "@type": "CollegeOrUniversity",
-                    name: "Veermata Jijabai Technological Institute",
-                    department: course.dept,
+        itemListElement: fullCourseList.map((course, index) => {
+            let desc = `Type: ${course.category}. Dept: ${course.dept}. Credits: ${course.credits}.`;
+            if (course.mutexIds.length > 0) {
+                desc += ` Mutually Exclusive with: ${course.mutexIds.join(", ")}.`;
+            }
+
+            return {
+                "@type": "ListItem",
+                position: index + 1,
+                item: {
+                    "@type": "Course",
+                    courseCode: course.code,
+                    name: course.title,
+                    description: desc,
+                    provider: {
+                        "@type": "CollegeOrUniversity",
+                        name: "Veermata Jijabai Technological Institute",
+                        department: course.dept,
+                    },
                 },
-            },
-        })),
+            };
+        }),
     };
 
     return (
@@ -128,7 +137,10 @@ export default async function FlowsheetPage({ params }: Props) {
                             {c.prereqs && c.prereqs.length > 0
                                 ? c.prereqs.join(", ")
                                 : "None"}
-                            .
+                            .{}
+                            {c.mutexIds && c.mutexIds.length > 0 && (
+                                <> Conflicts/Mutex: {c.mutexIds.join(", ")}.</>
+                            )}
                         </li>
                     ))}
                 </ul>
