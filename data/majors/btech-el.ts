@@ -1021,7 +1021,7 @@ export const EC_PROGRAM: Program = {
                                     title: "Financial Management",
                                     credits: 4,
                                     prereqs: [],
-                                    mutexIds: ["FIN"],
+                                    mutexIds: [],
                                 },
                                 {
                                     id: "OE-I-H",
