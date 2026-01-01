@@ -72,6 +72,41 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5CE2203",
+        dept: "Civil Engineering",
+        name: "Sustainable Environment",
+        courses: [
+            {
+                id: "R5CE2203T",
+                code: "R5CE2203T",
+                title: "Principles of Sustainability",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5CE2206T",
+                code: "R5CE2206T",
+                title: "Water and Wastewater Management",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5CE3203T",
+                code: "R5CE3203T",
+                title: "Environmental Economics",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5CE3206T",
+                code: "R5CE3206T",
+                title: "Air and Noise Pollution Control Engineering",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5IT2201",
         dept: "Information Technology",
         name: "Artificial Intelligence and Machine Learning",
