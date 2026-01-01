@@ -72,6 +72,42 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5IT2201",
+        dept: "Information Technology",
+        name: "Artificial Intelligence and Machine Learning",
+        courses: [
+            {
+                id: "R5IT2201T",
+                code: "R5IT2201T",
+                title: "Introduction to Artificial Intelligence and Machine Learning",
+                credits: 2,
+                prereqs: [],
+                mutexIds: ["R5MA2007T"],
+            },
+            {
+                id: "R5IT2205T",
+                code: "R5IT2205T",
+                title: "Introduction to Data Analytics",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5IT3201T",
+                code: "R5IT3201T",
+                title: "Deep Learning and Neural Networks",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5IT3205T",
+                code: "R5IT3205T",
+                title: "Special Topics in Artificial Intelligence",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5CO2201",
         dept: "Computer Engineering",
         name: "Data Science",
