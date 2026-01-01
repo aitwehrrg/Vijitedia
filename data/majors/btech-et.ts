@@ -514,7 +514,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2001T",
                             title: "Electronic Devices and Circuits",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET1022T", "R5ET1023L"],
                         },
                         {
                             id: "R5ET2001L",
@@ -530,7 +530,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2002T",
                             title: "Electrical Network Theory",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET1027T", "R5MA1013T"],
                         },
                         {
                             id: "R5ET2003T",
@@ -538,7 +538,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2003T",
                             title: "Digital Logic Design",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET1022T", "R5ET1023L"],
                         },
                         {
                             id: "R5ET2003L",
@@ -554,7 +554,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2004T",
                             title: "Analog Communication Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET1022T", "R5ET1023L"],
                         },
                         {
                             id: "R5ET2004L",
@@ -601,7 +601,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2006T",
                             title: "Signals and Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5MA2009T"],
                         },
                         {
                             id: "R5ET2007T",
@@ -609,7 +609,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2007T",
                             title: "Microprocessors and Microcontrollers",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET2003T", "R5ET2003L"],
                         },
                         {
                             id: "R5ET2007L",
@@ -625,7 +625,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2008T",
                             title: "Digital Communication Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET2004T", "R5ET2004L", "R5ET2006T"],
                         },
                         {
                             id: "R5ET2008L",
@@ -641,7 +641,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET2009T",
                             title: "Linear Integrated Circuits",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET2001T", "R5ET2001L"],
                         },
                         {
                             id: "R5ET2009L",
@@ -746,7 +746,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3001T",
                             title: "Electromagnetic Fields and Waves",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5MA1013T", "R5PH1012T", "R5PH1012L"],
                         },
                         {
                             id: "R5ET3002T",
@@ -754,7 +754,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3002T",
                             title: "Control Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET2006T"],
                         },
                         {
                             id: "R5ET3003T",
@@ -762,7 +762,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3003T",
                             title: "Digital Signal Processing",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET2006T"],
                         },
                         {
                             id: "R5ET3003L",
@@ -778,7 +778,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3004T",
                             title: "Computer Communication Networks",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5ET2008T"],
                         },
                         {
                             id: "R5ET3004L",
@@ -879,7 +879,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3006T",
                             title: "Microwave Communication",
                             credits: 2,
-                            prereqs: [],
+                            prereqs: ["R5ET3001T", "R5ET3001L"],
                         },
                         {
                             id: "R5ET3006L",
@@ -895,14 +895,14 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3007T",
                             title: "Embedded Systems",
                             credits: 2,
-                            prereqs: [],
+                            prereqs: ["R5ET2007T", "R5ET2007L"],
                         },
                         {
                             id: "R5ET3007L",
                             type: "core",
                             code: "R5ET3007L",
                             title: "Embedded Systems Laboratory",
-                            credits: 3,
+                            credits: 1,
                             prereqs: [],
                         },
                         {
@@ -911,14 +911,14 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3008T",
                             title: "Wireless Communication",
                             credits: 2,
-                            prereqs: [],
+                            prereqs: ["R5ET2008T", "R5ET2008L"],
                         },
                         {
                             id: "R5ET3008L",
                             type: "core",
                             code: "R5ET3008L",
                             title: "Wireless Communication Laboratory",
-                            credits: 2,
+                            credits: 1,
                             prereqs: [],
                         },
                         {
