@@ -284,6 +284,41 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5EE2201",
+        dept: "Electrical Engineering",
+        name: "Electric Vehicles",
+        courses: [
+            {
+                id: "R5EE2201T",
+                code: "R5EE2201T",
+                title: "Electromechanical Energy Conversion",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5EE2204T",
+                code: "R5EE2204T",
+                title: "Conventional Vehicles and Components of Electric Vehicles",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5EE3201T",
+                code: "R5EE3201T",
+                title: "Battery Management Systems",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5EE3204T",
+                code: "R5EE3204T",
+                title: "Hybrid Electric Vehicles",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5ME2201",
         dept: "Mechanical Engineering",
         name: "Robotics",
