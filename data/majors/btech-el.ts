@@ -1,6 +1,6 @@
 import { Program } from "@/types/flowsheet";
 
-export const EC_PROGRAM: Program = {
+export const EL_PROGRAM: Program = {
     id: "btech-el",
     name: "Electronics Engineering",
     department: "Electrical Engineering",
