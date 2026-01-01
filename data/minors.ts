@@ -179,6 +179,41 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5EL2201",
+        dept: "Electronics Engineering",
+        name: "Internet of Things",
+        courses: [
+            {
+                id: "R5EL2201T",
+                code: "R5EL2201T",
+                title: "Basics of Electronic Circuits",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5EL2203T",
+                code: "R5EL2203T",
+                title: "Digital Electronics",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5EL3201T",
+                code: "R5EL3201T",
+                title: "Sensors and Transducers",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5EL3203T",
+                code: "R5EL3203T",
+                title: "Principles of IoT",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5EL2203",
         dept: "Electronics Engineering",
         name: "Signal Processing and Imaging",
