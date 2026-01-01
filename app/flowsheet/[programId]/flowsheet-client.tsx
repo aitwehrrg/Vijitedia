@@ -13,7 +13,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeftFromLine, Calculator } from "lucide-react";
-import { Course, CourseOption } from "@/types/flowsheet";
+import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
 import { Button } from "@/components/ui/button";
