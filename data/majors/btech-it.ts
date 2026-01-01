@@ -565,9 +565,9 @@ export const IT_PROGRAM: Program = {
                             prereqs: ["R5CO1001T", "R5CO1001L"],
                         },
                         {
-                            id: "R5HS24010",
+                            id: "R5HS2401O",
                             type: "core",
-                            code: "R5HS24010",
+                            code: "R5HS2401O",
                             title: "Universal Human Values",
                             credits: 2,
                             prereqs: [],
@@ -704,9 +704,9 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "R5CH24020-IT",
+                            id: "R5CH2402O",
                             type: "core",
-                            code: "R5CH24020",
+                            code: "R5CH2402O",
                             title: "Environmental Science",
                             credits: 2,
                             prereqs: [],
