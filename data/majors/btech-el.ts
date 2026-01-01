@@ -514,7 +514,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2001T",
                             title: "Electronic Circuit Analysis and Design",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL1022T"],
                         },
                         {
                             id: "R5EL2001L",
@@ -530,7 +530,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2002T",
                             title: "Electrical Networks Analysis",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL1027T", "R5MA1013T"],
                         },
                         {
                             id: "R5EL2003T",
@@ -538,7 +538,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2003T",
                             title: "Principles of Communication Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL1022T", "R5EL1023L"],
                         },
                         {
                             id: "R5EL2003L",
@@ -554,7 +554,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2004T",
                             title: "Digital System Design",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL1022T", "R5EL1023L"],
                         },
                         {
                             id: "R5EL2004L",
@@ -601,7 +601,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2006T",
                             title: "Signals and Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5MA2006T"],
                         },
                         {
                             id: "R5EL2007T",
@@ -609,7 +609,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2007T",
                             title: "Microprocessors and Microcontrollers",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL2004T", "R5EL2004L"],
                         },
                         {
                             id: "R5EL2007L",
@@ -625,7 +625,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2008T",
                             title: "Analog Integrated Circuits",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL2001T", "R5EL2001L"],
                         },
                         {
                             id: "R5EL2008L",
@@ -641,7 +641,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2009T",
                             title: "Digital Communication",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL2003T", "R5EL2003L", "R5EL2006T"],
                         },
                         {
                             id: "R5EL2009L",
@@ -746,7 +746,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3001T",
                             title: "Electromagnetic Fields",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5MA1013T", "R5PH1012T", "R5PH1012L"],
                         },
                         {
                             id: "R5EL3002T",
@@ -754,7 +754,12 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3002T",
                             title: "Principles of VLSI",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: [
+                                "R5EL2001T",
+                                "R5EL2001L",
+                                "R5EL2004T",
+                                "R5EL2004L",
+                            ],
                         },
                         {
                             id: "R5EL3002L",
@@ -770,7 +775,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3003T",
                             title: "Digital Signal Processing",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL2006T"],
                         },
                         {
                             id: "R5EL3003L",
@@ -786,7 +791,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3004T",
                             title: "Control Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL2002T", "R5EL2006T"],
                         },
                         {
                             id: "R5EL3005T",
@@ -794,7 +799,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3005T",
                             title: "Microprocessor Systems",
                             credits: 2,
-                            prereqs: [],
+                            prereqs: ["R5EL2007T", "R5EL2007L"],
                         },
                         {
                             id: "R5EL3005L",
@@ -818,7 +823,7 @@ export const EL_PROGRAM: Program = {
                                     code: "R5EL3101T",
                                     title: "Digital VLSI Design",
                                     credits: 3,
-                                    prereqs: [],
+                                    prereqs: ["R5EL3002T", "R5EL3002L"],
                                     linkedOptionId: "R5EL3101L",
                                 },
                                 {
@@ -834,7 +839,12 @@ export const EL_PROGRAM: Program = {
                                     code: "R5EL3105T",
                                     title: "Basics of IoT",
                                     credits: 3,
-                                    prereqs: [],
+                                    prereqs: [
+                                        "R5EL2003T",
+                                        "R5EL2003L",
+                                        "R5EL2007T",
+                                        "R5EL2007L",
+                                    ],
                                     linkedOptionId: "R5EL3105L",
                                 },
                             ],
@@ -895,7 +905,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3006T",
                             title: "Power Electronics",
                             credits: 2,
-                            prereqs: [],
+                            prereqs: ["R5EL2001T", "R5EL2001L", "R5EL2002T"],
                         },
                         {
                             id: "R5EL3007T",
@@ -903,7 +913,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3007T",
                             title: "Embedded Systems",
                             credits: 2,
-                            prereqs: [],
+                            prereqs: ["R5EL3005T", "R5EL3005L"],
                         },
                         {
                             id: "R5EL3007L",
@@ -919,7 +929,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL3008T",
                             title: "Computer Communication Networks",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EL2009T", "R5EL2009L"],
                         },
                         {
                             id: "R5EL3008L",
