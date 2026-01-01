@@ -279,7 +279,7 @@ export const MINORS: Minor[] = [
                 code: "R5EL3204T",
                 title: "Pattern Recognition",
                 credits: 3,
-                prereqs: ["R5EL2203T", "R5EL2204T"],
+                prereqs: [],
             },
         ],
     },
