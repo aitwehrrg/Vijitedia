@@ -72,6 +72,42 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5CO2201",
+        dept: "Computer Engineering",
+        name: "Data Science",
+        courses: [
+            {
+                id: "R5CO2201T",
+                code: "R5CO2201T",
+                title: "Introduction to Data Science",
+                credits: 2,
+                prereqs: [],
+                mutexIds: ["R5MA2007T"],
+            },
+            {
+                id: "R5CO2205T",
+                code: "R5CO2205T",
+                title: "Python for Data Science and Data Analysis",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5CO3201T",
+                code: "R5CO3201T",
+                title: "Introduction to ML with Python",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5CO3205T",
+                code: "R5CO3205T",
+                title: "Data Visualization and Processing Tools",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5ET2201",
         dept: "Electronics and Telecommunication",
         name: "Cybersecurity",
