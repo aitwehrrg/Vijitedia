@@ -224,6 +224,7 @@ export const MINORS: Minor[] = [
                 title: "Basics of Electronic Circuits",
                 credits: 2,
                 prereqs: [],
+                mutexIds: ["R5MA2006T"],
             },
             {
                 id: "R5EL2203T",
@@ -259,6 +260,7 @@ export const MINORS: Minor[] = [
                 title: "Signals and Systems",
                 credits: 2,
                 prereqs: [],
+                mutexIds: ["R5MA2006T"],
             },
             {
                 id: "R5EL2204T",
@@ -377,14 +379,14 @@ export const MINORS: Minor[] = [
                 code: "R5ME3201T",
                 title: "Navigation, Guidance and Control",
                 credits: 3,
-                prereqs: ["R5SE1001T", "R5SE1001L", "R5MA1014T"],
+                prereqs: ["R5SE1001T", "R5SE1001L", "R5MA1013T", "R5MA1014T"],
             },
             {
                 id: "R5ME3203T",
                 code: "R5ME3203T",
                 title: "Communication Systems and Sensors",
                 credits: 3,
-                prereqs: ["R5PH1011T", "R5PH1011L"],
+                prereqs: ["R5PH1011T", "R5PH1011L", "R5PH1012T", "R5PH1012L"],
             },
         ],
     },
