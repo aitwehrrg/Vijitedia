@@ -97,6 +97,11 @@ export default function FlowsheetPage() {
         [programId]
     );
 
+    const selectedMinor = useMemo(
+        () => MINORS.find((m) => m.id === selectedMinorId),
+        [selectedMinorId]
+    );
+
     const flatSemesters = useMemo(
         () => currentProgram?.years.flatMap((y) => y.semesters) || [],
         [currentProgram]
@@ -471,7 +476,7 @@ export default function FlowsheetPage() {
                                 Academic Flowsheet
                             </h1>
                             <p className="text-xs md:text-sm text-slate-500 line-clamp-1">
-                                {currentProgram.department}
+                                {`Dept. of ${currentProgram.department}`}
                             </p>
                         </div>
                     </div>
@@ -523,6 +528,28 @@ export default function FlowsheetPage() {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div className="w-full px-4 pt-6 md:px-8">
+                <div className="max-w-7xl mx-auto text-center">
+                    <h2 className="text-xl md:text-2xl font-light text-slate-700 leading-relaxed">
+                        Bachelor of Technology in{" "}
+                        <span className="font-semibold text-slate-900 block sm:inline">
+                            {currentProgram.name}
+                        </span>
+                        {selectedMinor && (
+                            <span className="animate-in fade-in slide-in-from-top-2 duration-300">
+                                {" "}
+                                <span className="text-slate-400 block sm:inline sm:mx-1">
+                                    with Minor in
+                                </span>{" "}
+                                <span className="font-semibold text-blue-600 block sm:inline">
+                                    {selectedMinor.name}
+                                </span>
+                            </span>
+                        )}
+                    </h2>
                 </div>
             </div>
 
