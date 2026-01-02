@@ -514,7 +514,7 @@ export const EL_PROGRAM: Program = {
                             code: "R5EL2001T",
                             title: "Electronic Circuit Analysis and Design",
                             credits: 3,
-                            prereqs: ["R5EL1022T"],
+                            prereqs: ["R5EL1022T", "R5EL1023L"],
                         },
                         {
                             id: "R5EL2001L",
