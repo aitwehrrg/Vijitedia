@@ -778,7 +778,7 @@ export const ET_PROGRAM: Program = {
                             code: "R5ET3004T",
                             title: "Computer Communication Networks",
                             credits: 3,
-                            prereqs: ["R5ET2008T"],
+                            prereqs: ["R5ET2008T", "R5ET2008L"],
                         },
                         {
                             id: "R5ET3004L",
