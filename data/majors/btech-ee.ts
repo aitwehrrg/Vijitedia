@@ -25,7 +25,7 @@ export const EE_PROGRAM: Program = {
                             id: "R5PH1011T",
                             type: "core",
                             code: "R5PH1011T",
-                            title: "Physics I",
+                            title: "Physics",
                             credits: 3,
                             prereqs: [],
                         },
@@ -33,7 +33,7 @@ export const EE_PROGRAM: Program = {
                             id: "R5PH1011L",
                             type: "core",
                             code: "R5PH1011L",
-                            title: "Physics I Laboratory",
+                            title: "Physics Laboratory",
                             credits: 1,
                             prereqs: [],
                         },
@@ -514,7 +514,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE2001T",
                             title: "Electrical Networks",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5MA1012T", "R5EE1031T", "R5EE1031L"],
                         },
                         {
                             id: "R5EE2002T",
@@ -522,7 +522,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE2002T",
                             title: "Electrical Machines I",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE1031T", "R5EE1031L"],
                         },
                         {
                             id: "R5EE2002L",
@@ -538,7 +538,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE2003T",
                             title: "Introduction to Power Systems",
                             credits: 4,
-                            prereqs: [],
+                            prereqs: ["R5EE1031T", "R5EE1031L"],
                         },
                         {
                             id: "R5EE2004L",
@@ -629,7 +629,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE2005T",
                             title: "Electromagnetic Fields",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5MA1012T", "R5PH1011T", "R5PH1011L"],
                         },
                         {
                             id: "R5EE2005L",
@@ -645,7 +645,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE2006T",
                             title: "Electrical Machines II",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE2002T", "R5EE2002L"],
                         },
                         {
                             id: "R5EE2006L",
@@ -661,7 +661,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE2007T",
                             title: "Basic Electronics and Digital Circuits",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE1027T", "R5EE1027L"],
                         },
                         {
                             id: "R5EE2007L",
@@ -685,7 +685,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE2009T",
                             title: "Signals and Systems",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5MA2003T"],
                         },
                         {
                             id: "R5HS2402O",
@@ -730,7 +730,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE3010T",
                             title: "Power Systems Analysis",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE2001T", "R5EE2003T"],
                         },
                         {
                             id: "R5EE3010L",
@@ -746,7 +746,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE3011T",
                             title: "Power Electronics",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE2001T", "R5EE2007T", "R5EE2007L"],
                         },
                         {
                             id: "R5EE3011L",
@@ -762,7 +762,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE3012T",
                             title: "Microprocessors and Microcontrollers",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE2007T", "R5EE2007L"],
                         },
                         {
                             id: "R5EE3012L",
@@ -778,7 +778,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE3013T",
                             title: "Control Systems for Electrical Engineers",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE2009T"],
                         },
                         {
                             id: "R5HS3403X",
@@ -847,7 +847,12 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE3015T",
                             title: "Electrical Drives",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: [
+                                "R5EE2006T",
+                                "R5EE2006L",
+                                "R5EE3011T",
+                                "R5EE3011L",
+                            ],
                         },
                         {
                             id: "R5EE3015L",
@@ -863,7 +868,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE3016T",
                             title: "Power System Protection",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE3010T", "R5EE3010L"],
                         },
                         {
                             id: "R5HS3404X",
