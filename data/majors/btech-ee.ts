@@ -866,7 +866,7 @@ export const EE_PROGRAM: Program = {
                             id: "R5EE3016T",
                             type: "core",
                             code: "R5EE3016T",
-                            title: "Power System Protection",
+                            title: "Power Systems Protection",
                             credits: 3,
                             prereqs: ["R5EE3010T", "R5EE3010L"],
                         },
