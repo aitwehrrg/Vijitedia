@@ -224,7 +224,7 @@ export const MINORS: Minor[] = [
                 title: "Basics of Electronic Circuits",
                 credits: 2,
                 prereqs: [],
-                mutexIds: ["R5MA2006T", "R5MA2009T"],
+                mutexIds: ["R5MA2003T", "R5MA2006T", "R5MA2009T"],
             },
             {
                 id: "R5EL2203T",
@@ -260,7 +260,7 @@ export const MINORS: Minor[] = [
                 title: "Signals and Systems",
                 credits: 2,
                 prereqs: [],
-                mutexIds: ["R5MA2006T", "R5MA2009T"],
+                mutexIds: ["R5MA2003T", "R5MA2006T", "R5MA2009T"],
             },
             {
                 id: "R5EL2204T",
