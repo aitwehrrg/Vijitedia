@@ -426,6 +426,41 @@ export const MINORS: Minor[] = [
         ],
     },
     {
+        id: "R5PE2201T",
+        dept: "Production Engineering",
+        name: "Managerial Economics And IPR In Manufacturing Sector",
+        courses: [
+            {
+                id: "R5PE2201T",
+                code: "R5PE2201T",
+                title: "Elements of Business Management in Manufacturing Sector",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5PE2202T",
+                code: "R5PE2202T",
+                title: "Cost Economics in Manufacturing",
+                credits: 2,
+                prereqs: [],
+            },
+            {
+                id: "R5PE3201T",
+                code: "R5PE3201T",
+                title: "Retail and Supply Chain Management",
+                credits: 3,
+                prereqs: [],
+            },
+            {
+                id: "R5PE3202T",
+                code: "R5PE3202T",
+                title: "Certification and Sustainability Compliances in Manufacturing Sector",
+                credits: 3,
+                prereqs: [],
+            },
+        ],
+    },
+    {
         id: "R5IL2201",
         dept: "E-Cell",
         name: "Entrepreneurship and Startups",
