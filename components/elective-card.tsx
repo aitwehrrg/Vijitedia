@@ -80,10 +80,10 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                     onKeyDown={(e) => e.stopPropagation()}
                 >
                     <Command>
-                        <div className="hidden lg:block">
+                        <div className="hidden xl:block">
                             <CommandInput
                                 placeholder="Search options..."
-                                className="h-9 hidden lg:flex"
+                                className="h-9 hidden xl:flex"
                             />
                         </div>
                         <CommandList className="overscroll-contain">
