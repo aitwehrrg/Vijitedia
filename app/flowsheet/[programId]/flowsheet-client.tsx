@@ -512,7 +512,7 @@ export default function FlowsheetPage() {
                                 Academic Flowsheet
                             </h1>
                             <p className="text-xs md:text-sm text-slate-500 line-clamp-1">
-                                {`Dept. of ${currentProgram.department}`}
+                                {currentProgram.name}
                             </p>
                         </div>
                     </div>
