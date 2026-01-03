@@ -144,7 +144,7 @@ export default function Home() {
                             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                                 Utility Addon
                             </span>
-                            <span className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <span className="text-xs sm:text-sm font-semibold text-slate-700 flex items-center gap-2">
                                 <Calculator className="w-4 h-4 text-emerald-500" />
                                 CGPA Calculator & Predictor
                             </span>
