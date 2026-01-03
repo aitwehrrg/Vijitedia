@@ -44,7 +44,7 @@ export function CourseCard({ course, status }: CourseCardProps) {
                 <div className="flex justify-between items-start gap-2">
                     <Badge
                         variant={status === "default" ? "outline" : "secondary"}
-                        className="h-6 px-2 font-mono text-xs font-bold tracking-tight flex items-center shrink-0"
+                        className="h-6 px-2 font-mono text-sm font-bold tracking-tight flex items-center shrink-0"
                     >
                         <StatusIcon />
                         {course.code || "??"}
