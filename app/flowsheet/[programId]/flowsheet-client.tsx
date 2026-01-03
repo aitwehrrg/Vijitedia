@@ -469,7 +469,7 @@ export default function FlowsheetPage() {
                 document.activeElement as HTMLAnchorElement
             );
 
-            if (currentIndex === -1) return; 
+            if (currentIndex === -1) return;
 
             let nextIndex;
             if (e.key === "ArrowDown") {
@@ -559,15 +559,21 @@ export default function FlowsheetPage() {
                                 <SheetHeader>
                                     <SheetTitle>Select Program</SheetTitle>
                                     <SheetDescription>
-                                        Use{" "}
-                                        <kbd className="bg-slate-100 px-1 rounded border">
-                                            ↑
-                                        </kbd>{" "}
-                                        and{" "}
-                                        <kbd className="bg-slate-100 px-1 rounded border">
-                                            ↓
-                                        </kbd>{" "}
-                                        to navigate.
+                                        <span className="hidden sm:inline">
+                                            Use{" "}
+                                            <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
+                                                ↑
+                                            </kbd>{" "}
+                                            and{" "}
+                                            <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
+                                                ↓
+                                            </kbd>{" "}
+                                            to navigate.
+                                        </span>
+                                        <span className="sm:hidden">
+                                            Choose an academic program to view
+                                            its flowsheet.
+                                        </span>
                                     </SheetDescription>
                                 </SheetHeader>
                                 <div
