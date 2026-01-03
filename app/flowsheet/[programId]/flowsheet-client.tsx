@@ -461,7 +461,7 @@ export default function FlowsheetPage() {
     const programListRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
     const handleSheetKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "w" || e.key === "s" || e.key === "i" || e.key === "k") {
             e.preventDefault();
 
             const items = Array.from(programListRefs.current.values());
@@ -472,7 +472,7 @@ export default function FlowsheetPage() {
             if (currentIndex === -1) return;
 
             let nextIndex;
-            if (e.key === "ArrowDown") {
+            if (e.key === "ArrowDown" || e.key === "s" || e.key === "k") {
                 nextIndex =
                     currentIndex < items.length - 1 ? currentIndex + 1 : 0;
             } else {
