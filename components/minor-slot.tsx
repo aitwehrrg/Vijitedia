@@ -97,14 +97,14 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                     onKeyDown={(e) => e.stopPropagation()}
                 >
                     <Command>
-                        <div className="hidden xl:block">
+                        <div className="hidden 2xl:block">
                             <CommandInput
                                 placeholder="Search minors..."
                                 className="h-9"
                             />
                         </div>
 
-                        <CommandList className="overscroll-contain">
+                        <CommandList className="overscroll-contain max-h-[250px] 2xl:max-h-[300px]">
                             <CommandEmpty>No minor found.</CommandEmpty>
                             <CommandGroup>
                                 {MINORS.map((m) => {

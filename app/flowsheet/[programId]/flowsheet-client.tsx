@@ -559,7 +559,7 @@ export default function FlowsheetPage() {
                                 <SheetHeader>
                                     <SheetTitle>Select Program</SheetTitle>
                                     <SheetDescription>
-                                        <span className="hidden sm:inline">
+                                        <span className="hidden 2xl:inline">
                                             Use{" "}
                                             <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
                                                 ↑
@@ -570,7 +570,7 @@ export default function FlowsheetPage() {
                                             </kbd>{" "}
                                             to navigate.
                                         </span>
-                                        <span className="sm:hidden">
+                                        <span className="2xl:hidden">
                                             Choose an academic program to view
                                             its flowsheet.
                                         </span>
