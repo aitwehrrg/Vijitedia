@@ -547,7 +547,7 @@ export default function FlowsheetPage() {
                             </SheetTrigger>
                             <SheetContent
                                 side="right"
-                                className="w-full sm:w-[400px] overflow-y-auto"
+                                className="w-full sm:w-[400px] h-full flex flex-col"
                                 onOpenAutoFocus={(e) => {
                                     e.preventDefault();
                                     const target =
@@ -556,8 +556,8 @@ export default function FlowsheetPage() {
                                     target?.scrollIntoView({ block: "center" });
                                 }}
                             >
-                                <SheetHeader>
-                                    <SheetTitle>Select Program</SheetTitle>
+                                <SheetHeader className="pb-4 border-b">
+                                    <SheetTitle className="text-xl">Select Program</SheetTitle>
                                     <SheetDescription>
                                         <span className="hidden 2xl:inline">
                                             Use{" "}
@@ -576,8 +576,9 @@ export default function FlowsheetPage() {
                                         </span>
                                     </SheetDescription>
                                 </SheetHeader>
+
                                 <div
-                                    className="flex flex-col gap-2 mt-6 outline-none"
+                                    className="flex-1 overflow-y-auto py-6 flex flex-col gap-4 outline-none"
                                     onKeyDown={handleSheetKeyDown}
                                 >
                                     {FLOWSHEET_DATA.map((prog) => (
@@ -596,33 +597,35 @@ export default function FlowsheetPage() {
                                                         );
                                                 }}
                                                 className={cn(
-                                                    "flex items-start justify-between p-3 rounded-lg border transition-all outline-none",
-                                                    "hover:border-slate-300 hover:bg-slate-50",
+                                                    "flex items-center justify-between px-4 py-6 rounded-xl border transition-all outline-none group",
+                                                    "hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm",
                                                     "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:bg-slate-50 focus:border-blue-400",
                                                     programId === prog.id
-                                                        ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600/20"
-                                                        : "border-slate-200"
+                                                        ? "border-blue-600 bg-blue-50/50 ring-1 ring-blue-600/20"
+                                                        : "border-slate-100 bg-white shadow-sm"
                                                 )}
                                             >
-                                                <div className="flex flex-col gap-1 mr-3">
+                                                <div className="flex flex-col gap-1.5 mr-3">
                                                     <span
                                                         className={cn(
-                                                            "text-sm font-semibold leading-snug",
+                                                            "text-base font-semibold leading-snug transition-colors",
                                                             programId ===
                                                                 prog.id
-                                                                ? "text-blue-900"
-                                                                : "text-slate-900"
+                                                                ? "text-blue-700"
+                                                                : "text-slate-900 group-hover:text-slate-900"
                                                         )}
                                                     >
                                                         {prog.name}
                                                     </span>
-                                                    <span className="text-xs text-slate-500">
+                                                    <span className="text-sm text-slate-500 font-medium">
                                                         Dept. of{" "}
                                                         {prog.department}
                                                     </span>
                                                 </div>
                                                 {programId === prog.id && (
-                                                    <Check className="h-4 w-4 text-blue-600 shrink-0 mt-1" />
+                                                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                                                        <Check className="h-5 w-5 text-blue-600" />
+                                                    </div>
                                                 )}
                                             </Link>
                                         </SheetClose>
