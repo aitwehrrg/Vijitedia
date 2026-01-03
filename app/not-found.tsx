@@ -63,7 +63,7 @@ export default function NotFound() {
             </div>
 
             {}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-indigo-500/20 via-purple-500/20 to-blue-500/20 blur-[120px] rounded-full pointer-events-none z-0"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-linear-to-tr from-indigo-500/20 via-purple-500/20 to-blue-500/20 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
             {}
             <div className="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 max-w-md w-full flex flex-col items-center space-y-6 relative z-10">
