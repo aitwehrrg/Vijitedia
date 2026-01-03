@@ -6,18 +6,26 @@ import { CourseCard, CourseStatus } from "@/components/course-card";
 import { ElectiveCard, ElectiveCardHandle } from "@/components/elective-card";
 import { MinorSlot, MinorSlotHandle } from "@/components/minor-slot";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { ArrowLeftFromLine, Calculator } from "lucide-react";
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+    SheetClose,
+} from "@/components/ui/sheet";
+import {
+    ArrowLeftFromLine,
+    Calculator,
+    ChevronsUpDown,
+    Check,
+} from "lucide-react";
 import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type Point = { x: number; y: number };
 type Connection = { start: Point; end: Point; type: "prereq" | "postreq" };
@@ -450,6 +458,34 @@ export default function FlowsheetPage() {
         }
     };
 
+    const programListRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+
+    const handleSheetKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+
+            const items = Array.from(programListRefs.current.values());
+            const currentIndex = items.indexOf(
+                document.activeElement as HTMLAnchorElement
+            );
+
+            if (currentIndex === -1) return; 
+
+            let nextIndex;
+            if (e.key === "ArrowDown") {
+                nextIndex =
+                    currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+            } else {
+                nextIndex =
+                    currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+            }
+
+            const nextItem = items[nextIndex];
+            nextItem?.focus();
+            nextItem?.scrollIntoView({ block: "nearest" });
+        }
+    };
+
     return (
         <div
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
@@ -496,26 +532,98 @@ export default function FlowsheetPage() {
                             </Link>
                         </Button>
 
-                        <div className="flex-1 min-w-0 md:flex-none md:w-[220px]">
-                            <Select
-                                value={programId}
-                                onValueChange={handleProgramChange}
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className="flex-1 md:flex-none justify-between gap-2 h-10 md:h-9 md:w-[160px]"
+                                >
+                                    <span className="truncate">
+                                        Switch Program
+                                    </span>
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent
+                                side="right"
+                                className="w-full sm:w-[400px] overflow-y-auto"
+                                onOpenAutoFocus={(e) => {
+                                    e.preventDefault();
+                                    const target =
+                                        programListRefs.current.get(programId);
+                                    target?.focus();
+                                    target?.scrollIntoView({ block: "center" });
+                                }}
                             >
-                                <SelectTrigger className="w-full h-10 md:h-9 text-sm">
-                                    <SelectValue placeholder="Select Program" />
-                                </SelectTrigger>
-                                <SelectContent className="z-[60]">
+                                <SheetHeader>
+                                    <SheetTitle>Select Program</SheetTitle>
+                                    <SheetDescription>
+                                        Use{" "}
+                                        <kbd className="bg-slate-100 px-1 rounded border">
+                                            ↑
+                                        </kbd>{" "}
+                                        and{" "}
+                                        <kbd className="bg-slate-100 px-1 rounded border">
+                                            ↓
+                                        </kbd>{" "}
+                                        to navigate.
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div
+                                    className="flex flex-col gap-2 mt-6 outline-none"
+                                    onKeyDown={handleSheetKeyDown}
+                                >
                                     {FLOWSHEET_DATA.map((prog) => (
-                                        <SelectItem
-                                            key={prog.id}
-                                            value={prog.id}
-                                        >
-                                            {prog.name}
-                                        </SelectItem>
+                                        <SheetClose key={prog.id} asChild>
+                                            <Link
+                                                href={`/flowsheet/${prog.id}`}
+                                                ref={(el) => {
+                                                    if (el)
+                                                        programListRefs.current.set(
+                                                            prog.id,
+                                                            el
+                                                        );
+                                                    else
+                                                        programListRefs.current.delete(
+                                                            prog.id
+                                                        );
+                                                }}
+                                                className={cn(
+                                                    "flex items-start justify-between p-3 rounded-lg border transition-all outline-none",
+                                                    "hover:border-slate-300 hover:bg-slate-50",
+                                                    "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:bg-slate-50 focus:border-blue-400",
+                                                    programId === prog.id
+                                                        ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600/20"
+                                                        : "border-slate-200"
+                                                )}
+                                            >
+                                                <div className="flex flex-col gap-1 mr-3">
+                                                    <span
+                                                        className={cn(
+                                                            "text-sm font-semibold leading-snug",
+                                                            programId ===
+                                                                prog.id
+                                                                ? "text-blue-900"
+                                                                : "text-slate-900"
+                                                        )}
+                                                    >
+                                                        {prog.name}
+                                                    </span>
+                                                    <span className="text-xs text-slate-500">
+                                                        Dept. of{" "}
+                                                        {prog.department}
+                                                    </span>
+                                                </div>
+                                                {programId === prog.id && (
+                                                    <Check className="h-4 w-4 text-blue-600 shrink-0 mt-1" />
+                                                )}
+                                            </Link>
+                                        </SheetClose>
                                     ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                                </div>
+                            </SheetContent>
+                        </Sheet>
 
                         <div className="flex shrink-0 gap-3 text-xs md:text-xs font-medium">
                             <div className="flex items-center text-slate-600">
