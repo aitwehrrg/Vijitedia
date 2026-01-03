@@ -51,7 +51,7 @@ export function CourseCard({ course, status }: CourseCardProps) {
                     </Badge>
 
                     <div className="flex flex-col items-end shrink-0">
-                        <span className="text-xs font-bold text-slate-700 font-mono bg-slate-100 px-1.5 py-0.5 rounded-md border border-slate-200">
+                        <span className="text-sm font-bold text-slate-700 font-mono bg-slate-100 px-1.5 py-0.5 rounded-md border border-slate-200">
                             {course.credits || 0}
                         </span>
                     </div>

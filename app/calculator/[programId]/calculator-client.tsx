@@ -40,15 +40,15 @@ const CourseRow = memo(
             <div className="flex items-center justify-between gap-3 group">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-bold text-xs text-slate-700 font-mono truncate group-hover:text-indigo-600 transition-colors">
+                        <span className="font-bold text-sm text-slate-700 font-mono truncate group-hover:text-indigo-600 transition-colors">
                             {course.code || course.label || "Elective"}
                         </span>
-                        <span className="text-[10px] text-slate-400 shrink-0 bg-slate-100 px-1 rounded">
+                        <span className="text-xs text-slate-400 shrink-0 bg-slate-100 px-1 rounded">
                             {course.credits} Cr
                         </span>
                     </div>
                     <div
-                        className="text-xs sm:text-sm text-slate-600 truncate font-medium"
+                        className="text-sm text-slate-600 truncate font-medium"
                         title={course.title}
                     >
                         {course.title || "Select Grade"}
