@@ -801,7 +801,7 @@ export const EE_PROGRAM: Program = {
                                     code: "R5EE3101T",
                                     title: "Advanced Electronic Devices",
                                     credits: 4,
-                                    prereqs: [],
+                                    prereqs: ["R5EE2007T", "R5EE2007L"],
                                 },
                                 {
                                     id: "R5EE3102T",
@@ -815,7 +815,7 @@ export const EE_PROGRAM: Program = {
                                     code: "R5EE3104T",
                                     title: "Applied Linear Algebra",
                                     credits: 4,
-                                    prereqs: [],
+                                    prereqs: ["R5MA1002T", "R5MA2003T"],
                                 },
                             ],
                         },

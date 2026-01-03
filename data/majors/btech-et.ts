@@ -818,7 +818,7 @@ export const ET_PROGRAM: Program = {
                                     code: "R5ET3101T",
                                     title: "Microprocessor Systems",
                                     credits: 3,
-                                    prereqs: [],
+                                    prereqs: ["R5ET2007T", "R5ET2007L"],
                                     linkedOptionId: "R5ET3101L",
                                 },
                                 {
