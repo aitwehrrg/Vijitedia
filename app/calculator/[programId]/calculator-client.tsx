@@ -24,6 +24,26 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
+const getGradeColor = (grade: string) => {
+    const points = GRADE_POINTS[grade];
+    if (points === undefined)
+        return "border-indigo-300 bg-indigo-50 text-indigo-700 font-bold";
+
+    if (points >= 9)
+        return "border-emerald-200 bg-emerald-50 text-emerald-700 font-bold";
+    if (points >= 8)
+        return "border-green-200 bg-green-50 text-green-700 font-bold";
+    if (points >= 7)
+        return "border-teal-200 bg-teal-50 text-teal-700 font-bold";
+    if (points >= 6)
+        return "border-blue-200 bg-blue-50 text-blue-700 font-bold";
+    if (points >= 5)
+        return "border-yellow-200 bg-yellow-50 text-yellow-700 font-bold";
+    if (points >= 4)
+        return "border-orange-200 bg-orange-50 text-orange-700 font-bold";
+    return "border-red-200 bg-red-50 text-red-700 font-bold";
+};
+
 const CourseRow = memo(
     ({
         course,
@@ -61,10 +81,8 @@ const CourseRow = memo(
                     disabled={isDisabled}
                 >
                     <SelectTrigger
-                        className={`w-[75px] h-9 text-xs font-mono ${
-                            grade && !isDisabled
-                                ? "border-indigo-300 bg-indigo-50 text-indigo-700 font-bold"
-                                : ""
+                        className={`w-[75px] h-9 text-sm font-mono transition-colors ${
+                            grade && !isDisabled ? getGradeColor(grade) : ""
                         }`}
                     >
                         <SelectValue placeholder="-" />
@@ -385,7 +403,7 @@ export default function CalculatorPage() {
                                 </div>
                                 <div
                                     className={`text-xl md:text-2xl font-mono font-black ${
-                                        Number(globalStats.gpa) >= 3.0
+                                        Number(globalStats.gpa) >= 6.75
                                             ? "text-green-600"
                                             : "text-slate-900"
                                     }`}
