@@ -92,7 +92,7 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                 )}
 
                 <PopoverContent
-                    className="w-[300px] p-0"
+                    className="w-[350px] p-0"
                     align="start"
                     onKeyDown={(e) => e.stopPropagation()}
                 >
