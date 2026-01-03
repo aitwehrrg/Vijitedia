@@ -16,7 +16,13 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeftFromLine, RotateCcw, Target, Network } from "lucide-react";
+import {
+    ArrowLeftFromLine,
+    RotateCcw,
+    Target,
+    Network,
+    AlertTriangle,
+} from "lucide-react";
 import Link from "next/link";
 import {
     Popover,
@@ -213,6 +219,29 @@ export default function CalculatorPage() {
         return calculateStats(activeCourses, grades);
     }, [activeCourses, grades]);
 
+    const yearStats = useMemo(() => {
+        if (!currentProgram) return [];
+        return currentProgram.years.map((year) => {
+            let passedCredits = 0;
+            let failureCount = 0;
+
+            const allCourses = year.semesters.flatMap((s) => s.courses);
+
+            allCourses.forEach((course) => {
+                const g = grades[course.id];
+                if (g) {
+                    if (g === "FF") {
+                        failureCount++;
+                    } else {
+                        passedCredits += course.credits || 0;
+                    }
+                }
+            });
+
+            return { passedCredits, failureCount };
+        });
+    }, [currentProgram, grades]);
+
     const prediction = useMemo(() => {
         const target = parseFloat(targetCGPA);
         if (isNaN(target)) return null;
@@ -314,6 +343,54 @@ export default function CalculatorPage() {
                 remaining credits.
             </div>
         );
+    };
+
+    const renderPromotionWarning = (yearIndex: number) => {
+        if (yearIndex === 0) return null; 
+
+        const isDSY = currentProgram.years[0].semesters.every((s) =>
+            excludedSemesters.includes(s.id)
+        );
+
+        const failuresY1 = yearStats[0]?.failureCount || 0;
+        const creditsY1 = yearStats[0]?.passedCredits || 0;
+        const failuresY2 = yearStats[1]?.failureCount || 0;
+        const creditsY2 = yearStats[1]?.passedCredits || 0;
+        const creditsY3 = yearStats[2]?.passedCredits || 0;
+
+        let error = null;
+
+        if (yearIndex === 1) {
+            if (!isDSY && creditsY1 < 32) {
+                error = `Insufficient Year 1 Credits (${creditsY1}/32)`;
+            }
+        }
+        else if (yearIndex === 2) {
+            if (creditsY2 < 32)
+                error = `Insufficient Year 2 Credits (${creditsY2}/32)`;
+            else if (!isDSY && failuresY1 > 1)
+                error = `Too many Year 1 Failures (${failuresY1} > 1)`;
+        }
+        else if (yearIndex === 3) {
+            if (creditsY3 < 32)
+                error = `Insufficient Year 3 Credits (${creditsY3}/32)`;
+            else if (failuresY2 > 1)
+                error = `Too many Year 2 Failures (${failuresY2} > 1)`;
+            else if (!isDSY && failuresY1 > 0)
+                error = `Uncleared Year 1 Failures (${failuresY1})`;
+        }
+
+        if (error) {
+            return (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800 text-sm font-medium">
+                    <AlertTriangle className="w-4 h-4 shrink-0" />
+                    <span>
+                        Cannot promote to Year {yearIndex + 1}: {error}
+                    </span>
+                </div>
+            );
+        }
+        return null;
     };
 
     return (
@@ -426,112 +503,129 @@ export default function CalculatorPage() {
             </div>
 
             <div className="max-w-7xl mx-auto w-full p-4 md:p-8 space-y-8">
-                {currentProgram.years.map((year) => (
-                    <div key={year.id} className="space-y-4">
-                        <h2 className="text-sm md:text-base font-bold text-slate-800 border-b pb-2">
-                            {year.label}
-                        </h2>
+                {currentProgram.years.map((year, yearIndex) => {
+                    const isYearDisabled = year.semesters.every((s) =>
+                        excludedSemesters.includes(s.id)
+                    );
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                            {year.semesters.map((semester) => {
-                                const isExcluded = excludedSemesters.includes(
-                                    semester.id
-                                );
-                                const semStats = calculateStats(
-                                    semester.courses,
-                                    grades
-                                );
+                    return (
+                        <div key={year.id} className="space-y-4">
+                            {!isYearDisabled &&
+                                renderPromotionWarning(yearIndex)}
 
-                                return (
-                                    <div
-                                        key={semester.id}
-                                        className={`bg-white rounded-xl border shadow-sm p-4 md:p-5 flex flex-col transition-opacity duration-200 ${
-                                            isExcluded
-                                                ? "opacity-60 grayscale-[0.5]"
-                                                : "opacity-100"
-                                        }`}
-                                    >
-                                        <div className="flex justify-between items-center mb-4 border-b pb-3">
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    id={`chk-${semester.id}`}
-                                                    checked={!isExcluded}
-                                                    onCheckedChange={() =>
-                                                        toggleSemester(
-                                                            semester.id
-                                                        )
-                                                    }
-                                                    className="data-[state=checked]:bg-neutral-600 data-[state=checked]:border-neutral-600"
-                                                />
-                                                <label
-                                                    htmlFor={`chk-${semester.id}`}
-                                                    className="font-bold text-slate-700 text-sm cursor-pointer select-none"
-                                                >
-                                                    {semester.label}
-                                                </label>
-                                            </div>
+                            <h2 className="text-sm md:text-base font-bold text-slate-800 border-b pb-2">
+                                {year.label}
+                            </h2>
 
-                                            <div className="flex gap-2 items-center">
-                                                <Badge
-                                                    variant="secondary"
-                                                    className="font-mono text-sm"
-                                                >
-                                                    {semStats.credits} Cr
-                                                </Badge>
-                                                <Badge
-                                                    variant="outline"
-                                                    className={`font-mono text-sm ${
-                                                        !isExcluded &&
-                                                        Number(semStats.gpa) >=
-                                                            4.0
-                                                            ? "bg-green-50 text-green-700 border-green-200"
-                                                            : "bg-slate-50 text-slate-500"
-                                                    }`}
-                                                >
-                                                    SGPA: {semStats.gpa}
-                                                </Badge>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                                {year.semesters.map((semester) => {
+                                    const isExcluded =
+                                        excludedSemesters.includes(semester.id);
+                                    const semStats = calculateStats(
+                                        semester.courses,
+                                        grades
+                                    );
 
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-6 w-6 text-slate-300 hover:text-red-500 hover:bg-red-50 ml-1"
-                                                    onClick={() =>
-                                                        clearSemesterGrades(
-                                                            semester.courses
-                                                        )
-                                                    }
-                                                    disabled={isExcluded}
-                                                >
-                                                    <RotateCcw className="w-3 h-3" />
-                                                </Button>
-                                            </div>
-                                        </div>
-
+                                    return (
                                         <div
-                                            className={`space-y-3 flex-1 ${
+                                            key={semester.id}
+                                            className={`bg-white rounded-xl border shadow-sm p-4 md:p-5 flex flex-col transition-opacity duration-200 ${
                                                 isExcluded
-                                                    ? "pointer-events-none"
-                                                    : ""
+                                                    ? "opacity-60 grayscale-[0.5]"
+                                                    : "opacity-100"
                                             }`}
                                         >
-                                            {semester.courses.map((course) => (
-                                                <CourseRow
-                                                    key={course.id}
-                                                    course={course}
-                                                    grade={grades[course.id]}
-                                                    isDisabled={isExcluded}
-                                                    onGradeChange={
-                                                        handleGradeChange
-                                                    }
-                                                />
-                                            ))}
+                                            <div className="flex justify-between items-center mb-4 border-b pb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <Checkbox
+                                                        id={`chk-${semester.id}`}
+                                                        checked={!isExcluded}
+                                                        onCheckedChange={() =>
+                                                            toggleSemester(
+                                                                semester.id
+                                                            )
+                                                        }
+                                                        className="data-[state=checked]:bg-neutral-600 data-[state=checked]:border-neutral-600"
+                                                    />
+                                                    <label
+                                                        htmlFor={`chk-${semester.id}`}
+                                                        className="font-bold text-slate-700 text-sm cursor-pointer select-none"
+                                                    >
+                                                        {semester.label}
+                                                    </label>
+                                                </div>
+
+                                                <div className="flex gap-2 items-center">
+                                                    <Badge
+                                                        variant="secondary"
+                                                        className="font-mono text-sm"
+                                                    >
+                                                        {semStats.credits} Cr
+                                                    </Badge>
+                                                    <Badge
+                                                        variant="outline"
+                                                        className={`font-mono text-sm ${
+                                                            !isExcluded &&
+                                                            Number(
+                                                                semStats.gpa
+                                                            ) >= 4.0
+                                                                ? "bg-green-50 text-green-700 border-green-200"
+                                                                : "bg-slate-50 text-slate-500"
+                                                        }`}
+                                                    >
+                                                        SGPA: {semStats.gpa}
+                                                    </Badge>
+
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6 text-slate-300 hover:text-red-500 hover:bg-red-50 ml-1"
+                                                        onClick={() =>
+                                                            clearSemesterGrades(
+                                                                semester.courses
+                                                            )
+                                                        }
+                                                        disabled={isExcluded}
+                                                    >
+                                                        <RotateCcw className="w-3 h-3" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                className={`space-y-3 flex-1 ${
+                                                    isExcluded
+                                                        ? "pointer-events-none"
+                                                        : ""
+                                                }`}
+                                            >
+                                                {semester.courses.map(
+                                                    (course) => (
+                                                        <CourseRow
+                                                            key={course.id}
+                                                            course={course}
+                                                            grade={
+                                                                grades[
+                                                                    course.id
+                                                                ]
+                                                            }
+                                                            isDisabled={
+                                                                isExcluded
+                                                            }
+                                                            onGradeChange={
+                                                                handleGradeChange
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );
