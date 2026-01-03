@@ -379,7 +379,15 @@ export const MINORS: Minor[] = [
                 code: "R5ME3201T",
                 title: "Navigation, Guidance and Control",
                 credits: 3,
-                prereqs: ["R5SE1001T", "R5SE1001L", "R5SE1002T", "R5SE1002L", "R5MA1012T", "R5MA1013T", "R5MA1014T"],
+                prereqs: [
+                    "R5SE1001T",
+                    "R5SE1001L",
+                    "R5SE1002T",
+                    "R5SE1002L",
+                    "R5MA1012T",
+                    "R5MA1013T",
+                    "R5MA1014T",
+                ],
             },
             {
                 id: "R5ME3203T",
