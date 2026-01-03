@@ -97,7 +97,7 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                     onKeyDown={(e) => e.stopPropagation()}
                 >
                     <Command>
-                        <div className="hidden sm:block">
+                        <div className="hidden lg:block">
                             <CommandInput
                                 placeholder="Search minors..."
                                 className="h-9"
