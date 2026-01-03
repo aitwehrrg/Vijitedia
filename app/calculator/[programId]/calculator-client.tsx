@@ -27,21 +27,20 @@ import {
 const getGradeColor = (grade: string) => {
     const points = GRADE_POINTS[grade];
     if (points === undefined)
-        return "border-indigo-300 bg-indigo-50 text-indigo-700 font-bold";
-
+        return "border-slate-300 bg-slate-100 text-slate-700 font-bold";
     if (points >= 9)
-        return "border-emerald-200 bg-emerald-50 text-emerald-700 font-bold";
+        return "border-green-300 bg-green-100 text-green-800 font-bold";
     if (points >= 8)
-        return "border-green-200 bg-green-50 text-green-700 font-bold";
+        return "border-cyan-300 bg-cyan-100 text-cyan-800 font-bold";
     if (points >= 7)
-        return "border-teal-200 bg-teal-50 text-teal-700 font-bold";
+        return "border-blue-300 bg-blue-100 text-blue-800 font-bold";
     if (points >= 6)
-        return "border-blue-200 bg-blue-50 text-blue-700 font-bold";
+        return "border-violet-300 bg-violet-100 text-violet-800 font-bold";
     if (points >= 5)
-        return "border-yellow-200 bg-yellow-50 text-yellow-700 font-bold";
+        return "border-yellow-300 bg-yellow-100 text-yellow-800 font-bold";
     if (points >= 4)
-        return "border-orange-200 bg-orange-50 text-orange-700 font-bold";
-    return "border-red-200 bg-red-50 text-red-700 font-bold";
+        return "border-orange-300 bg-orange-100 text-orange-800 font-bold";
+    return "border-rose-300 bg-rose-100 text-rose-800 font-bold";
 };
 
 const CourseRow = memo(
@@ -475,16 +474,16 @@ export default function CalculatorPage() {
                                             <div className="flex gap-2 items-center">
                                                 <Badge
                                                     variant="secondary"
-                                                    className="font-mono text-xs"
+                                                    className="font-mono text-sm"
                                                 >
                                                     {semStats.credits} Cr
                                                 </Badge>
                                                 <Badge
                                                     variant="outline"
-                                                    className={`font-mono text-xs ${
+                                                    className={`font-mono text-sm ${
                                                         !isExcluded &&
                                                         Number(semStats.gpa) >=
-                                                            3.0
+                                                            4.0
                                                             ? "bg-green-50 text-green-700 border-green-200"
                                                             : "bg-slate-50 text-slate-500"
                                                     }`}
