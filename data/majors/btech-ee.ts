@@ -901,7 +901,7 @@ export const EE_PROGRAM: Program = {
                                     code: "R5EE3108T",
                                     title: "Internet of Things",
                                     credits: 3,
-                                    prereqs: [],
+                                    prereqs: ["R5EE3012T", "R5EE3012L"],
                                     linkedOptionId: "R5EE3108L",
                                 },
                             ],
