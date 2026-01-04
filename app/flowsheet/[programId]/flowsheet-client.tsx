@@ -5,24 +5,26 @@ import { useParams, useRouter } from "next/navigation";
 import { CourseCard, CourseStatus } from "@/components/course-card";
 import { ElectiveCard, ElectiveCardHandle } from "@/components/elective-card";
 import { MinorSlot, MinorSlotHandle } from "@/components/minor-slot";
+import { HonorsSlot, HonorsSlotHandle } from "@/components/honors-slot";
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
     SheetClose,
+    SheetDescription,
 } from "@/components/ui/sheet";
 import {
     ArrowLeftFromLine,
     Calculator,
-    ChevronsUpDown,
     Check,
+    ChevronsUpDown,
 } from "lucide-react";
 import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
+import { HONORS } from "@/data/honors";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -64,7 +66,11 @@ const ConnectionLines = ({ connections }: { connections: Connection[] }) => {
                     Math.max(Math.abs(dx) * 0.5, 40),
                     150
                 );
-                const pathData = `M ${conn.start.x} ${conn.start.y} C ${conn.start.x + curveIntensity} ${conn.start.y}, ${conn.end.x - curveIntensity} ${conn.end.y}, ${conn.end.x} ${conn.end.y}`;
+                const pathData = `M ${conn.start.x} ${conn.start.y} C ${
+                    conn.start.x + curveIntensity
+                } ${conn.start.y}, ${conn.end.x - curveIntensity} ${
+                    conn.end.y
+                }, ${conn.end.x} ${conn.end.y}`;
                 const color = conn.type === "prereq" ? "#f59e0b" : "#3b82f6";
                 return (
                     <path
@@ -94,16 +100,28 @@ export default function FlowsheetPage() {
     );
     const [selections, setSelections] = useState<Record<string, string>>({});
     const [selectedMinorId, setSelectedMinorId] = useState<string | null>(null);
+    const [selectedHonorsId, setSelectedHonorsId] = useState<string | null>(
+        null
+    );
     const [connections, setConnections] = useState<Connection[]>([]);
 
     const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const electiveRefs = useRef<Map<string, ElectiveCardHandle>>(new Map());
+    const minorRefs = useRef<Map<string, MinorSlotHandle>>(new Map());
+    const honorsRefs = useRef<Map<string, HonorsSlotHandle>>(new Map());
+    const programListRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
     const currentProgram = useMemo(
         () => FLOWSHEET_DATA.find((p) => p.id === programId),
         [programId]
     );
+
+    const availableHonors = useMemo(() => {
+        if (!currentProgram) return [];
+        return HONORS.filter((h) => h.dept === currentProgram.department);
+    }, [currentProgram]);
 
     const selectedMinor = useMemo(
         () => MINORS.find((m) => m.id === selectedMinorId),
@@ -157,52 +175,58 @@ export default function FlowsheetPage() {
                 }
             }
 
+            if (
+                course.type === "honors" &&
+                selectedHonorsId &&
+                course.honorsIndex !== undefined
+            ) {
+                const activeHonors = HONORS.find(
+                    (h) => h.id === selectedHonorsId
+                );
+                const honorsCourse = activeHonors?.courses[course.honorsIndex];
+
+                if (honorsCourse) {
+                    return {
+                        ...course,
+                        ...honorsCourse,
+                        id: course.id,
+                        originalId: honorsCourse.id,
+                    };
+                }
+            }
+
             return course;
         });
-    }, [allCourses, selections, selectedMinorId]);
+    }, [allCourses, selections, selectedMinorId, selectedHonorsId]);
 
     const takenCoursesBase = useMemo(() => {
         const taken = new Set<string>();
-
         allCourses.forEach((course) => {
-            if (course.type === "core") {
-                taken.add(course.id);
-            }
+            if (course.type === "core") taken.add(course.id);
         });
-
         Object.values(selections).forEach((selId) => taken.add(selId));
-
         return taken;
     }, [allCourses, selections]);
 
     const disabledMinorIds = useMemo(() => {
         const disabled = new Set<string>();
-
         MINORS.forEach((minor) => {
             for (const course of minor.courses) {
                 if (takenCoursesBase.has(course.id)) {
                     disabled.add(minor.id);
                     break;
                 }
-
-                if (course.mutexIds) {
-                    const hasMutexConflict = course.mutexIds.some((mutexId) =>
-                        takenCoursesBase.has(mutexId)
-                    );
-                    if (hasMutexConflict) {
-                        disabled.add(minor.id);
-                        break;
-                    }
+                if (course.mutexIds?.some((id) => takenCoursesBase.has(id))) {
+                    disabled.add(minor.id);
+                    break;
                 }
             }
         });
-
         return disabled;
     }, [takenCoursesBase]);
 
     const disabledOptionIds = useMemo(() => {
         const disabled = new Set<string>();
-
         const takenForElectives = new Set(takenCoursesBase);
 
         if (selectedMinorId) {
@@ -210,33 +234,32 @@ export default function FlowsheetPage() {
             activeMinor?.courses.forEach((c) => takenForElectives.add(c.id));
         }
 
+        if (selectedHonorsId) {
+            const activeHonors = HONORS.find((h) => h.id === selectedHonorsId);
+            activeHonors?.courses.forEach((c) => takenForElectives.add(c.id));
+        }
+
         allCourses.forEach((course) => {
             if (course.type === "elective" && course.options) {
                 course.options.forEach((option) => {
-                    if (takenForElectives.has(option.id)) {
+                    if (
+                        takenForElectives.has(option.id) ||
+                        option.mutexIds?.some((id) => takenForElectives.has(id))
+                    ) {
                         disabled.add(option.id);
-                    }
-
-                    if (option.mutexIds) {
-                        const hasConflict = option.mutexIds.some((mutexId) =>
-                            takenForElectives.has(mutexId)
-                        );
-                        if (hasConflict) {
-                            disabled.add(option.id);
-                        }
                     }
                 });
             }
         });
-
         return disabled;
-    }, [allCourses, takenCoursesBase, selectedMinorId]);
+    }, [allCourses, takenCoursesBase, selectedMinorId, selectedHonorsId]);
 
     useEffect(() => {
         setHoveredCourseId(null);
         setSelectedCourseId(null);
         setSelections({});
         setSelectedMinorId(null);
+        setSelectedHonorsId(null);
         setConnections([]);
         cardRefs.current.clear();
     }, [programId]);
@@ -253,8 +276,6 @@ export default function FlowsheetPage() {
     }
 
     const activeCourseId = hoveredCourseId || selectedCourseId;
-    const handleProgramChange = (newId: string) =>
-        router.push(`/flowsheet/${newId}`);
 
     const handleCourseClick = (e: React.MouseEvent, courseId: string) => {
         e.stopPropagation();
@@ -268,7 +289,6 @@ export default function FlowsheetPage() {
         const selectedOption = currentSlot.options.find(
             (o) => o.id === optionId
         );
-
         const updates: Record<string, string> = {};
         updates[slotId] = optionId;
 
@@ -277,7 +297,6 @@ export default function FlowsheetPage() {
         }
 
         setSelections((prev) => ({ ...prev, ...updates }));
-
         setTimeout(() => {
             cardRefs.current.get(slotId)?.focus();
         }, 0);
@@ -314,15 +333,13 @@ export default function FlowsheetPage() {
             const containerRect = contentRef.current.getBoundingClientRect();
 
             const getNodeRef = (targetId: string) => {
-                if (cardRefs.current.has(targetId)) {
+                if (cardRefs.current.has(targetId))
                     return cardRefs.current.get(targetId);
-                }
                 const hiddenCourse = effectiveCourses.find(
                     (c) => (c as any).originalId === targetId
                 );
-                if (hiddenCourse && cardRefs.current.has(hiddenCourse.id)) {
+                if (hiddenCourse && cardRefs.current.has(hiddenCourse.id))
                     return cardRefs.current.get(hiddenCourse.id);
-                }
                 return null;
             };
 
@@ -390,78 +407,34 @@ export default function FlowsheetPage() {
         return (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
     };
 
-    const electiveRefs = useRef<Map<string, ElectiveCardHandle>>(new Map());
-    const minorRefs = useRef<Map<string, MinorSlotHandle>>(new Map());
     const handleKeyDown = (
         e: React.KeyboardEvent,
         rowIndex: number,
         colIndex: number,
         course: Course
     ) => {
-        const focusCell = (r: number, c: number) => {
-            const targetSemester = flatSemesters[c];
-            if (targetSemester && targetSemester.courses[r]) {
-                const targetId = targetSemester.courses[r].id;
-                cardRefs.current.get(targetId)?.focus();
+        if (e.key === "Enter" || e.key === " ") {
+            if (
+                course.type === "honors" &&
+                !selectedHonorsId &&
+                honorsRefs.current.has(course.id)
+            ) {
+                e.preventDefault();
+                honorsRefs.current.get(course.id)?.trigger();
+                return;
             }
-        };
-
-        switch (e.key) {
-            case "ArrowUp":
-            case "w":
-            case "i":
-                e.preventDefault();
-                focusCell(rowIndex - 1, colIndex);
-                break;
-            case "ArrowDown":
-            case "s":
-            case "k":
-                e.preventDefault();
-                focusCell(rowIndex + 1, colIndex);
-                break;
-            case "ArrowLeft":
-            case "a":
-            case "j":
-                e.preventDefault();
-                focusCell(rowIndex, colIndex - 1);
-                break;
-            case "ArrowRight":
-            case "d":
-            case "l":
-                e.preventDefault();
-                focusCell(rowIndex, colIndex + 1);
-                break;
-
-            case "Enter":
-            case " ":
-                e.preventDefault();
-
-                if (course.type === "elective") {
-                    const isSelected = selections[course.id];
-                    if (!isSelected && electiveRefs.current.has(course.id)) {
-                        electiveRefs.current.get(course.id)?.trigger();
-                        return;
-                    }
-                }
-
-                if (course.type === "minor") {
-                    if (!selectedMinorId && minorRefs.current.has(course.id)) {
-                        minorRefs.current.get(course.id)?.trigger();
-                        return;
-                    }
-                }
-
-                setSelectedCourseId((prev) =>
-                    prev === course.id ? null : course.id
-                );
-                break;
         }
     };
 
-    const programListRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
-
     const handleSheetKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "w" || e.key === "s" || e.key === "i" || e.key === "k") {
+        if (
+            e.key === "ArrowDown" ||
+            e.key === "ArrowUp" ||
+            e.key === "w" ||
+            e.key === "s" ||
+            e.key === "i" ||
+            e.key === "k"
+        ) {
             e.preventDefault();
 
             const items = Array.from(programListRefs.current.values());
@@ -531,7 +504,6 @@ export default function FlowsheetPage() {
                                 </span>
                             </Link>
                         </Button>
-
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
@@ -557,7 +529,9 @@ export default function FlowsheetPage() {
                                 }}
                             >
                                 <SheetHeader className="pb-4 border-b">
-                                    <SheetTitle className="text-xl">Select Program</SheetTitle>
+                                    <SheetTitle className="text-xl">
+                                        Select Program
+                                    </SheetTitle>
                                     <SheetDescription>
                                         <span className="hidden 2xl:inline">
                                             Use{" "}
@@ -633,14 +607,13 @@ export default function FlowsheetPage() {
                                 </div>
                             </SheetContent>
                         </Sheet>
-
-                        <div className="flex shrink-0 gap-3 text-xs md:text-xs font-medium">
+                        <div className="flex shrink-0 gap-3 text-xs font-medium">
                             <div className="flex items-center text-slate-600">
-                                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-amber-500 mr-1.5 md:mr-2" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5" />{" "}
                                 Prereq
                             </div>
                             <div className="flex items-center text-slate-600">
-                                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-blue-500 mr-1.5 md:mr-2" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5" />{" "}
                                 Postreq
                             </div>
                         </div>
@@ -657,12 +630,24 @@ export default function FlowsheetPage() {
                         </span>
                         {selectedMinor && (
                             <span className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                {" "}
                                 <span className="text-slate-400 block sm:inline sm:mx-1">
                                     with Minor in
-                                </span>{" "}
+                                </span>
                                 <span className="font-semibold text-blue-600 block sm:inline">
                                     {selectedMinor.name}
+                                </span>
+                            </span>
+                        )}
+                        {}
+                        {selectedHonorsId && (
+                            <span className="animate-in fade-in slide-in-from-top-2 duration-300">
+                                <span className="text-slate-400 block sm:inline sm:mx-1">
+                                    {selectedMinor ? "and" : "with"} Honors in
+                                </span>
+                                <span className="font-semibold text-purple-600 block sm:inline">
+                                    {HONORS.find(
+                                        (h) => h.id === selectedHonorsId
+                                    )?.name.replace("B.Tech Honors in ", "")}
                                 </span>
                             </span>
                         )}
@@ -731,35 +716,27 @@ export default function FlowsheetPage() {
                                     const course = semester.courses[rowIndex];
                                     const showSep =
                                         shouldShowSeparator(semIndex);
-                                    const wrapperClass =
-                                        "aspect-4/3 w-full relative rounded-lg scroll-mt-36 md:scroll-mt-24";
-
                                     if (!course)
                                         return (
                                             <div
                                                 key={`empty-${semester.id}-${rowIndex}`}
-                                                className={wrapperClass}
+                                                className="aspect-4/3 relative"
                                             >
                                                 {showSep && (
-                                                    <div className="absolute -right-2 -top-2 -bottom-2 w-px bg-slate-200" />
+                                                    <div className="absolute -right-2 top-0 bottom-0 w-px bg-slate-200" />
                                                 )}
                                             </div>
                                         );
 
+                                    const effectiveCourse =
+                                        effectiveCourses.find(
+                                            (c) => c.id === course.id
+                                        ) || course;
+
                                     return (
                                         <div
                                             key={course.id}
-                                            className={`${wrapperClass} outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-shadow`}
-                                            role="button"
-                                            tabIndex={0}
-                                            onKeyDown={(e) =>
-                                                handleKeyDown(
-                                                    e,
-                                                    rowIndex,
-                                                    semIndex,
-                                                    course
-                                                )
-                                            }
+                                            className="aspect-4/3 w-full relative"
                                             ref={(el) => {
                                                 if (el)
                                                     cardRefs.current.set(
@@ -793,36 +770,49 @@ export default function FlowsheetPage() {
                                                                 course.id,
                                                                 el
                                                             );
-                                                        else
-                                                            minorRefs.current.delete(
-                                                                course.id
-                                                            );
                                                     }}
                                                     course={course}
                                                     selectedMinorId={
                                                         selectedMinorId
                                                     }
-                                                    disabledMinorIds={
-                                                        disabledMinorIds
+                                                    onSelectMinor={
+                                                        setSelectedMinorId
                                                     }
-                                                    onSelectMinor={(id) => {
-                                                        setSelectedMinorId(id);
-                                                        setTimeout(() => {
-                                                            cardRefs.current
-                                                                .get(course.id)
-                                                                ?.focus();
-                                                        }, 0);
-                                                    }}
                                                     effectiveCourse={
-                                                        effectiveCourses.find(
-                                                            (c) =>
-                                                                c.id ===
-                                                                course.id
-                                                        ) || course
+                                                        effectiveCourse
                                                     }
                                                     status={getCourseStatus(
                                                         course
                                                     )}
+                                                    disabledMinorIds={
+                                                        disabledMinorIds
+                                                    }
+                                                />
+                                            ) : course.type === "honors" ? (
+                                                <HonorsSlot
+                                                    ref={(el) => {
+                                                        if (el)
+                                                            honorsRefs.current.set(
+                                                                course.id,
+                                                                el
+                                                            );
+                                                    }}
+                                                    course={course}
+                                                    selectedHonorsId={
+                                                        selectedHonorsId
+                                                    }
+                                                    onSelectHonors={
+                                                        setSelectedHonorsId
+                                                    }
+                                                    effectiveCourse={
+                                                        effectiveCourse
+                                                    }
+                                                    status={getCourseStatus(
+                                                        course
+                                                    )}
+                                                    availableHonors={
+                                                        availableHonors
+                                                    }
                                                 />
                                             ) : course.type === "elective" ? (
                                                 <ElectiveCard
@@ -831,10 +821,6 @@ export default function FlowsheetPage() {
                                                             electiveRefs.current.set(
                                                                 course.id,
                                                                 el
-                                                            );
-                                                        else
-                                                            electiveRefs.current.delete(
-                                                                course.id
                                                             );
                                                     }}
                                                     course={course}

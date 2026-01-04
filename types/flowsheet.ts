@@ -1,4 +1,11 @@
-export type CourseType = "core" | "elective" | "minor";
+export type CourseType = "core" | "elective" | "minor" | "honors";
+
+export type Honors = {
+    id: string;
+    dept: string;
+    name: string;
+    courses: CourseOption[];
+};
 
 export type Minor = {
     id: string;
@@ -32,17 +39,18 @@ export type Course = {
     mutexIds?: string[];
 
     minorIndex?: number;
+    honorsIndex?: number; 
 };
 
 export type Semester = {
     id: string;
-    label: string; 
+    label: string;
     courses: Course[];
 };
 
 export type Year = {
     id: string;
-    label: string; 
+    label: string;
     semesters: Semester[];
 };
 

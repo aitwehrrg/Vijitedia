@@ -16,33 +16,32 @@ import {
     CommandEmpty,
 } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap, Pencil, Check } from "lucide-react";
-import { MINORS } from "@/data/minors";
-import { Course } from "@/types/flowsheet";
-import { toRoman } from "@/lib/utils";
+import { Award, Pencil, Check } from "lucide-react";
+import { Course, Honors } from "@/types/flowsheet";
+import { getSuffix } from "@/lib/utils";
 
-export interface MinorSlotHandle {
+export interface HonorsSlotHandle {
     trigger: () => void;
 }
 
-interface MinorSlotProps {
+interface HonorsSlotProps {
     course: Course;
-    selectedMinorId: string | null;
-    onSelectMinor: (id: string | null) => void;
+    selectedHonorsId: string | null;
+    onSelectHonors: (id: string | null) => void;
     effectiveCourse: Course;
     status: CourseStatus;
-    disabledMinorIds?: Set<string>;
+    availableHonors: Honors[];
 }
 
-export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
+export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
     (
         {
             course,
-            selectedMinorId,
-            onSelectMinor,
+            selectedHonorsId,
+            onSelectHonors,
             effectiveCourse,
             status,
-            disabledMinorIds,
+            availableHonors,
         },
         ref
     ) => {
@@ -54,14 +53,14 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
 
         return (
             <Popover open={open} onOpenChange={setOpen}>
-                {selectedMinorId ? (
+                {selectedHonorsId ? (
                     <div className="relative h-full w-full group">
                         <CourseCard course={effectiveCourse} status={status} />
 
                         <PopoverTrigger asChild>
                             <button
                                 className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 shadow-sm transition-all"
-                                title="Change Minor"
+                                title="Change Honors Track"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setOpen(true);
@@ -72,18 +71,19 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                             </button>
                         </PopoverTrigger>
 
-                        <div className="absolute inset-0 border-2 border-indigo-500/10 pointer-events-none rounded-lg" />
+                        {}
+                        <div className="absolute inset-0 border-2 border-purple-500/20 pointer-events-none rounded-lg" />
                     </div>
                 ) : (
                     <PopoverTrigger asChild>
-                        <div className="h-full border-2 border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
-                            <GraduationCap className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 mb-1 transition-colors" />
-                            <span className="text-sm font-semibold text-center text-slate-600 group-hover:text-indigo-700 leading-tight transition-colors">
-                                Minor {toRoman(course.minorIndex! + 1)}
+                        <div className="h-full border-2 border-dashed border-purple-200 hover:border-purple-400 hover:bg-purple-50/50 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
+                            <Award className="w-4 h-4 text-purple-300 group-hover:text-purple-600 mb-1 transition-colors" />
+                            <span className="text-sm font-semibold text-center text-purple-400 group-hover:text-purple-700 leading-tight transition-colors">
+                                Honors{getSuffix(course.honorsIndex || 0)}
                             </span>
                             <Badge
                                 variant="secondary"
-                                className="mt-1 text-[10px] h-4 bg-slate-100 text-slate-500 group-hover:bg-indigo-100 group-hover:text-indigo-700 transition-colors"
+                                className="mt-1 text-[10px] h-4 bg-purple-50 text-purple-400 group-hover:bg-purple-100 group-hover:text-purple-700 border-purple-100 transition-colors"
                             >
                                 Select
                             </Badge>
@@ -91,6 +91,7 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                     </PopoverTrigger>
                 )}
 
+                {}
                 <PopoverContent
                     className="w-[350px] p-0"
                     align="start"
@@ -99,54 +100,58 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                     <Command>
                         <div className="hidden 2xl:block">
                             <CommandInput
-                                placeholder="Search minors..."
+                                placeholder="Search honors tracks..."
                                 className="h-9"
                             />
                         </div>
 
                         <CommandList className="overscroll-contain max-h-[250px] 2xl:max-h-[300px]">
-                            <CommandEmpty>No minor found.</CommandEmpty>
-                            <CommandGroup>
-                                {MINORS.map((m) => {
-                                    const isDisabled = disabledMinorIds?.has(
-                                        m.id
-                                    );
+                            <CommandEmpty>
+                                No relevant honors found.
+                            </CommandEmpty>
+                            <CommandGroup heading="Available Tracks">
+                                {}
+                                <CommandItem
+                                    value="none"
+                                    onSelect={() => {
+                                        onSelectHonors(null);
+                                        setOpen(false);
+                                    }}
+                                    className="text-slate-500 italic"
+                                >
+                                    <div className="flex items-center w-full">
+                                        <span>No Honors Track</span>
+                                        {!selectedHonorsId && (
+                                            <Check className="w-4 h-4 text-slate-400 ml-auto" />
+                                        )}
+                                    </div>
+                                </CommandItem>
+
+                                {}
+                                {availableHonors.map((h) => {
+                                    const isSelected =
+                                        selectedHonorsId === h.id;
 
                                     return (
                                         <CommandItem
-                                            key={m.id}
-                                            value={m.name + " " + m.dept}
-                                            disabled={isDisabled}
+                                            key={h.id}
+                                            value={h.name + " " + h.dept}
                                             onSelect={() => {
-                                                if (!isDisabled) {
-                                                    onSelectMinor(m.id);
-                                                    setOpen(false);
-                                                }
+                                                onSelectHonors(h.id);
+                                                setOpen(false);
                                             }}
-                                            className={
-                                                isDisabled
-                                                    ? "opacity-50 cursor-not-allowed"
-                                                    : ""
-                                            }
                                         >
                                             <div className="flex flex-col w-full">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="font-bold mr-2">
-                                                        {m.name}
+                                                    <span className="font-bold mr-2 text-slate-900">
+                                                        {h.name}
                                                     </span>
-                                                    {isDisabled ? (
-                                                        <span className="text-[9px] text-red-500 font-bold uppercase ml-2">
-                                                            (Conflict)
-                                                        </span>
-                                                    ) : (
-                                                        selectedMinorId ===
-                                                            m.id && (
-                                                            <Check className="w-4 h-4 text-indigo-600 ml-2" />
-                                                        )
+                                                    {isSelected && (
+                                                        <Check className="w-4 h-4 text-purple-600 ml-2" />
                                                     )}
                                                 </div>
-                                                <span className="text-xs font-medium text-slate-700">
-                                                    {m.dept}
+                                                <span className="text-xs font-medium text-slate-500">
+                                                    {h.dept}
                                                 </span>
                                             </div>
                                         </CommandItem>
@@ -161,4 +166,4 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
     }
 );
 
-MinorSlot.displayName = "MinorSlot";
+HonorsSlot.displayName = "HonorsSlot";

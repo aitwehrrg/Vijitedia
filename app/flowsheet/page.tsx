@@ -97,7 +97,7 @@ export default function FlowsheetLanding() {
                     <div className="space-y-2">
                         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
                             Academic{" "}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 to-purple-600">
                                 Flowsheets
                             </span>
                         </h1>

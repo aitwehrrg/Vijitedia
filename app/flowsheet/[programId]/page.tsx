@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
+import { HONORS } from "@/data/honors";
 import { notFound } from "next/navigation";
 import FlowsheetClient from "./flowsheet-client";
 
@@ -9,7 +10,7 @@ type SeoCourse = {
     title: string;
     credits: number;
     prereqs: string[];
-    mutexIds: string[]; 
+    mutexIds: string[];
     category: string;
     dept: string;
 };
@@ -49,7 +50,7 @@ export default async function FlowsheetPage({ params }: Props) {
                         title: opt.title,
                         credits: opt.credits,
                         prereqs: opt.prereqs || [],
-                        mutexIds: opt.mutexIds || [], 
+                        mutexIds: opt.mutexIds || [],
                         category: "Elective Option",
                         dept: program.department,
                     }));
@@ -62,7 +63,7 @@ export default async function FlowsheetPage({ params }: Props) {
                             title: c.title,
                             credits: c.credits || 0,
                             prereqs: c.prereqs || [],
-                            mutexIds: c.mutexIds || [], 
+                            mutexIds: c.mutexIds || [],
                             category: "Core Requirement",
                             dept: program.department,
                         },
@@ -80,13 +81,30 @@ export default async function FlowsheetPage({ params }: Props) {
             title: c.title,
             credits: c.credits,
             prereqs: c.prereqs || [],
-            mutexIds: c.mutexIds || [], 
+            mutexIds: c.mutexIds || [],
             category: `Minor in ${m.name}`,
             dept: m.dept,
         }))
     );
 
-    const fullCourseList = [...coreAndElectives, ...minorCourses];
+    const relevantHonors = HONORS.filter((h) => h.dept === program.department);
+    const honorsCourses: SeoCourse[] = relevantHonors.flatMap((h) =>
+        h.courses.map((c) => ({
+            code: c.code,
+            title: c.title,
+            credits: c.credits,
+            prereqs: c.prereqs || [],
+            mutexIds: c.mutexIds || [],
+            category: `Honors in ${h.name}`,
+            dept: h.dept,
+        }))
+    );
+
+    const fullCourseList = [
+        ...coreAndElectives,
+        ...minorCourses,
+        ...honorsCourses,
+    ];
 
     const jsonLd = {
         "@context": "https://schema.org",
