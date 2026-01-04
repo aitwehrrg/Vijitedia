@@ -25,7 +25,7 @@ export const HONORS: Honors[] = [
                 code: "R5XX3XXXT",
                 title: "Ethereum Blockchain",
                 credits: 3,
-                prereqs: [],
+                prereqs: ["BLOCK-I", "BLOCK-I-Lab"],
             },
             {
                 id: "BLOCK-II-Lab",
@@ -39,7 +39,7 @@ export const HONORS: Honors[] = [
                 code: "R5XX4XXXT",
                 title: "Hyperledger Blockchain",
                 credits: 3,
-                prereqs: [],
+                prereqs: ["BLOCK-I", "BLOCK-I-Lab"],
             },
             {
                 id: "BLOCK-III-Lab",
@@ -53,7 +53,7 @@ export const HONORS: Honors[] = [
                 code: "R5XX4XXXT",
                 title: "Decentralized Finance",
                 credits: 3,
-                prereqs: [],
+                prereqs: ["BLOCK-I", "BLOCK-I-Lab"],
             },
             {
                 id: "BLOCK-IV-Project",
