@@ -1,4 +1,5 @@
 import { Program } from "@/types/flowsheet";
+import { OPEN_ELECTIVES_I } from "@/data/electives";
 
 export const EE_PROGRAM: Program = {
     id: "btech-ee",
@@ -957,84 +958,7 @@ export const EE_PROGRAM: Program = {
                             title: "Open Elective I",
                             label: "Open Elective I",
                             credits: 4,
-                            options: [
-                                {
-                                    id: "OE-I-A",
-                                    code: "R5HS33XXT",
-                                    title: "Professional Communication Skills",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-B",
-                                    code: "R5MA33XXT",
-                                    title: "Nonlinear Dynamics",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-C",
-                                    code: "R5MA33XXT",
-                                    title: "Differential Geometry",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-D",
-                                    code: "R5MA33XXT",
-                                    title: "Combinatorics and Graph Theory",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-E",
-                                    code: "R5CH33XXT",
-                                    title: "Practices to Performance: Pathways to Enterprise Sustainability",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-F",
-                                    code: "R5PH33XXT",
-                                    title: "Nanoscience and Nanotechnology for Engineers",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-G",
-                                    code: "R5HS33XXT",
-                                    title: "Financial Management",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-H",
-                                    code: "R5NP33XXT",
-                                    title: "Leadership and Team Effectiveness",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-I",
-                                    code: "R5NP33XXT",
-                                    title: "Principles of Management",
-                                    credits: 4,
-                                    prereqs: [],
-                                },
-                                {
-                                    id: "OE-I-J",
-                                    code: "R5NP33XXT",
-                                    title: "Business Development: From Start to Scale",
-                                    credits: 4,
-                                    prereqs: [],
-                                    mutexIds: [
-                                        "R5IL2201T",
-                                        "R5IL2202T",
-                                        "R5IL3201T",
-                                        "R5IL3202T",
-                                    ],
-                                },
-                            ],
+                            options: OPEN_ELECTIVES_I,
                         },
                     ],
                 },

@@ -1,0 +1,62 @@
+import { CourseOption } from "@/types/flowsheet";
+
+export const OPEN_ELECTIVES_I: CourseOption[] = [
+    {
+        id: "OE-I-A",
+        code: "R5HS33XXT",
+        title: "Professional Communication Skills",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "OE-I-B",
+        code: "R5MA33XXT",
+        title: "Combinatorics and Graph Theory",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "OE-I-C",
+        code: "R5CH33XXT",
+        title: "Practices to Performance: Pathways to Enterprise Sustainability",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "OE-I-D",
+        code: "R5PH33XXT",
+        title: "Nanoscience and Nanotechnology for Engineers",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "OE-I-E",
+        code: "R5HS33XXT",
+        title: "Financial Management",
+        credits: 4,
+        prereqs: [],
+        mutexIds: ["FIN"],
+    },
+    {
+        id: "OE-I-F",
+        code: "R5NP33XXT",
+        title: "Leadership and Team Effectiveness",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "OE-I-G",
+        code: "R5NP33XXT",
+        title: "Principles of Management",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "OE-I-H",
+        code: "R5NP33XXT",
+        title: "Business Development: From Start to Scale",
+        credits: 4,
+        prereqs: [],
+        mutexIds: ["R5IL2201T", "R5IL2202T", "R5IL3201T", "R5IL3202T"],
+    },
+];

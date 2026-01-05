@@ -479,7 +479,7 @@ export const MINORS: Minor[] = [
                 title: "Orientation Programme in Entrepreneurship",
                 credits: 2,
                 prereqs: [],
-                mutexIds: ["OE-I-J"],
+                mutexIds: ["OE-I-H"],
             },
             {
                 id: "R5IL2202T",
