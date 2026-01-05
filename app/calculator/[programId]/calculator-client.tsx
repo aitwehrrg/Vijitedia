@@ -213,7 +213,7 @@ export default function CalculatorPage() {
                 .filter((s) => !excludedSemesters.includes(s.id))
                 .flatMap((s) =>
                     s.courses.filter(
-                        (c) => c.type !== "honors" && c.type !== "minor"
+                        (c) => c.type !== "honors"
                     )
                 )
         );
