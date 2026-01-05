@@ -1,97 +1,26 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+
 import { CourseCard, CourseStatus } from "@/components/course-card";
 import { ElectiveCard, ElectiveCardHandle } from "@/components/elective-card";
 import { MinorSlot, MinorSlotHandle } from "@/components/minor-slot";
 import { HonorsSlot, HonorsSlotHandle } from "@/components/honors-slot";
+import { Button } from "@/components/ui/button";
+import { FlowsheetHeader } from "@/components/flowsheet/header";
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-    SheetClose,
-    SheetDescription,
-} from "@/components/ui/sheet";
-import {
-    ArrowLeftFromLine,
-    Calculator,
-    Check,
-    ChevronsUpDown,
-} from "lucide-react";
-import { Course } from "@/types/flowsheet";
+    ConnectionLines,
+    Connection,
+} from "@/components/flowsheet/connections";
+
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
 import { HONORS } from "@/data/honors";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-
-type Point = { x: number; y: number };
-type Connection = { start: Point; end: Point; type: "prereq" | "postreq" };
-
-const ConnectionLines = ({ connections }: { connections: Connection[] }) => {
-    return (
-        <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-20 overflow-visible">
-            <defs>
-                <marker
-                    id="arrow-prereq"
-                    viewBox="0 0 12 12"
-                    refX="10"
-                    refY="6"
-                    markerWidth="8"
-                    markerHeight="8"
-                    orient="auto-start-reverse"
-                >
-                    <path d="M0,0 L12,6 L0,12 L3,6 z" fill="#f59e0b" />
-                </marker>
-
-                <marker
-                    id="arrow-postreq"
-                    viewBox="0 0 12 12"
-                    refX="10"
-                    refY="6"
-                    markerWidth="8"
-                    markerHeight="8"
-                    orient="auto-start-reverse"
-                >
-                    <path d="M0,0 L12,6 L0,12 L3,6 z" fill="#3b82f6" />
-                </marker>
-            </defs>
-            {connections.map((conn, i) => {
-                const dx = conn.end.x - conn.start.x;
-                const curveIntensity = Math.min(
-                    Math.max(Math.abs(dx) * 0.5, 40),
-                    150
-                );
-                const pathData = `M ${conn.start.x} ${conn.start.y} C ${
-                    conn.start.x + curveIntensity
-                } ${conn.start.y}, ${conn.end.x - curveIntensity} ${
-                    conn.end.y
-                }, ${conn.end.x} ${conn.end.y}`;
-                const color = conn.type === "prereq" ? "#f59e0b" : "#3b82f6";
-                return (
-                    <path
-                        key={i}
-                        d={pathData}
-                        fill="none"
-                        stroke={color}
-                        strokeWidth="2"
-                        strokeDasharray={conn.type === "prereq" ? "5,5" : "0"}
-                        markerEnd={`url(#arrow-${conn.type})`}
-                        className="opacity-80 transition-all duration-300"
-                    />
-                );
-            })}
-        </svg>
-    );
-};
 
 export default function FlowsheetPage() {
     const params = useParams();
-    const router = useRouter();
     const programId = params.programId as string;
 
     const [hoveredCourseId, setHoveredCourseId] = useState<string | null>(null);
@@ -106,7 +35,6 @@ export default function FlowsheetPage() {
     const [connections, setConnections] = useState<Connection[]>([]);
 
     const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const electiveRefs = useRef<Map<string, ElectiveCardHandle>>(new Map());
     const minorRefs = useRef<Map<string, MinorSlotHandle>>(new Map());
@@ -150,9 +78,8 @@ export default function FlowsheetPage() {
                 const selectedOpt = course.options?.find(
                     (o) => o.id === selections[course.id]
                 );
-                if (selectedOpt) {
+                if (selectedOpt)
                     return { ...course, ...selectedOpt, id: course.id };
-                }
             }
 
             if (
@@ -164,15 +91,13 @@ export default function FlowsheetPage() {
                     (m) => m.id === selectedMinorId
                 );
                 const minorCourse = activeMinor?.courses[course.minorIndex];
-
-                if (minorCourse) {
+                if (minorCourse)
                     return {
                         ...course,
                         ...minorCourse,
                         id: course.id,
                         originalId: minorCourse.id,
                     };
-                }
             }
 
             if (
@@ -184,15 +109,13 @@ export default function FlowsheetPage() {
                     (h) => h.id === selectedHonorsId
                 );
                 const honorsCourse = activeHonors?.courses[course.honorsIndex];
-
-                if (honorsCourse) {
+                if (honorsCourse)
                     return {
                         ...course,
                         ...honorsCourse,
                         id: course.id,
                         originalId: honorsCourse.id,
                     };
-                }
             }
 
             return course;
@@ -201,9 +124,7 @@ export default function FlowsheetPage() {
 
     const takenCoursesBase = useMemo(() => {
         const taken = new Set<string>();
-        allCourses.forEach((course) => {
-            if (course.type === "core") taken.add(course.id);
-        });
+        allCourses.forEach((c) => c.type === "core" && taken.add(c.id));
         Object.values(selections).forEach((selId) => taken.add(selId));
         return taken;
     }, [allCourses, selections]);
@@ -212,11 +133,10 @@ export default function FlowsheetPage() {
         const disabled = new Set<string>();
         MINORS.forEach((minor) => {
             for (const course of minor.courses) {
-                if (takenCoursesBase.has(course.id)) {
-                    disabled.add(minor.id);
-                    break;
-                }
-                if (course.mutexIds?.some((id) => takenCoursesBase.has(id))) {
+                if (
+                    takenCoursesBase.has(course.id) ||
+                    course.mutexIds?.some((id) => takenCoursesBase.has(id))
+                ) {
                     disabled.add(minor.id);
                     break;
                 }
@@ -229,15 +149,14 @@ export default function FlowsheetPage() {
         const disabled = new Set<string>();
         const takenForElectives = new Set(takenCoursesBase);
 
-        if (selectedMinorId) {
-            const activeMinor = MINORS.find((m) => m.id === selectedMinorId);
-            activeMinor?.courses.forEach((c) => takenForElectives.add(c.id));
-        }
-
-        if (selectedHonorsId) {
-            const activeHonors = HONORS.find((h) => h.id === selectedHonorsId);
-            activeHonors?.courses.forEach((c) => takenForElectives.add(c.id));
-        }
+        if (selectedMinorId)
+            MINORS.find((m) => m.id === selectedMinorId)?.courses.forEach((c) =>
+                takenForElectives.add(c.id)
+            );
+        if (selectedHonorsId)
+            HONORS.find((h) => h.id === selectedHonorsId)?.courses.forEach(
+                (c) => takenForElectives.add(c.id)
+            );
 
         allCourses.forEach((course) => {
             if (course.type === "elective" && course.options) {
@@ -254,6 +173,104 @@ export default function FlowsheetPage() {
         return disabled;
     }, [allCourses, takenCoursesBase, selectedMinorId, selectedHonorsId]);
 
+    const activeCourseId = hoveredCourseId || selectedCourseId;
+
+    const activeRelationships = useMemo(() => {
+        if (!activeCourseId) return null;
+
+        const activeCourse = effectiveCourses.find(
+            (c) => c.id === activeCourseId
+        );
+        if (!activeCourse) return null;
+
+        const prereqs = new Set(activeCourse.prereqs || []);
+        const postreqs = new Set<string>();
+
+        effectiveCourses.forEach((c) => {
+            const p = c.prereqs || [];
+            if (
+                p.includes(activeCourseId) ||
+                ((activeCourse as any).originalId &&
+                    p.includes((activeCourse as any).originalId))
+            ) {
+                postreqs.add(c.id);
+            }
+        });
+
+        return { prereqs, postreqs, activeId: activeCourseId };
+    }, [activeCourseId, effectiveCourses]);
+
+    const getCourseStatus = useCallback(
+        (courseId: string): CourseStatus => {
+            if (!activeRelationships) return "default";
+            if (courseId === activeRelationships.activeId) return "hovered";
+            if (activeRelationships.prereqs.has(courseId)) return "prereq";
+            if (activeRelationships.postreqs.has(courseId)) return "postreq";
+            return "default";
+        },
+        [activeRelationships]
+    );
+
+    useEffect(() => {
+        if (!activeCourseId || !contentRef.current || !activeRelationships) {
+            setConnections([]);
+            return;
+        }
+
+        const rAF = requestAnimationFrame(() => {
+            const newConnections: Connection[] = [];
+            const containerRect = contentRef.current!.getBoundingClientRect();
+            const activeNode = cardRefs.current.get(activeCourseId);
+
+            if (!activeNode) return;
+
+            const activeRect = activeNode.getBoundingClientRect();
+            const getCoords = (rect: DOMRect, side: "left" | "right") => ({
+                x:
+                    (side === "left" ? rect.left : rect.right) -
+                    containerRect.left,
+                y: rect.top - containerRect.top + rect.height / 2,
+            });
+
+            const getNodeRef = (targetId: string) => {
+                if (cardRefs.current.has(targetId))
+                    return cardRefs.current.get(targetId);
+                const hiddenCourse = effectiveCourses.find(
+                    (c) => (c as any).originalId === targetId
+                );
+                if (hiddenCourse && cardRefs.current.has(hiddenCourse.id))
+                    return cardRefs.current.get(hiddenCourse.id);
+                return null;
+            };
+
+            activeRelationships.prereqs.forEach((pid) => {
+                const node = getNodeRef(pid);
+                if (node) {
+                    newConnections.push({
+                        start: getCoords(node.getBoundingClientRect(), "right"),
+                        end: getCoords(activeRect, "left"),
+                        type: "prereq",
+                    });
+                }
+            });
+
+            activeRelationships.postreqs.forEach((pid) => {
+                const node = cardRefs.current.get(pid);
+                if (node) {
+                    newConnections.push({
+                        start: getCoords(activeRect, "right"),
+                        end: getCoords(node.getBoundingClientRect(), "left"),
+                        type: "postreq",
+                    });
+                }
+            });
+
+            setConnections(newConnections);
+        });
+
+        return () => cancelAnimationFrame(rAF);
+    }, [activeCourseId, activeRelationships, effectiveCourses]);
+
     useEffect(() => {
         setHoveredCourseId(null);
         setSelectedCourseId(null);
@@ -263,19 +280,6 @@ export default function FlowsheetPage() {
         setConnections([]);
         cardRefs.current.clear();
     }, [programId]);
-
-    if (!currentProgram) {
-        return (
-            <div className="h-screen flex flex-col items-center justify-center space-y-4">
-                <h1 className="text-2xl font-bold">Program Not Found</h1>
-                <Button asChild>
-                    <Link href="/">Return to List</Link>
-                </Button>
-            </div>
-        );
-    }
-
-    const activeCourseId = hoveredCourseId || selectedCourseId;
 
     const handleCourseClick = (e: React.MouseEvent, courseId: string) => {
         e.stopPropagation();
@@ -289,337 +293,41 @@ export default function FlowsheetPage() {
         const selectedOption = currentSlot.options.find(
             (o) => o.id === optionId
         );
-        const updates: Record<string, string> = {};
-        updates[slotId] = optionId;
+        const updates: Record<string, string> = { [slotId]: optionId };
 
         if (currentSlot.linkedSlotId && selectedOption?.linkedOptionId) {
             updates[currentSlot.linkedSlotId] = selectedOption.linkedOptionId;
         }
 
         setSelections((prev) => ({ ...prev, ...updates }));
-        setTimeout(() => {
-            cardRefs.current.get(slotId)?.focus();
-        }, 0);
+        setTimeout(() => cardRefs.current.get(slotId)?.focus(), 0);
     };
 
-    const getCourseStatus = (currentCourse: Course): CourseStatus => {
-        if (!activeCourseId) return "default";
-        if (currentCourse.id === activeCourseId) return "hovered";
-
-        const activeCourse = effectiveCourses.find(
-            (c) => c.id === activeCourseId
+    if (!currentProgram) {
+        return (
+            <div className="h-screen flex flex-col items-center justify-center space-y-4">
+                <h1 className="text-2xl font-bold">Program Not Found</h1>
+                <Button asChild>
+                    <Link href="/">Return to List</Link>
+                </Button>
+            </div>
         );
-        if (!activeCourse) return "default";
+    }
 
-        const effectiveCurrent =
-            effectiveCourses.find((c) => c.id === currentCourse.id) ||
-            currentCourse;
-
-        if (activeCourse.prereqs?.includes(currentCourse.id)) return "prereq";
-        if (effectiveCurrent.prereqs?.includes(activeCourse.id))
-            return "postreq";
-
-        return "default";
-    };
-
-    useEffect(() => {
-        const updateConnections = () => {
-            if (!activeCourseId || !contentRef.current) {
-                setConnections([]);
-                return;
-            }
-
-            const newConnections: Connection[] = [];
-            const containerRect = contentRef.current.getBoundingClientRect();
-
-            const getNodeRef = (targetId: string) => {
-                if (cardRefs.current.has(targetId))
-                    return cardRefs.current.get(targetId);
-                const hiddenCourse = effectiveCourses.find(
-                    (c) => (c as any).originalId === targetId
-                );
-                if (hiddenCourse && cardRefs.current.has(hiddenCourse.id))
-                    return cardRefs.current.get(hiddenCourse.id);
-                return null;
-            };
-
-            const activeNode = cardRefs.current.get(activeCourseId);
-            if (!activeNode) return;
-
-            const activeRect = activeNode.getBoundingClientRect();
-            const activeCourse = effectiveCourses.find(
-                (c) => c.id === activeCourseId
-            );
-
-            const getCoords = (rect: DOMRect, side: "left" | "right") => ({
-                x:
-                    (side === "left" ? rect.left : rect.right) -
-                    containerRect.left,
-                y: rect.top - containerRect.top + rect.height / 2,
-            });
-
-            activeCourse?.prereqs?.forEach((prereqId) => {
-                const prereqNode = getNodeRef(prereqId);
-                if (prereqNode) {
-                    newConnections.push({
-                        start: getCoords(
-                            prereqNode.getBoundingClientRect(),
-                            "right"
-                        ),
-                        end: getCoords(activeRect, "left"),
-                        type: "prereq",
-                    });
-                }
-            });
-
-            const postReqs = effectiveCourses.filter((c) => {
-                const prereqs = c.prereqs || [];
-                return (
-                    prereqs.includes(activeCourseId) ||
-                    ((activeCourse as any).originalId &&
-                        prereqs.includes((activeCourse as any).originalId))
-                );
-            });
-
-            postReqs.forEach((post) => {
-                const postNode = cardRefs.current.get(post.id);
-                if (postNode) {
-                    newConnections.push({
-                        start: getCoords(activeRect, "right"),
-                        end: getCoords(
-                            postNode.getBoundingClientRect(),
-                            "left"
-                        ),
-                        type: "postreq",
-                    });
-                }
-            });
-
-            setConnections(newConnections);
-        };
-
-        updateConnections();
-        window.addEventListener("resize", updateConnections);
-        return () => window.removeEventListener("resize", updateConnections);
-    }, [activeCourseId, effectiveCourses]);
-
-    const shouldShowSeparator = (index: number) => {
-        return (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
-    };
-
-    const handleKeyDown = (
-        e: React.KeyboardEvent,
-        rowIndex: number,
-        colIndex: number,
-        course: Course
-    ) => {
-        if (e.key === "Enter" || e.key === " ") {
-            if (
-                course.type === "honors" &&
-                !selectedHonorsId &&
-                honorsRefs.current.has(course.id)
-            ) {
-                e.preventDefault();
-                honorsRefs.current.get(course.id)?.trigger();
-                return;
-            }
-        }
-    };
-
-    const handleSheetKeyDown = (e: React.KeyboardEvent) => {
-        if (
-            e.key === "ArrowDown" ||
-            e.key === "ArrowUp" ||
-            e.key === "w" ||
-            e.key === "s" ||
-            e.key === "i" ||
-            e.key === "k"
-        ) {
-            e.preventDefault();
-
-            const items = Array.from(programListRefs.current.values());
-            const currentIndex = items.indexOf(
-                document.activeElement as HTMLAnchorElement
-            );
-
-            if (currentIndex === -1) return;
-
-            let nextIndex;
-            if (e.key === "ArrowDown" || e.key === "s" || e.key === "k") {
-                nextIndex =
-                    currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-            } else {
-                nextIndex =
-                    currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-            }
-
-            const nextItem = items[nextIndex];
-            nextItem?.focus();
-            nextItem?.scrollIntoView({ block: "nearest" });
-        }
-    };
+    const shouldShowSeparator = (index: number) =>
+        (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
 
     return (
         <div
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
             onClick={() => setSelectedCourseId(null)}
         >
-            <div
-                className="w-full bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-50 shadow-sm"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-4">
-                    <div className="flex items-center gap-3 w-full md:w-auto">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-9 w-9 -ml-1 md:ml-0 shrink-0"
-                            asChild
-                        >
-                            <Link href="/flowsheet">
-                                <ArrowLeftFromLine className="w-5 h-5" />
-                            </Link>
-                        </Button>
-                        <div className="min-w-0">
-                            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 leading-tight truncate">
-                                Academic Flowsheet
-                            </h1>
-                            <p className="text-xs md:text-sm text-slate-500 line-clamp-1">
-                                {currentProgram.name}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="w-full md:w-auto flex flex-row items-center justify-between gap-3 md:gap-4">
-                        <Button
-                            asChild
-                            variant="outline"
-                            size="sm"
-                            className="shrink-0 gap-2 h-10 md:h-9"
-                        >
-                            <Link href={`/calculator/${programId}`}>
-                                <Calculator className="w-4 h-4" />
-                                <span className="hidden sm:inline">
-                                    Calculator
-                                </span>
-                            </Link>
-                        </Button>
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className="flex-1 md:flex-none justify-between gap-2 h-10 md:h-9 md:w-[160px]"
-                                >
-                                    <span className="truncate">
-                                        Switch Program
-                                    </span>
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent
-                                side="right"
-                                className="w-full sm:w-[400px] h-full flex flex-col"
-                                onOpenAutoFocus={(e) => {
-                                    e.preventDefault();
-                                    const target =
-                                        programListRefs.current.get(programId);
-                                    target?.focus();
-                                    target?.scrollIntoView({ block: "center" });
-                                }}
-                            >
-                                <SheetHeader className="pb-4 border-b">
-                                    <SheetTitle className="text-xl">
-                                        Select Program
-                                    </SheetTitle>
-                                    <SheetDescription>
-                                        <span className="hidden 2xl:inline">
-                                            Use{" "}
-                                            <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
-                                                ↑
-                                            </kbd>{" "}
-                                            and{" "}
-                                            <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
-                                                ↓
-                                            </kbd>{" "}
-                                            to navigate.
-                                        </span>
-                                        <span className="2xl:hidden">
-                                            Choose an academic program to view
-                                            its flowsheet.
-                                        </span>
-                                    </SheetDescription>
-                                </SheetHeader>
-
-                                <div
-                                    className="flex-1 overflow-y-auto py-6 flex flex-col gap-4 outline-none"
-                                    onKeyDown={handleSheetKeyDown}
-                                >
-                                    {FLOWSHEET_DATA.map((prog) => (
-                                        <SheetClose key={prog.id} asChild>
-                                            <Link
-                                                href={`/flowsheet/${prog.id}`}
-                                                ref={(el) => {
-                                                    if (el)
-                                                        programListRefs.current.set(
-                                                            prog.id,
-                                                            el
-                                                        );
-                                                    else
-                                                        programListRefs.current.delete(
-                                                            prog.id
-                                                        );
-                                                }}
-                                                className={cn(
-                                                    "flex items-center justify-between px-4 py-6 rounded-xl border transition-all outline-none group",
-                                                    "hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm",
-                                                    "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:bg-slate-50 focus:border-blue-400",
-                                                    programId === prog.id
-                                                        ? "border-blue-600 bg-blue-50/50 ring-1 ring-blue-600/20"
-                                                        : "border-slate-100 bg-white shadow-sm"
-                                                )}
-                                            >
-                                                <div className="flex flex-col gap-1.5 mr-3">
-                                                    <span
-                                                        className={cn(
-                                                            "text-base font-semibold leading-snug transition-colors",
-                                                            programId ===
-                                                                prog.id
-                                                                ? "text-blue-700"
-                                                                : "text-slate-900 group-hover:text-slate-900"
-                                                        )}
-                                                    >
-                                                        {prog.name}
-                                                    </span>
-                                                    <span className="text-sm text-slate-500 font-medium">
-                                                        Dept. of{" "}
-                                                        {prog.department}
-                                                    </span>
-                                                </div>
-                                                {programId === prog.id && (
-                                                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                                                        <Check className="h-5 w-5 text-blue-600" />
-                                                    </div>
-                                                )}
-                                            </Link>
-                                        </SheetClose>
-                                    ))}
-                                </div>
-                            </SheetContent>
-                        </Sheet>
-                        <div className="flex shrink-0 gap-3 text-xs font-medium">
-                            <div className="flex items-center text-slate-600">
-                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5" />{" "}
-                                Prereq
-                            </div>
-                            <div className="flex items-center text-slate-600">
-                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5" />{" "}
-                                Postreq
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <FlowsheetHeader
+                programName={currentProgram.name}
+                department={currentProgram.department}
+                currentProgramId={programId}
+                programListRefs={programListRefs}
+            />
 
             <div className="w-full px-4 pt-6 md:px-8">
                 <div className="max-w-7xl mx-auto text-center">
@@ -629,22 +337,21 @@ export default function FlowsheetPage() {
                             {currentProgram.name}
                         </span>
                         {selectedMinor && (
-                            <span className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                <span className="text-slate-400 block sm:inline sm:mx-1">
+                            <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
+                                <span className="text-slate-400 sm:mx-1">
                                     with Minor in
                                 </span>
-                                <span className="font-semibold text-blue-600 block sm:inline">
+                                <span className="font-semibold text-blue-600">
                                     {selectedMinor.name}
                                 </span>
                             </span>
                         )}
-                        {}
                         {selectedHonorsId && (
-                            <span className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                <span className="text-slate-400 block sm:inline sm:mx-1">
+                            <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
+                                <span className="text-slate-400 sm:mx-1">
                                     {selectedMinor ? "and" : "with"} Honors in
                                 </span>
-                                <span className="font-semibold text-purple-600 block sm:inline">
+                                <span className="font-semibold text-purple-600">
                                     {HONORS.find(
                                         (h) => h.id === selectedHonorsId
                                     )?.name.replace("B.Tech Honors in ", "")}
@@ -655,10 +362,7 @@ export default function FlowsheetPage() {
                 </div>
             </div>
 
-            <div
-                className="flex-1 w-full overflow-x-auto p-4 md:p-8"
-                ref={scrollContainerRef}
-            >
+            <div className="flex-1 w-full overflow-x-auto p-4 md:p-8">
                 <div
                     className="relative bg-white rounded-xl shadow-xl border p-6 mx-auto min-w-[1200px] max-w-7xl"
                     ref={contentRef}
@@ -716,7 +420,8 @@ export default function FlowsheetPage() {
                                     const course = semester.courses[rowIndex];
                                     const showSep =
                                         shouldShowSeparator(semIndex);
-                                    if (!course)
+
+                                    if (!course) {
                                         return (
                                             <div
                                                 key={`empty-${semester.id}-${rowIndex}`}
@@ -727,11 +432,13 @@ export default function FlowsheetPage() {
                                                 )}
                                             </div>
                                         );
+                                    }
 
                                     const effectiveCourse =
                                         effectiveCourses.find(
                                             (c) => c.id === course.id
                                         ) || course;
+                                    const status = getCourseStatus(course.id);
 
                                     return (
                                         <div
@@ -781,9 +488,7 @@ export default function FlowsheetPage() {
                                                     effectiveCourse={
                                                         effectiveCourse
                                                     }
-                                                    status={getCourseStatus(
-                                                        course
-                                                    )}
+                                                    status={status}
                                                     disabledMinorIds={
                                                         disabledMinorIds
                                                     }
@@ -807,9 +512,7 @@ export default function FlowsheetPage() {
                                                     effectiveCourse={
                                                         effectiveCourse
                                                     }
-                                                    status={getCourseStatus(
-                                                        course
-                                                    )}
+                                                    status={status}
                                                     availableHonors={
                                                         availableHonors
                                                     }
@@ -839,9 +542,7 @@ export default function FlowsheetPage() {
                                                             opt.id
                                                         )
                                                     }
-                                                    status={getCourseStatus(
-                                                        course
-                                                    )}
+                                                    status={status}
                                                     disabledOptionIds={
                                                         disabledOptionIds
                                                     }
@@ -849,9 +550,7 @@ export default function FlowsheetPage() {
                                             ) : (
                                                 <CourseCard
                                                     course={course}
-                                                    status={getCourseStatus(
-                                                        course
-                                                    )}
+                                                    status={status}
                                                 />
                                             )}
                                         </div>
