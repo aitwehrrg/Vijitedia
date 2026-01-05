@@ -18,6 +18,7 @@ import {
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
 import { HONORS } from "@/data/honors";
+import { Course } from "@/types/flowsheet";
 
 export default function FlowsheetPage() {
     const params = useParams();
@@ -303,6 +304,92 @@ export default function FlowsheetPage() {
         setTimeout(() => cardRefs.current.get(slotId)?.focus(), 0);
     };
 
+    // ADDED: Handle focus restoration for Minors
+    const handleMinorSelect = (courseId: string, minorId: string | null) => {
+        setSelectedMinorId(minorId);
+        setTimeout(() => cardRefs.current.get(courseId)?.focus(), 0);
+    };
+
+    // ADDED: Handle focus restoration for Honors
+    const handleHonorsSelect = (courseId: string, honorsId: string | null) => {
+        setSelectedHonorsId(honorsId);
+        setTimeout(() => cardRefs.current.get(courseId)?.focus(), 0);
+    };
+
+    const handleGridKeyDown = (
+        e: React.KeyboardEvent,
+        rowIndex: number,
+        colIndex: number,
+        course: Course
+    ) => {
+        const focusCell = (r: number, c: number) => {
+            const targetSemester = flatSemesters[c];
+            if (targetSemester && targetSemester.courses[r]) {
+                const targetId = targetSemester.courses[r].id;
+                cardRefs.current.get(targetId)?.focus();
+            }
+        };
+
+        switch (e.key) {
+            case "ArrowUp":
+            case "w":
+            case "i":
+                e.preventDefault();
+                focusCell(rowIndex - 1, colIndex);
+                break;
+            case "ArrowDown":
+            case "s":
+            case "k":
+                e.preventDefault();
+                focusCell(rowIndex + 1, colIndex);
+                break;
+            case "ArrowLeft":
+            case "a":
+            case "j":
+                e.preventDefault();
+                focusCell(rowIndex, colIndex - 1);
+                break;
+            case "ArrowRight":
+            case "d":
+            case "l":
+                e.preventDefault();
+                focusCell(rowIndex, colIndex + 1);
+                break;
+
+            case "Enter":
+            case " ":
+                e.preventDefault();
+
+                if (course.type === "elective") {
+                    const isSelected = selections[course.id];
+                    if (!isSelected && electiveRefs.current.has(course.id)) {
+                        electiveRefs.current.get(course.id)?.trigger();
+                        return;
+                    }
+                }
+
+                if (course.type === "minor") {
+                    if (!selectedMinorId && minorRefs.current.has(course.id)) {
+                        minorRefs.current.get(course.id)?.trigger();
+                        return;
+                    }
+                }
+
+                if (course.type === "honors") {
+                    if (
+                        !selectedHonorsId &&
+                        honorsRefs.current.has(course.id)
+                    ) {
+                        honorsRefs.current.get(course.id)?.trigger();
+                        return;
+                    }
+                }
+
+                handleCourseClick(e as any, course.id);
+                break;
+        }
+    };
+
     if (!currentProgram) {
         return (
             <div className="h-screen flex flex-col items-center justify-center space-y-4">
@@ -443,7 +530,10 @@ export default function FlowsheetPage() {
                                     return (
                                         <div
                                             key={course.id}
-                                            className="aspect-4/3 w-full relative"
+                                            className="aspect-4/3 w-full relative outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-xl scroll-mt-28 md:scroll-mt-32"
+                                            tabIndex={0}
+                                            data-grid-row={rowIndex}
+                                            data-grid-col={semIndex}
                                             ref={(el) => {
                                                 if (el)
                                                     cardRefs.current.set(
@@ -464,6 +554,14 @@ export default function FlowsheetPage() {
                                             onClick={(e) =>
                                                 handleCourseClick(e, course.id)
                                             }
+                                            onKeyDown={(e) =>
+                                                handleGridKeyDown(
+                                                    e,
+                                                    rowIndex,
+                                                    semIndex,
+                                                    course
+                                                )
+                                            }
                                         >
                                             {showSep && (
                                                 <div className="absolute -right-2 -top-2 -bottom-2 w-px bg-slate-200 pointer-events-none" />
@@ -477,13 +575,21 @@ export default function FlowsheetPage() {
                                                                 course.id,
                                                                 el
                                                             );
+                                                        else
+                                                            minorRefs.current.delete(
+                                                                course.id
+                                                            );
                                                     }}
                                                     course={course}
                                                     selectedMinorId={
                                                         selectedMinorId
                                                     }
-                                                    onSelectMinor={
-                                                        setSelectedMinorId
+                                                    // CHANGED: Use the wrapper handler for focus restoration
+                                                    onSelectMinor={(id) =>
+                                                        handleMinorSelect(
+                                                            course.id,
+                                                            id
+                                                        )
                                                     }
                                                     effectiveCourse={
                                                         effectiveCourse
@@ -501,13 +607,21 @@ export default function FlowsheetPage() {
                                                                 course.id,
                                                                 el
                                                             );
+                                                        else
+                                                            honorsRefs.current.delete(
+                                                                course.id
+                                                            );
                                                     }}
                                                     course={course}
                                                     selectedHonorsId={
                                                         selectedHonorsId
                                                     }
-                                                    onSelectHonors={
-                                                        setSelectedHonorsId
+                                                    // CHANGED: Use the wrapper handler for focus restoration
+                                                    onSelectHonors={(id) =>
+                                                        handleHonorsSelect(
+                                                            course.id,
+                                                            id
+                                                        )
                                                     }
                                                     effectiveCourse={
                                                         effectiveCourse
@@ -524,6 +638,10 @@ export default function FlowsheetPage() {
                                                             electiveRefs.current.set(
                                                                 course.id,
                                                                 el
+                                                            );
+                                                        else
+                                                            electiveRefs.current.delete(
+                                                                course.id
                                                             );
                                                     }}
                                                     course={course}

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
     ArrowLeftFromLine,
@@ -35,9 +37,9 @@ export function FlowsheetHeader({
         if (["ArrowDown", "ArrowUp", "w", "s", "i", "k"].includes(e.key)) {
             e.preventDefault();
             const items = Array.from(programListRefs.current.values());
-            const currentIndex = items.indexOf(
-                document.activeElement as HTMLAnchorElement
-            );
+            const activeEl = document.activeElement as HTMLAnchorElement;
+            const currentIndex = items.indexOf(activeEl);
+
             if (currentIndex === -1) return;
 
             let nextIndex;

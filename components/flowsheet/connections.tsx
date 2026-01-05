@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 type Point = { x: number; y: number };
