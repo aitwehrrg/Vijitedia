@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, GitBranch, Calculator, Github, Network } from "lucide-react";
+import {
+    ArrowRight,
+    GitBranch,
+    Calculator,
+    Github,
+    Network,
+} from "lucide-react";
 
 export default function Home() {
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
-            {}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]">
                 <svg
                     className="w-full h-full"
@@ -82,7 +87,6 @@ export default function Home() {
                 ></div>
             </div>
 
-            {}
             <header className="relative z-10 border-b border-slate-200 bg-white/50 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2 font-bold text-xl tracking-tighter text-slate-900">
@@ -104,12 +108,10 @@ export default function Home() {
                 </div>
             </header>
 
-            {}
             <main className="flex-1 relative z-10 flex flex-col items-center justify-center p-6 text-center">
-                {}
                 <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1] text-slate-900 text-left">
                     Visualize Your <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-gradient-x">
+                    <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-gradient-x">
                         Engineering Path
                     </span>
                 </h1>
@@ -120,9 +122,8 @@ export default function Home() {
                     in real-time.
                 </p>
 
-                {}
                 <div className="group relative inline-flex shadow-xl shadow-indigo-500/20">
-                    <div className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
+                    <div className="absolute transition-all duration-1000 opacity-70 -inset-px bg-linear-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
                     <Link href="/flowsheet">
                         <Button
                             size="lg"
@@ -135,9 +136,8 @@ export default function Home() {
                     </Link>
                 </div>
 
-                {}
                 <div className="mt-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-                    <div className="h-12 w-px bg-gradient-to-b from-transparent via-slate-300 to-transparent"></div>
+                    <div className="h-12 w-px bg-linear-to-b from-transparent via-slate-300 to-transparent"></div>
 
                     <div className="flex items-center gap-6 p-4 rounded-2xl border border-slate-200 bg-white/60 backdrop-blur-sm hover:bg-white hover:shadow-md transition-all">
                         <div className="flex flex-col text-left">
@@ -161,10 +161,9 @@ export default function Home() {
                 </div>
             </main>
 
-            {}
             <footer className="w-full py-6 text-center text-sm text-slate-400 border-t border-slate-200 bg-slate-50 relative z-10">
                 <p>
-                    Built by {" "}
+                    Built by{" "}
                     <a
                         href="https://github.com/aitwehrrg"
                         target="_blank"

@@ -71,7 +71,6 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                             </button>
                         </PopoverTrigger>
 
-                        {}
                         <div className="absolute inset-0 border-2 border-purple-500/20 pointer-events-none rounded-lg" />
                     </div>
                 ) : (
@@ -91,7 +90,6 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                     </PopoverTrigger>
                 )}
 
-                {}
                 <PopoverContent
                     className="w-[350px] p-0"
                     align="start"
@@ -110,7 +108,6 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                                 No relevant honors found.
                             </CommandEmpty>
                             <CommandGroup heading="Available Tracks">
-                                {}
                                 <CommandItem
                                     value="none"
                                     onSelect={() => {
@@ -127,7 +124,6 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                                     </div>
                                 </CommandItem>
 
-                                {}
                                 {availableHonors.map((h) => {
                                     const isSelected =
                                         selectedHonorsId === h.id;

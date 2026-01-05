@@ -30,7 +30,6 @@ export default function FlowsheetLanding() {
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8 relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
-            {}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]">
                 <svg
                     className="w-full h-full"
@@ -127,7 +126,6 @@ export default function FlowsheetLanding() {
                                                     <CardTitle className="text-slate-800 group-hover:text-indigo-600 transition-colors text-lg">
                                                         {program.name}
                                                     </CardTitle>
-                                                    {}
                                                     <CardDescription className="text-slate-400 mt-1 text-sm">
                                                         View Curriculum
                                                     </CardDescription>

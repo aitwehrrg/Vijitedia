@@ -155,7 +155,7 @@ export default async function FlowsheetPage({ params }: Props) {
                             {c.prereqs && c.prereqs.length > 0
                                 ? c.prereqs.join(", ")
                                 : "None"}
-                            .{}
+                            .
                             {c.mutexIds && c.mutexIds.length > 0 && (
                                 <> Conflicts/Mutex: {c.mutexIds.join(", ")}.</>
                             )}

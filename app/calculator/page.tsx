@@ -30,7 +30,6 @@ export default function CalculatorLanding() {
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8 relative overflow-hidden selection:bg-emerald-100 selection:text-emerald-900">
-            {}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]">
                 <svg
                     className="w-full h-full"
@@ -104,7 +103,7 @@ export default function CalculatorLanding() {
                     <div className="space-y-2">
                         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
                             CGPA{" "}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
+                            <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-teal-500">
                                 Calculator
                             </span>
                         </h1>

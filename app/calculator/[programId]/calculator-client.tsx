@@ -211,11 +211,7 @@ export default function CalculatorPage() {
         return currentProgram.years.flatMap((y) =>
             y.semesters
                 .filter((s) => !excludedSemesters.includes(s.id))
-                .flatMap((s) =>
-                    s.courses.filter(
-                        (c) => c.type !== "honors"
-                    )
-                )
+                .flatMap((s) => s.courses.filter((c) => c.type !== "honors"))
         );
     }, [currentProgram, excludedSemesters]);
 
@@ -390,7 +386,6 @@ export default function CalculatorPage() {
 
     return (
         <div className="min-h-screen bg-slate-50/50 flex flex-col">
-            {}
             <div className="bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-30 shadow-sm">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-3 w-full md:w-auto">
@@ -493,7 +488,6 @@ export default function CalculatorPage() {
             </div>
 
             <div className="max-w-7xl mx-auto w-full p-4 md:p-8 space-y-8">
-                {}
                 {currentProgram.years.map((year, yearIndex) => {
                     const isYearDisabled = year.semesters.every((s) =>
                         excludedSemesters.includes(s.id)
@@ -601,7 +595,6 @@ export default function CalculatorPage() {
                     );
                 })}
 
-                {}
                 {activeHonorsCourses.length > 0 && (
                     <div className="pt-8 border-t border-slate-200">
                         <div className="bg-purple-50/50 rounded-xl border border-purple-100 shadow-sm p-4 md:p-6">

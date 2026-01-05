@@ -38,7 +38,7 @@ export function CourseCard({ course, status }: CourseCardProps) {
 
     return (
         <Card
-            className={`h-full flex flex-col justify-between border-l-[4px] transition-all duration-200 cursor-pointer shadow-sm overflow-hidden ${styles[status]}`}
+            className={`h-full flex flex-col justify-between border-l-4 transition-all duration-200 cursor-pointer shadow-sm overflow-hidden ${styles[status]}`}
         >
             <CardHeader className="p-3 pb-2 space-y-0 shrink-0">
                 <div className="flex justify-between items-start gap-2">
@@ -58,8 +58,7 @@ export function CourseCard({ course, status }: CourseCardProps) {
                 </div>
             </CardHeader>
 
-            {}
-            <CardContent className="p-3 pt-0 flex-grow flex items-center min-h-0">
+            <CardContent className="p-3 pt-0 grow flex items-center min-h-0">
                 <CardTitle
                     className="text-xs sm:text-sm font-medium leading-snug text-slate-800 line-clamp-3"
                     title={course.title}
