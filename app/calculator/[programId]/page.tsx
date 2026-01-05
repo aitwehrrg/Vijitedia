@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { FLOWSHEET_DATA } from "@/data/programs";
-import CalculatorClient from "./calculator-client";
+import CalculatorClient from "@/components/calculator/client";
 
 type Props = {
     params: { programId: string };

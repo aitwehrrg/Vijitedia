@@ -10,12 +10,10 @@
 ├── app
 │   ├── calculator
 │   │   ├── [programId]
-│   │   │   ├── calculator-client.tsx     # Client-side calculator logic
 │   │   │   └── page.tsx                  # Server wrapper for calculator
 │   │   └── page.tsx                      # Calculator landing page
 │   ├── flowsheet
 │   │   ├── [programId]
-│   │   │   ├── flowsheet-client.tsx      # Interactive canvas & state manager
 │   │   │   └── page.tsx                  # Server wrapper for flowsheet
 │   │   └── page.tsx                      # Flowsheet landing page
 │   ├── fonts/                            # Local font files

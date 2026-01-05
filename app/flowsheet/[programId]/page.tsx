@@ -3,7 +3,7 @@ import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
 import { HONORS } from "@/data/honors";
 import { notFound } from "next/navigation";
-import FlowsheetClient from "./flowsheet-client";
+import FlowsheetClient from "@/components/flowsheet/client";
 
 type SeoCourse = {
     code: string;
