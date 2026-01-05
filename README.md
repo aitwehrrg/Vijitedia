@@ -7,28 +7,42 @@
 ## Project Structure
 
 ```text
-app
-├── calculator
-│   ├── [programId]
-│   │   └── page.tsx      # Client-side calculator logic
-│   └── page.tsx          # Calculator landing page
-├── flowsheet
-│   ├── [programId]
-│   │   └── page.tsx      # Interactive flowsheet canvas
-│   └── page.tsx          # Flowsheet landing page
-├── favicon.ico
-├── globals.css
-├── layout.tsx
-└── page.tsx              # Main landing page
-components
-├── ui/                   # ShadCN components (badge, button, etc.)
-├── course-card.tsx       # Renders individual course blocks
-└── elective-card.tsx     # Renders interactive elective slots
-data
-├── majors/               # Degree specific data
-├── grades.ts             # Grade point mapping (AA = 10.0)
-├── minors.ts             # Minor definitions
-└── programs.ts           # Main curriculum data structure
+├── app
+│   ├── calculator
+│   │   ├── [programId]
+│   │   │   ├── calculator-client.tsx     # Client-side calculator logic
+│   │   │   └── page.tsx                  # Server wrapper for calculator
+│   │   └── page.tsx                      # Calculator landing page
+│   ├── flowsheet
+│   │   ├── [programId]
+│   │   │   ├── flowsheet-client.tsx      # Interactive canvas & state manager
+│   │   │   └── page.tsx                  # Server wrapper for flowsheet
+│   │   └── page.tsx                      # Flowsheet landing page
+│   ├── fonts/                            # Local font files
+│   ├── globals.css                       # Global styles & Tailwind directives
+│   ├── layout.tsx                        # Root application layout
+│   ├── not-found.tsx                     # 404 Error page
+│   └── page.tsx                          # Main landing page
+├── components
+│   ├── flowsheet/                        # Flowsheet modular components
+│   ├── ui/                               # Reusable ShadCN components
+│   ├── course-card.tsx                   # Renders individual course blocks
+│   ├── elective-card.tsx                 # Renders interactive elective slots
+│   ├── honors-slot.tsx                   # Renders honors degree slots
+│   └── minor-slot.tsx                    # Renders minor degree slots
+├── data
+│   ├── majors/                           # Degree-specific JSON data
+│   ├── electives.ts                      # Elective pool definitions
+│   ├── grades.ts                         # Grade point mapping (AA = 10.0)
+│   ├── honors.ts                         # Honors program definitions
+│   ├── minors.ts                         # Minor degree definitions
+│   └── programs.ts                       # Main curriculum registry
+├── lib
+│   └── utils.ts                          # Utility functions
+├── types
+│   └── flowsheet.ts                      # TypeScript interfaces (Course, Program)
+├── package.json
+└── ... (config files)
 ```
 
 ## How it works
@@ -64,10 +78,9 @@ The graph relationships are determined at runtime:
 
 #### B. Dynamic Node Swapping
 
-To handle Electives and Minors without re-rendering the entire DOM, the application uses a **Map-based "Effective Course" lookup**:
-- Instead of an $\mathcal{O}(N)$ array search on every hover, the app builds a `Map<string, Course>` on mount.
-- When a user selects a specific Elective option or Minor, the Map is updated to swap the generic "Slot Node" with the specific "Course Node" (inheriting the specific course's prerequisites).
-- This allows for $\mathcal{O}(1)$ access time during hover events, ensuring 60fps performance even with complex graphs.
+The application optimizes graph traversal by pre-computing relationship maps.
+- Instead of iterating through the entire node array ($\mathcal{O}(N)$) during every render cycle to determine connectivity, the system generates a **Relationship Set** for the active node upon interaction.
+- Child components determine their rendering state (e.g., `prereq`, `postreq`, `default`) via constant-time `Set.has()` lookups ($\mathcal{O}(1)$), significantly reducing the computational overhead during rapid state changes.
 
 #### C. Bézier Curve Rendering
 
