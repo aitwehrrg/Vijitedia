@@ -530,7 +530,7 @@ export default function FlowsheetPage() {
                                     return (
                                         <div
                                             key={course.id}
-                                            className="aspect-4/3 w-full relative outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-xl scroll-mt-28 md:scroll-mt-32"
+                                            className="aspect-4/3 w-full relative outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-xl scroll-mt-28 scroll-mb-28 md:scroll-mt-32 md:scroll-mb-32"
                                             tabIndex={0}
                                             data-grid-row={rowIndex}
                                             data-grid-col={semIndex}
