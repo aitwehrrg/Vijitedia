@@ -436,7 +436,7 @@ export const MINORS: Minor[] = [
     {
         id: "R5PE2201T",
         dept: "Production Engineering",
-        name: "Managerial Economics And IPR In Manufacturing Sector",
+        name: "Managerial Economics and IPR in Manufacturing Sector",
         courses: [
             {
                 id: "R5PE2201T",
