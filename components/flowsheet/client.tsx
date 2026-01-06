@@ -424,7 +424,7 @@ export default function FlowsheetPage() {
                         {selectedMinor && (
                             <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
                                 <span className="text-slate-400 sm:mx-1">
-                                    with Minor in{" "}
+                                    {" "}with Minor in{" "}
                                 </span>
                                 <span className="font-semibold text-blue-600">
                                     {selectedMinor.name}
@@ -434,7 +434,7 @@ export default function FlowsheetPage() {
                         {selectedHonorsId && (
                             <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
                                 <span className="text-slate-400 sm:mx-1">
-                                    {selectedMinor ? "and" : "with"} Honors in{" "}
+                                    {selectedMinor ? " and" : " with"} Honors in{" "}
                                 </span>
                                 <span className="font-semibold text-purple-600">
                                     {HONORS.find(
