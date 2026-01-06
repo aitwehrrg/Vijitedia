@@ -439,7 +439,7 @@ export default function FlowsheetPage() {
                                 <span className="font-semibold text-purple-600">
                                     {HONORS.find(
                                         (h) => h.id === selectedHonorsId
-                                    )?.name.replace("B.Tech Honors in ", "")}
+                                    )?.name}
                                 </span>
                             </span>
                         )}
