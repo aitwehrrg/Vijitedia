@@ -117,7 +117,7 @@ export default function Home() {
                 </h1>
 
                 <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-                    The interactive directed graph for your degree. Trace
+                    The interactive directed graph for your VJTI degree. Trace
                     prerequisites, map out electives, and visualize dependencies
                     in real-time.
                 </p>
