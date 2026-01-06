@@ -161,7 +161,7 @@ export const IT_PROGRAM: Program = {
                                 {
                                     id: "R5CO1030LG",
                                     code: "R5CO1030LG",
-                                    title: "Comprehensive Personality Development",
+                                    title: "Comprehensive Personal Development",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5CO1025LG"],
@@ -169,7 +169,7 @@ export const IT_PROGRAM: Program = {
                                 {
                                     id: "R5CO1030LH",
                                     code: "R5CO1030LH",
-                                    title: "Engineering Motorsports and Electrical Vehicles",
+                                    title: "Engineering Motorsports and Electric Vehicles",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5CO1025LH"],
@@ -393,7 +393,7 @@ export const IT_PROGRAM: Program = {
                                 {
                                     id: "R5CO1025LG",
                                     code: "R5CO1025LG",
-                                    title: "Comprehensive Personality Development",
+                                    title: "Comprehensive Personal Development",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5CO1030LG"],
@@ -401,7 +401,7 @@ export const IT_PROGRAM: Program = {
                                 {
                                     id: "R5CO1025LH",
                                     code: "R5CO1025LH",
-                                    title: "Engineering Motorsports and Electrical Vehicles",
+                                    title: "Engineering Motorsports and Electric Vehicles",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5CO1030LH"],

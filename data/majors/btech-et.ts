@@ -161,7 +161,7 @@ export const ET_PROGRAM: Program = {
                                 {
                                     id: "R5ET1030LG",
                                     code: "R5ET1030LG",
-                                    title: "Comprehensive Personality Development",
+                                    title: "Comprehensive Personal Development",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5ET1025LG"],
@@ -169,7 +169,7 @@ export const ET_PROGRAM: Program = {
                                 {
                                     id: "R5ET1030LH",
                                     code: "R5ET1030LH",
-                                    title: "Engineering Motorsports and Electrical Vehicles",
+                                    title: "Engineering Motorsports and Electric Vehicles",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5ET1025LH"],
@@ -393,7 +393,7 @@ export const ET_PROGRAM: Program = {
                                 {
                                     id: "R5ET1025LG",
                                     code: "R5ET1025LG",
-                                    title: "Comprehensive Personality Development",
+                                    title: "Comprehensive Personal Development",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5ET1030LG"],
@@ -401,7 +401,7 @@ export const ET_PROGRAM: Program = {
                                 {
                                     id: "R5ET1025LH",
                                     code: "R5ET1025LH",
-                                    title: "Engineering Motorsports and Electrical Vehicles",
+                                    title: "Engineering Motorsports and Electric Vehicles",
                                     credits: 1.5,
                                     prereqs: [],
                                     mutexIds: ["R5ET1030LH"],
