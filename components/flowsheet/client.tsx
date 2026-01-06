@@ -304,13 +304,11 @@ export default function FlowsheetPage() {
         setTimeout(() => cardRefs.current.get(slotId)?.focus(), 0);
     };
 
-    // ADDED: Handle focus restoration for Minors
     const handleMinorSelect = (courseId: string, minorId: string | null) => {
         setSelectedMinorId(minorId);
         setTimeout(() => cardRefs.current.get(courseId)?.focus(), 0);
     };
 
-    // ADDED: Handle focus restoration for Honors
     const handleHonorsSelect = (courseId: string, honorsId: string | null) => {
         setSelectedHonorsId(honorsId);
         setTimeout(() => cardRefs.current.get(courseId)?.focus(), 0);
@@ -426,7 +424,7 @@ export default function FlowsheetPage() {
                         {selectedMinor && (
                             <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
                                 <span className="text-slate-400 sm:mx-1">
-                                    with Minor in
+                                    with Minor in{" "}
                                 </span>
                                 <span className="font-semibold text-blue-600">
                                     {selectedMinor.name}
@@ -436,7 +434,7 @@ export default function FlowsheetPage() {
                         {selectedHonorsId && (
                             <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
                                 <span className="text-slate-400 sm:mx-1">
-                                    {selectedMinor ? "and" : "with"} Honors in
+                                    {selectedMinor ? "and" : "with"} Honors in{" "}
                                 </span>
                                 <span className="font-semibold text-purple-600">
                                     {HONORS.find(
@@ -584,7 +582,6 @@ export default function FlowsheetPage() {
                                                     selectedMinorId={
                                                         selectedMinorId
                                                     }
-                                                    // CHANGED: Use the wrapper handler for focus restoration
                                                     onSelectMinor={(id) =>
                                                         handleMinorSelect(
                                                             course.id,
@@ -616,7 +613,6 @@ export default function FlowsheetPage() {
                                                     selectedHonorsId={
                                                         selectedHonorsId
                                                     }
-                                                    // CHANGED: Use the wrapper handler for focus restoration
                                                     onSelectHonors={(id) =>
                                                         handleHonorsSelect(
                                                             course.id,
