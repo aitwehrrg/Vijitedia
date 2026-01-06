@@ -963,7 +963,16 @@ export const IT_PROGRAM: Program = {
                             label: "Professional Elective II",
                             linkedSlotId: "PE-II-Lab",
                             credits: 3,
-                            options: [],
+                            options: [
+                                {
+                                    id: "R5IT3108T",
+                                    code: "R5IT3108T",
+                                    title: "Object Oriented Analysis and Design",
+                                    credits: 3,
+                                    prereqs: [],
+                                    linkedOptionId: "R5IT3108L",
+                                },
+                            ],
                         },
                         {
                             id: "PE-II-Lab",
@@ -973,7 +982,16 @@ export const IT_PROGRAM: Program = {
                             label: "Professional Elective II Laboratory",
                             linkedSlotId: "PE-II",
                             credits: 1,
-                            options: [],
+                            options: [
+                                {
+                                    id: "R5IT3108L",
+                                    code: "R5IT3108L",
+                                    title: "Object Oriented Analysis and Design Laboratory",
+                                    credits: 1,
+                                    prereqs: [],
+                                    linkedOptionId: "R5IT3108T",
+                                },
+                            ],
                         },
                         {
                             id: "OE-I",
