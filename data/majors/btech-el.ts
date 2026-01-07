@@ -1039,5 +1039,65 @@ export const EL_PROGRAM: Program = {
                 },
             ],
         },
+        {
+            id: "y4",
+            label: "Final Year",
+            semesters: [
+                {
+                    id: "y4s1",
+                    label: "Semester VII",
+                    courses: [
+                        {
+                            id: "MDM-V",
+                            type: "minor",
+                            code: "R5XX42XXT",
+                            title: "Multidisciplinary Minor V",
+                            label: "Multidisciplinary Minor V",
+                            credits: 4,
+                            minorIndex: 4,
+                        },
+                        {
+                            id: "OE-II",
+                            type: "elective",
+                            code: "R5EL43XXT",
+                            title: "Open Elective II",
+                            label: "Open Elective II",
+                            credits: 4,
+                            options: [],
+                        },
+                        {
+                            id: "R5EL4801P",
+                            type: "core",
+                            code: "R5EL4801P",
+                            title: "B. Tech. Project",
+                            credits: 4,
+                            prereqs: [],
+                        },
+                    ],
+                },
+                {
+                    id: "y4s2",
+                    label: "Semester VIII",
+                    courses: [
+                        {
+                            id: "R5EL4701I",
+                            type: "core",
+                            code: "R5EL4701I",
+                            title: "Internship",
+                            credits: 12,
+                            prereqs: [],
+                        },
+                        {
+                            id: "R5EL4XXXT",
+                            type: "core",
+                            code: "R5EL4XXXT",
+                            title: "Online Course",
+                            credits: 2,
+                            prereqs: [],
+                        },
+                    ],
+                },
+            ],
+        },
     ],
 };

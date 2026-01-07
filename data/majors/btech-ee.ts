@@ -987,7 +987,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE4017T",
                             title: "AI/ML and Powergrids",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE3010T", "R5EE3010L"],
                         },
                         {
                             id: "R5EE4018T",
@@ -995,7 +995,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE4018T",
                             title: "Digital Signal Processing",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5EE2009T"],
                         },
                         {
                             id: "R5EE4019L",
@@ -1003,7 +1003,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE4019L",
                             title: "Advanced Power Systems Laboratory",
                             credits: 1,
-                            prereqs: [],
+                            prereqs: ["R5EE3010T", "R5EE3010L"],
                         },
                         {
                             id: "R5EE4020L",
@@ -1011,7 +1011,7 @@ export const EE_PROGRAM: Program = {
                             code: "R5EE4020L",
                             title: "Electrical Simulation Laboratory",
                             credits: 1,
-                            prereqs: [],
+                            prereqs: ["R5EE2001T"],
                         },
                         {
                             id: "PE-IV",
