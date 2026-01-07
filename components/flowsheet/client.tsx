@@ -415,7 +415,7 @@ export default function FlowsheetPage() {
             />
 
             <div className="w-full px-4 pt-6 md:px-8">
-                <div className="max-w-7xl mx-auto text-center">
+                <div className="max-w-8xl mx-auto text-center">
                     <h2 className="text-xl md:text-2xl font-light text-slate-700 leading-relaxed">
                         Bachelor of Technology in{" "}
                         <span className="font-semibold text-slate-900 block sm:inline">
@@ -449,7 +449,7 @@ export default function FlowsheetPage() {
 
             <div className="flex-1 w-full overflow-x-auto p-4 md:p-8">
                 <div
-                    className="relative bg-white rounded-xl shadow-xl border p-6 mx-auto min-w-[1200px] max-w-7xl"
+                    className="relative bg-white rounded-xl shadow-xl border p-6 mx-auto min-w-[1200px] max-w-8xl"
                     ref={contentRef}
                     onClick={(e) => e.stopPropagation()}
                 >
