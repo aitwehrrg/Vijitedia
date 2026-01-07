@@ -114,14 +114,14 @@ export const HONORS: Honors[] = [
             {
                 id: "ARVR-IV",
                 code: "R5XX4XXXT",
-                title: "Special Topics",
+                title: "Special Topics and Capstone Project",
                 credits: 3,
                 prereqs: ["ARVR-III", "ARVR-III-Lab"],
             },
             {
                 id: "ARVR-IV-Project",
                 code: "R5XX4XXXP",
-                title: "Capstone Project",
+                title: "Special Topics and Capstone Project Laboratory",
                 credits: 3,
                 prereqs: ["ARVR-III", "ARVR-III-Lab"],
             },
