@@ -403,6 +403,9 @@ export default function FlowsheetPage() {
         (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
 
     const MIN_COL_WIDTH = "180px";
+    const SEPARATOR_STYLE =
+        "absolute -right-[10px] w-[2px] bg-slate-300/80 pointer-events-none z-0";
+
     return (
         <div
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
@@ -491,7 +494,9 @@ export default function FlowsheetPage() {
                             >
                                 {sem.label}
                                 {shouldShowSeparator(i) && (
-                                    <div className="absolute -right-2 top-0 h-full w-px bg-slate-200" />
+                                    <div
+                                        className={`${SEPARATOR_STYLE} top-0 h-full`}
+                                    />
                                 )}
                             </div>
                         ))}
@@ -518,7 +523,9 @@ export default function FlowsheetPage() {
                                                 className="aspect-4/3 relative"
                                             >
                                                 {showSep && (
-                                                    <div className="absolute -right-2 top-0 bottom-0 w-px bg-slate-200" />
+                                                    <div
+                                                        className={`${SEPARATOR_STYLE} -top-2 -bottom-2`}
+                                                    />
                                                 )}
                                             </div>
                                         );
@@ -567,7 +574,9 @@ export default function FlowsheetPage() {
                                             }
                                         >
                                             {showSep && (
-                                                <div className="absolute -right-2 -top-2 -bottom-2 w-px bg-slate-200 pointer-events-none" />
+                                                <div
+                                                    className={`${SEPARATOR_STYLE} -top-2 -bottom-2`}
+                                                />
                                             )}
 
                                             {course.type === "minor" ? (
