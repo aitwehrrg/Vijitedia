@@ -71,6 +71,12 @@ export const OPEN_ELECTIVES_I: CourseOption[] = [
         title: "Business Development: From Start to Scale",
         credits: 4,
         prereqs: [],
-        mutexIds: ["R5IL2201T", "R5IL2202T", "R5IL3201T", "R5IL3202T"],
+        mutexIds: [
+            "R5IL2201T",
+            "R5IL2202T",
+            "R5IL3201T",
+            "R5IL3202T",
+            "R5IL4201T",
+        ],
     },
 ];
