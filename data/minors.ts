@@ -135,7 +135,7 @@ export const MINORS: Minor[] = [
             {
                 id: "R5IT2201T",
                 code: "R5IT2201T",
-                title: "Introduction to Artificial Intelligence and Machine Learning",
+                title: "Introduction to AI and Machine Learning",
                 credits: 2,
                 prereqs: [],
                 mutexIds: ["R5MA2007T"],
@@ -164,7 +164,7 @@ export const MINORS: Minor[] = [
             {
                 id: "R5IT4201T",
                 code: "R5IT4201T",
-                title: "Applications of Artificial Intelligence",
+                title: "Applications of AI",
                 credits: 4,
                 prereqs: [],
             },
