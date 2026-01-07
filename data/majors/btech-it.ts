@@ -686,7 +686,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT2009T",
                             title: "Computer Networks",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5CO1028L"],
                         },
                         {
                             id: "R5IT2009L",
@@ -913,7 +913,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT3006T",
                             title: "System Security",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5IT2009T", "R5IT2009L"],
                         },
                         {
                             id: "R5IT3005L",
@@ -929,7 +929,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT3007T",
                             title: "Wireless Networks",
                             credits: 3,
-                            prereqs: ["R5IT2003T", "R5IT2003L"],
+                            prereqs: ["R5IT2009T", "R5IT2009L"],
                         },
                         {
                             id: "R5IT3006L",
@@ -1001,7 +1001,7 @@ export const IT_PROGRAM: Program = {
                                     code: "R5IT3111T",
                                     title: "Information Storage Management Systems",
                                     credits: 3,
-                                    prereqs: [],
+                                    prereqs: ["R5IT2003T", "R5IT2003L"],
                                     linkedOptionId: "R5IT3111L",
                                 },
                             ],
@@ -1048,8 +1048,8 @@ export const IT_PROGRAM: Program = {
                                     linkedOptionId: "R5IT3110T",
                                 },
                                 {
-                                    id: "R5IT3111T",
-                                    code: "R5IT3111T",
+                                    id: "R5IT3111L",
+                                    code: "R5IT3111L",
                                     title: "Information Storage Management Systems Laboratory",
                                     credits: 1,
                                     prereqs: [],
