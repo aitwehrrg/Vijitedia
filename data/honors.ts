@@ -57,7 +57,7 @@ export const HONORS: Honors[] = [
             },
             {
                 id: "BLOCK-IV-Project",
-                code: "R5XX3XXXP",
+                code: "R5XX4XXXP",
                 title: "Mini Project",
                 credits: 3,
                 prereqs: ["BLOCK-III", "BLOCK-III-Lab"],
