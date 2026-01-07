@@ -402,6 +402,7 @@ export default function FlowsheetPage() {
     const shouldShowSeparator = (index: number) =>
         (index + 1) % 2 === 0 && index !== flatSemesters.length - 1;
 
+    const MIN_COL_WIDTH = "180px";
     return (
         <div
             className="min-h-screen w-full flex flex-col bg-slate-50/50"
@@ -415,7 +416,7 @@ export default function FlowsheetPage() {
             />
 
             <div className="w-full px-4 pt-6 md:px-8">
-                <div className="max-w-8xl mx-auto text-center">
+                <div className="w-fit mx-auto text-center">
                     <h2 className="text-xl md:text-2xl font-light text-slate-700 leading-relaxed">
                         Bachelor of Technology in{" "}
                         <span className="font-semibold text-slate-900 block sm:inline">
@@ -424,7 +425,8 @@ export default function FlowsheetPage() {
                         {selectedMinor && (
                             <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
                                 <span className="text-slate-400 sm:mx-1">
-                                    {" "}with Minor in{" "}
+                                    {" "}
+                                    with Minor in{" "}
                                 </span>
                                 <span className="font-semibold text-blue-600">
                                     {selectedMinor.name}
@@ -434,12 +436,15 @@ export default function FlowsheetPage() {
                         {selectedHonorsId && (
                             <span className="animate-in fade-in slide-in-from-top-2 duration-300 block sm:inline">
                                 <span className="text-slate-400 sm:mx-1">
-                                    {selectedMinor ? " and" : " with"} Honors in{" "}
+                                    {selectedMinor ? " and" : " with"} Honors
+                                    in{" "}
                                 </span>
                                 <span className="font-semibold text-purple-600">
-                                    {HONORS.find(
-                                        (h) => h.id === selectedHonorsId
-                                    )?.name}
+                                    {
+                                        HONORS.find(
+                                            (h) => h.id === selectedHonorsId
+                                        )?.name
+                                    }
                                 </span>
                             </span>
                         )}
@@ -449,7 +454,7 @@ export default function FlowsheetPage() {
 
             <div className="flex-1 w-full overflow-x-auto p-4 md:p-8">
                 <div
-                    className="relative bg-white rounded-xl shadow-xl border p-6 mx-auto min-w-[1200px] max-w-8xl"
+                    className="relative bg-white rounded-xl shadow-xl border p-6 mx-auto min-w-[1200px] w-fit"
                     ref={contentRef}
                     onClick={(e) => e.stopPropagation()}
                 >
@@ -458,7 +463,7 @@ export default function FlowsheetPage() {
                     <div
                         className="grid w-full mb-2"
                         style={{
-                            gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
+                            gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(${MIN_COL_WIDTH}, 1fr))`,
                         }}
                     >
                         {currentProgram.years.map((year) => (
@@ -476,7 +481,7 @@ export default function FlowsheetPage() {
                     <div
                         className="grid w-full mb-4 gap-4"
                         style={{
-                            gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
+                            gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(${MIN_COL_WIDTH}, 1fr))`,
                         }}
                     >
                         {flatSemesters.map((sem, i) => (
@@ -498,7 +503,7 @@ export default function FlowsheetPage() {
                                 key={rowIndex}
                                 className="grid gap-4 w-full"
                                 style={{
-                                    gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(0, 1fr))`,
+                                    gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(${MIN_COL_WIDTH}, 1fr))`,
                                 }}
                             >
                                 {flatSemesters.map((semester, semIndex) => {

@@ -126,15 +126,21 @@ export function FlowsheetHeader({
                                     Select Program
                                 </SheetTitle>
                                 <SheetDescription>
-                                    Use{" "}
-                                    <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
-                                        ↑
-                                    </kbd>{" "}
-                                    and{" "}
-                                    <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
-                                        ↓
-                                    </kbd>{" "}
-                                    to navigate.
+                                    <span className="hidden 2xl:inline">
+                                        Use{" "}
+                                        <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
+                                            ↑
+                                        </kbd>{" "}
+                                        and{" "}
+                                        <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
+                                            ↓
+                                        </kbd>{" "}
+                                        to navigate.
+                                    </span>
+                                    <span className="2xl:hidden">
+                                        Choose an academic program to view its
+                                        flowsheet.
+                                    </span>
                                 </SheetDescription>
                             </SheetHeader>
                             <div
