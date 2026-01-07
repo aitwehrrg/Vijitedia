@@ -470,9 +470,10 @@ export default function FlowsheetPage() {
                         }}
                     >
                         {currentProgram.years.map((year) => (
+                            /*ligma balls */
                             <div
                                 key={year.id}
-                                className="col-span-2 text-center border-b border-slate-100 pb-2"
+                                className="col-span-2 text-center border-b-2 border-slate-300/80 pb-2"
                             >
                                 <span className="font-bold text-slate-800 text-sm">
                                     {year.label}
