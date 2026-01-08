@@ -207,7 +207,7 @@ export const MINORS: Minor[] = [
             {
                 id: "R5CO4201T",
                 code: "R5CO4201T",
-                title: "Data Visualization and Processing Tools",
+                title: "Web Data Mining",
                 credits: 4,
                 prereqs: [],
             },
