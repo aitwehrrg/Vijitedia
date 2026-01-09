@@ -952,7 +952,7 @@ export const CE_PROGRAM: Program = {
                             code: "R5CO3006L",
                             title: "Cybersecurity Laboratory",
                             credits: 1,
-                            prereqs: [],
+                            prereqs: ["R5CO2010L"],
                         },
                         {
                             id: "R5CO3008T",
