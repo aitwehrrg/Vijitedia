@@ -795,7 +795,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT3004T",
                             title: "Cloud Computing",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5IT2003T", "R5IT2003L"],
                         },
                         {
                             id: "R5IT3005T",
