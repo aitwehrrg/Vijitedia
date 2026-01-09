@@ -921,7 +921,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT3005L",
                             title: "System Security Laboratory",
                             credits: 1,
-                            prereqs: [],
+                            prereqs: ["R5IT2010L"],
                         },
                         {
                             id: "R5IT3007T",
