@@ -99,7 +99,7 @@ export const HONORS: Honors[] = [
             },
             {
                 id: "ARVR-III",
-                code: "R5XX3XXXT",
+                code: "R5XX4XXXT",
                 title: "Advanced AR and Mixed Reality",
                 credits: 3,
                 prereqs: ["ARVR-II", "ARVR-II-Lab"],
