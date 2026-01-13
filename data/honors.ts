@@ -7,15 +7,15 @@ export const HONORS: Honors[] = [
         name: "Blockchain Technology",
         courses: [
             {
-                id: "BLOCK-I",
-                code: "R5XX3XXXT",
+                id: "R5CO3009T",
+                code: "R5CO3009T",
                 title: "Blockchain Foundations",
                 credits: 3,
                 prereqs: [],
             },
             {
-                id: "BLOCK-I-Lab",
-                code: "R5XX3XXXL",
+                id: "R5CO3009L",
+                code: "R5CO3009L",
                 title: "Bitcoin Laboratory",
                 credits: 1,
                 prereqs: [],
@@ -25,14 +25,14 @@ export const HONORS: Honors[] = [
                 code: "R5XX3XXXT",
                 title: "Ethereum Blockchain",
                 credits: 3,
-                prereqs: ["BLOCK-I", "BLOCK-I-Lab"],
+                prereqs: ["R5CO3009T", "R5CO3009L"],
             },
             {
                 id: "BLOCK-II-Lab",
                 code: "R5XX3XXXL",
                 title: "Ethereum Laboratory",
                 credits: 1,
-                prereqs: ["BLOCK-I", "BLOCK-I-Lab"],
+                prereqs: ["R5CO3009T", "R5CO3009L"],
             },
             {
                 id: "BLOCK-III",
@@ -70,15 +70,15 @@ export const HONORS: Honors[] = [
         name: "Augmented Reality and Virtual Reality",
         courses: [
             {
-                id: "ARVR-I",
-                code: "R5XX3XXXT",
+                id: "R5CO3010T",
+                code: "R5CO3010T",
                 title: "Foundations of AR/VR and VR Development",
                 credits: 3,
                 prereqs: [],
             },
             {
-                id: "ARVR-I-Lab",
-                code: "R5XX3XXXL",
+                id: "R5CO3010L",
+                code: "R5CO3010L",
                 title: "Foundations of AR/VR and VR Development Laboratory",
                 credits: 1,
                 prereqs: [],
@@ -88,14 +88,14 @@ export const HONORS: Honors[] = [
                 code: "R5XX3XXXT",
                 title: "Advanced VR and Introduction to AR",
                 credits: 3,
-                prereqs: ["ARVR-I", "ARVR-I-Lab"],
+                prereqs: ["R5CO3010T", "R5CO3010L"],
             },
             {
                 id: "ARVR-II-Lab",
                 code: "R5XX3XXXL",
                 title: "Advanced VR and Introduction to AR Laboratory",
                 credits: 1,
-                prereqs: ["ARVR-I", "ARVR-I-Lab"],
+                prereqs: ["R5CO3010T", "R5CO3010L"],
             },
             {
                 id: "ARVR-III",
