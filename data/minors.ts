@@ -335,7 +335,7 @@ export const MINORS: Minor[] = [
             {
                 id: "R5EL4202T",
                 code: "R5EL4202T",
-                title: "Signal and Image Processing",
+                title: "Applications of Signal and Image Processing",
                 credits: 4,
                 prereqs: [],
             },
