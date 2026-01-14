@@ -948,9 +948,9 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "FIN",
+                            id: "R5IT3401T",
                             type: "core",
-                            code: "R5XX34XXT",
+                            code: "R5IT3401T",
                             title: "Financial Management",
                             credits: 2,
                             prereqs: [],
