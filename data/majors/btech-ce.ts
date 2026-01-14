@@ -910,7 +910,7 @@ export const CE_PROGRAM: Program = {
                             id: "R5CO3004L",
                             type: "core",
                             code: "R5CO3004L",
-                            title: "DevOps Laboratory",
+                            title: "DevOps",
                             credits: 1,
                             prereqs: [
                                 "R5CO2009T",

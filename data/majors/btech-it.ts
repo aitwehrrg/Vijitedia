@@ -896,7 +896,7 @@ export const IT_PROGRAM: Program = {
                             id: "R5IT3004L",
                             type: "core",
                             code: "R5IT3004L",
-                            title: "DevOps Laboratory",
+                            title: "DevOps",
                             credits: 1,
                             prereqs: [
                                 "R5IT3002T",
