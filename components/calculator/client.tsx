@@ -347,40 +347,56 @@ export default function CalculatorPage() {
 
     const renderPromotionWarning = (yearIndex: number) => {
         if (yearIndex === 0) return null;
+
+        const targetYearLabel =
+            currentProgram.years[yearIndex]?.label || "Graduation";
+
         const isDSY = currentProgram.years[0].semesters.every((s) =>
             excludedSemesters.includes(s.id)
         );
+
         const failuresY1 = yearStats[0]?.failureCount || 0;
         const creditsY1 = yearStats[0]?.passedCredits || 0;
         const failuresY2 = yearStats[1]?.failureCount || 0;
         const creditsY2 = yearStats[1]?.passedCredits || 0;
         const creditsY3 = yearStats[2]?.passedCredits || 0;
+
         let error = null;
+
         if (yearIndex === 1) {
             if (!isDSY && creditsY1 < 32)
-                error = `Insufficient Year 1 Credits (${creditsY1}/32)`;
+                error = `Insufficient First Year Credits (${creditsY1}/32)`;
         } else if (yearIndex === 2) {
             if (creditsY2 < 32)
-                error = `Insufficient Year 2 Credits (${creditsY2}/32)`;
+                error = `Insufficient Second Year Credits (${creditsY2}/32)`;
             else if (!isDSY && failuresY1 > 1)
-                error = `Too many Year 1 Failures (${failuresY1} > 1)`;
+                error = `Too many First Year Failures (${failuresY1} > 1)`;
         } else if (yearIndex === 3) {
             if (creditsY3 < 32)
-                error = `Insufficient Year 3 Credits (${creditsY3}/32)`;
+                error = `Insufficient Third Year Credits (${creditsY3}/32)`;
             else if (failuresY2 > 1)
-                error = `Too many Year 2 Failures (${failuresY2} > 1)`;
+                error = `Too many Second Year Failures (${failuresY2} > 1)`;
             else if (!isDSY && failuresY1 > 0)
-                error = `Uncleared Year 1 Failures (${failuresY1})`;
+                error = `Uncleared First Year Failures (${failuresY1})`;
+        } else if (yearIndex === 4) {
+            if (Number(mainStats.gpa) < 4.0) error = `CGPA below 4.0 (${Number(mainStats.gpa).toFixed(2)})`;
         }
-        if (error)
+
+        if (error) {
+            const title =
+                yearIndex === 4
+                    ? "Cannot Graduate"
+                    : `Cannot promote to ${targetYearLabel}`;
+
             return (
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800 text-sm font-medium">
                     <AlertTriangle className="w-4 h-4 shrink-0" />
                     <span>
-                        Cannot promote to Year {yearIndex + 1}: {error}
+                        {title}: {error}
                     </span>
                 </div>
             );
+        }
         return null;
     };
 
@@ -594,6 +610,8 @@ export default function CalculatorPage() {
                         </div>
                     );
                 })}
+
+                {renderPromotionWarning(4)}
 
                 {activeHonorsCourses.length > 0 && (
                     <div className="pt-8 border-t border-slate-200">
