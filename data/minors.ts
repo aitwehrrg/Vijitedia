@@ -186,7 +186,7 @@ export const MINORS: Minor[] = [
             {
                 id: "R5CO2205T",
                 code: "R5CO2205T",
-                title: "Python for Data Science and Data Analysis",
+                title: "Data Visualization, Regression and Prediction",
                 credits: 2,
                 prereqs: [],
             },
@@ -398,7 +398,7 @@ export const MINORS: Minor[] = [
             {
                 id: "R5ME2204T",
                 code: "R5ME2204T",
-                title: "Mechanics of Robotics",
+                title: "Mechanics of Robots",
                 credits: 2,
                 prereqs: [],
             },

@@ -23,7 +23,7 @@ export const HONORS: Honors[] = [
             {
                 id: "BLOCK-II",
                 code: "R5XX3XXXT",
-                title: "Ethereum Blockchain",
+                title: "Ethereum Foundations",
                 credits: 3,
                 prereqs: ["R5CO3009T", "R5CO3009L"],
             },
