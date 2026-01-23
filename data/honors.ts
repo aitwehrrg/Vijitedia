@@ -25,14 +25,14 @@ export const HONORS: Honors[] = [
                 code: "R5XX3XXXT",
                 title: "Ethereum Foundations",
                 credits: 3,
-                prereqs: ["R5CO3009T", "R5CO3009L"],
+                prereqs: ["R5CO3009T"],
             },
             {
                 id: "BLOCK-II-Lab",
                 code: "R5XX3XXXL",
                 title: "Ethereum Laboratory",
                 credits: 1,
-                prereqs: ["R5CO3009T", "R5CO3009L"],
+                prereqs: ["R5CO3009L", "R5CO1024L", "R5CO2005L", "R5IT2005L"],
             },
             {
                 id: "BLOCK-III",

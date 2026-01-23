@@ -929,7 +929,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT3007T",
                             title: "Wireless Networks",
                             credits: 3,
-                            prereqs: ["R5IT2009T", "R5IT2009L"],
+                            prereqs: ["R5CO1026T", "R5IT2009T", "R5IT2009L"],
                         },
                         {
                             id: "R5IT3006L",
@@ -937,7 +937,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5IT3006L",
                             title: "Wireless Networks Laboratory",
                             credits: 1,
-                            prereqs: ["R5IT2003T", "R5IT2003L"],
+                            prereqs: [],
                         },
                         {
                             id: "R5IT3008T",
@@ -1004,6 +1004,14 @@ export const IT_PROGRAM: Program = {
                                     prereqs: ["R5IT2003T", "R5IT2003L"],
                                     linkedOptionId: "R5IT3111L",
                                 },
+                                {
+                                    id: "R5IT3112T",
+                                    code: "R5IT3112T",
+                                    title: "Quantum Computing",
+                                    credits: 3,
+                                    prereqs: ["R5MA2007T", "R5CO1026T"],
+                                    linkedOptionId: "R5IT3112L",
+                                },
                             ],
                         },
                         {
@@ -1054,6 +1062,14 @@ export const IT_PROGRAM: Program = {
                                     credits: 1,
                                     prereqs: [],
                                     linkedOptionId: "R5IT3111T",
+                                },
+                                {
+                                    id: "R5IT3112L",
+                                    code: "R5IT3112L",
+                                    title: "Quantum Computing Laboratory",
+                                    credits: 1,
+                                    prereqs: [],
+                                    linkedOptionId: "R5IT3112T",
                                 },
                             ],
                         },
