@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -69,6 +70,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <SpeedInsights />
             <head>
                 <meta property="og:image" content="/thumbnail.jpeg"></meta>
                 <meta property="og:site_name" content="Vijitedia"></meta>
@@ -82,9 +84,7 @@ export default function RootLayout({
                     content="https://vijitedia.vercel.app/"
                 ></meta>
             </head>
-            <body
-                className={`${cmSans.variable} ${cmMono.variable} font-sans`}
-            >
+            <body className={`${cmSans.variable} ${cmMono.variable} font-sans`}>
                 {children}
             </body>
         </html>
