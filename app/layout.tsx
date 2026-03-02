@@ -70,7 +70,6 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <SpeedInsights />
             <head>
                 <meta property="og:image" content="/thumbnail.jpeg"></meta>
                 <meta property="og:site_name" content="Vijitedia"></meta>
@@ -86,6 +85,7 @@ export default function RootLayout({
             </head>
             <body className={`${cmSans.variable} ${cmMono.variable} font-sans`}>
                 {children}
+                <SpeedInsights />
             </body>
         </html>
     );
