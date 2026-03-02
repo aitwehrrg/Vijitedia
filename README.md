@@ -78,7 +78,7 @@ The graph relationships are determined at runtime:
 
 The application optimizes graph traversal by pre-computing relationship maps.
 - Instead of iterating through the entire node array ($\mathcal{O}(N)$) during every render cycle to determine connectivity, the system generates a **Relationship Set** for the active node upon interaction.
-- Child components determine their rendering state (e.g., `prereq`, `postreq`, `default`) via constant-time `Set.has()` lookups ($\mathcal{O}(1)$), significantly reducing the computational overhead during rapid state changes.
+- Child components determine their rendering state (e.g., `prereq`, `postreq`, `default`) via constant-time `Set.has()` lookups $(\mathcal{O}(1))$, significantly reducing the computational overhead during rapid state changes.
 
 #### C. Bézier Curve Rendering
 
