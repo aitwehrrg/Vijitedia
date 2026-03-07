@@ -32,25 +32,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { getSuffix } from "@/lib/utils";
-
-const getGradeColor = (grade: string) => {
-    const points = GRADE_POINTS[grade];
-    if (points === undefined)
-        return "border-slate-300 bg-slate-100 text-slate-700 font-bold";
-    if (points >= 9)
-        return "border-green-300 bg-green-100 text-green-800 font-bold";
-    if (points >= 8)
-        return "border-cyan-300 bg-cyan-100 text-cyan-800 font-bold";
-    if (points >= 7)
-        return "border-blue-300 bg-blue-100 text-blue-800 font-bold";
-    if (points >= 6)
-        return "border-violet-300 bg-violet-100 text-violet-800 font-bold";
-    if (points >= 5)
-        return "border-yellow-300 bg-yellow-100 text-yellow-800 font-bold";
-    if (points >= 4)
-        return "border-orange-300 bg-orange-100 text-orange-800 font-bold";
-    return "border-rose-300 bg-rose-100 text-rose-800 font-bold";
-};
+import { getGradeColor, calculateStats, predictCGPA, computeYearStats, checkPromotionEligibility } from "@/lib/calculator";
 
 const CourseRow = memo(
     ({
@@ -89,9 +71,8 @@ const CourseRow = memo(
                     disabled={isDisabled}
                 >
                     <SelectTrigger
-                        className={`w-[75px] h-9 text-sm font-mono transition-colors ${
-                            grade && !isDisabled ? getGradeColor(grade) : ""
-                        }`}
+                        className={`w-[75px] h-9 text-sm font-mono transition-colors ${grade && !isDisabled ? getGradeColor(grade) : ""
+                            }`}
                     >
                         <SelectValue placeholder="-" />
                     </SelectTrigger>
@@ -115,28 +96,6 @@ const CourseRow = memo(
     }
 );
 CourseRow.displayName = "CourseRow";
-
-const calculateStats = (courses: Course[], grades: Record<string, string>) => {
-    let totalPoints = 0;
-    let totalCredits = 0;
-
-    courses.forEach((course) => {
-        const gradeKey = grades[course.id];
-        if (gradeKey) {
-            const points = GRADE_POINTS[gradeKey];
-            const credits = course.credits || 0;
-            totalPoints += points * credits;
-            totalCredits += credits;
-        }
-    });
-
-    return {
-        points: totalPoints,
-        credits: totalCredits,
-        gpa:
-            totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00",
-    };
-};
 
 export default function CalculatorPage() {
     const params = useParams();
@@ -237,75 +196,15 @@ export default function CalculatorPage() {
         return calculateStats(activeHonorsCourses, grades);
     }, [activeHonorsCourses, grades]);
 
-    const yearStats = useMemo(() => {
-        if (!currentProgram) return [];
-        return currentProgram.years.map((year) => {
-            let passedCredits = 0;
-            let failureCount = 0;
-            const allCourses = year.semesters.flatMap((s) => s.courses);
-            allCourses.forEach((course) => {
-                const g = grades[course.id];
-                if (g) {
-                    if (g === "FF") failureCount++;
-                    else passedCredits += course.credits || 0;
-                }
-            });
-            return { passedCredits, failureCount };
-        });
-    }, [currentProgram, grades]);
+    const yearStats = useMemo(
+        () => currentProgram ? computeYearStats(currentProgram.years, grades) : [],
+        [currentProgram, grades]
+    );
 
-    const prediction = useMemo(() => {
-        const target = parseFloat(targetCGPA);
-        if (isNaN(target)) return null;
-
-        const totalDegreeCredits = activeMainCourses.reduce(
-            (sum, c) => sum + (c.credits || 0),
-            0
-        );
-        const completedCredits = mainStats.credits;
-        const remainingCredits = totalDegreeCredits - completedCredits;
-        const currentPoints = mainStats.points;
-
-        const maxPoints = currentPoints + 10 * remainingCredits;
-        const maxPossibleCGPA =
-            totalDegreeCredits > 0 ? maxPoints / totalDegreeCredits : 0;
-        const minPoints = currentPoints + 0 * remainingCredits;
-        const minPossibleCGPA =
-            totalDegreeCredits > 0 ? minPoints / totalDegreeCredits : 0;
-
-        if (remainingCredits <= 0)
-            return {
-                status: "done",
-                value: 0,
-                maxPossible: maxPossibleCGPA,
-                minPossible: minPossibleCGPA,
-            };
-
-        const requiredPoints = target * totalDegreeCredits - currentPoints;
-        const requiredGPA = requiredPoints / remainingCredits;
-
-        if (requiredGPA > 10.0)
-            return {
-                status: "impossible-high",
-                value: requiredGPA,
-                maxPossible: maxPossibleCGPA,
-                minPossible: minPossibleCGPA,
-            };
-        if (requiredGPA < 0)
-            return {
-                status: "impossible-low",
-                value: requiredGPA,
-                maxPossible: maxPossibleCGPA,
-                minPossible: minPossibleCGPA,
-            };
-
-        return {
-            status: "possible",
-            value: requiredGPA,
-            maxPossible: maxPossibleCGPA,
-            minPossible: minPossibleCGPA,
-        };
-    }, [targetCGPA, activeMainCourses, mainStats]);
+    const prediction = useMemo(
+        () => predictCGPA(targetCGPA, activeMainCourses, mainStats),
+        [targetCGPA, activeMainCourses, mainStats]
+    );
 
     if (!currentProgram) notFound();
 
@@ -346,58 +245,34 @@ export default function CalculatorPage() {
     };
 
     const renderPromotionWarning = (yearIndex: number) => {
-        if (yearIndex === 0) return null;
-
-        const targetYearLabel =
-            currentProgram.years[yearIndex]?.label || "Graduation";
-
         const isDSY = currentProgram.years[0].semesters.every((s) =>
             excludedSemesters.includes(s.id)
         );
 
-        const failuresY1 = yearStats[0]?.failureCount || 0;
-        const creditsY1 = yearStats[0]?.passedCredits || 0;
-        const failuresY2 = yearStats[1]?.failureCount || 0;
-        const creditsY2 = yearStats[1]?.passedCredits || 0;
-        const creditsY3 = yearStats[2]?.passedCredits || 0;
+        const error = checkPromotionEligibility(
+            yearIndex,
+            yearStats,
+            isDSY,
+            Number(mainStats.gpa)
+        );
 
-        let error = null;
+        if (!error) return null;
 
-        if (yearIndex === 1) {
-            if (!isDSY && creditsY1 < 32)
-                error = `Insufficient First Year Credits (${creditsY1}/32)`;
-        } else if (yearIndex === 2) {
-            if (creditsY2 < 32)
-                error = `Insufficient Second Year Credits (${creditsY2}/32)`;
-            else if (!isDSY && failuresY1 > 1)
-                error = `Too many First Year Failures (${failuresY1} > 1)`;
-        } else if (yearIndex === 3) {
-            if (creditsY3 < 32)
-                error = `Insufficient Third Year Credits (${creditsY3}/32)`;
-            else if (failuresY2 > 1)
-                error = `Too many Second Year Failures (${failuresY2} > 1)`;
-            else if (!isDSY && failuresY1 > 0)
-                error = `Uncleared First Year Failures (${failuresY1})`;
-        } else if (yearIndex === 4) {
-            if (Number(mainStats.gpa) < 4.0) error = `CGPA below 4.0 (${Number(mainStats.gpa).toFixed(2)})`;
-        }
+        const targetYearLabel =
+            currentProgram.years[yearIndex]?.label || "Graduation";
+        const title =
+            yearIndex === 4
+                ? "Cannot Graduate"
+                : `Cannot promote to ${targetYearLabel}`;
 
-        if (error) {
-            const title =
-                yearIndex === 4
-                    ? "Cannot Graduate"
-                    : `Cannot promote to ${targetYearLabel}`;
-
-            return (
-                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800 text-sm font-medium">
-                    <AlertTriangle className="w-4 h-4 shrink-0" />
-                    <span>
-                        {title}: {error}
-                    </span>
-                </div>
-            );
-        }
-        return null;
+        return (
+            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800 text-sm font-medium">
+                <AlertTriangle className="w-4 h-4 shrink-0" />
+                <span>
+                    {title}: {error}
+                </span>
+            </div>
+        );
     };
 
     return (
@@ -590,7 +465,7 @@ export default function CalculatorPage() {
                                                             course={course}
                                                             grade={
                                                                 grades[
-                                                                    course.id
+                                                                course.id
                                                                 ]
                                                             }
                                                             isDisabled={

@@ -4,7 +4,16 @@ import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
-import { CourseCard, CourseStatus } from "@/components/course-card";
+import { CourseCard } from "@/components/course-card";
+import {
+    resolveEffectiveCourses,
+    computeTakenCourses,
+    computeDisabledMinorIds,
+    computeDisabledOptionIds,
+    computeActiveRelationships,
+    getCourseStatus,
+    CourseStatus,
+} from "@/lib/flowsheet";
 import { ElectiveCard, ElectiveCardHandle } from "@/components/elective-card";
 import { MinorSlot, MinorSlotHandle } from "@/components/minor-slot";
 import { HonorsSlot, HonorsSlotHandle } from "@/components/honors-slot";
@@ -73,142 +82,35 @@ export default function FlowsheetPage() {
         [flatSemesters]
     );
 
-    const effectiveCourses = useMemo(() => {
-        return allCourses.map((course) => {
-            if (course.type === "elective" && selections[course.id]) {
-                const selectedOpt = course.options?.find(
-                    (o) => o.id === selections[course.id]
-                );
-                if (selectedOpt)
-                    return { ...course, ...selectedOpt, id: course.id };
-            }
+    const effectiveCourses = useMemo(
+        () => resolveEffectiveCourses(allCourses, selections, selectedMinorId, selectedHonorsId),
+        [allCourses, selections, selectedMinorId, selectedHonorsId]
+    );
 
-            if (
-                course.type === "minor" &&
-                selectedMinorId &&
-                course.minorIndex !== undefined
-            ) {
-                const activeMinor = MINORS.find(
-                    (m) => m.id === selectedMinorId
-                );
-                const minorCourse = activeMinor?.courses[course.minorIndex];
-                if (minorCourse)
-                    return {
-                        ...course,
-                        ...minorCourse,
-                        id: course.id,
-                        originalId: minorCourse.id,
-                    };
-            }
+    const takenCoursesBase = useMemo(
+        () => computeTakenCourses(allCourses, selections),
+        [allCourses, selections]
+    );
 
-            if (
-                course.type === "honors" &&
-                selectedHonorsId &&
-                course.honorsIndex !== undefined
-            ) {
-                const activeHonors = HONORS.find(
-                    (h) => h.id === selectedHonorsId
-                );
-                const honorsCourse = activeHonors?.courses[course.honorsIndex];
-                if (honorsCourse)
-                    return {
-                        ...course,
-                        ...honorsCourse,
-                        id: course.id,
-                        originalId: honorsCourse.id,
-                    };
-            }
+    const disabledMinorIds = useMemo(
+        () => computeDisabledMinorIds(takenCoursesBase),
+        [takenCoursesBase]
+    );
 
-            return course;
-        });
-    }, [allCourses, selections, selectedMinorId, selectedHonorsId]);
-
-    const takenCoursesBase = useMemo(() => {
-        const taken = new Set<string>();
-        allCourses.forEach((c) => c.type === "core" && taken.add(c.id));
-        Object.values(selections).forEach((selId) => taken.add(selId));
-        return taken;
-    }, [allCourses, selections]);
-
-    const disabledMinorIds = useMemo(() => {
-        const disabled = new Set<string>();
-        MINORS.forEach((minor) => {
-            for (const course of minor.courses) {
-                if (
-                    takenCoursesBase.has(course.id) ||
-                    course.mutexIds?.some((id) => takenCoursesBase.has(id))
-                ) {
-                    disabled.add(minor.id);
-                    break;
-                }
-            }
-        });
-        return disabled;
-    }, [takenCoursesBase]);
-
-    const disabledOptionIds = useMemo(() => {
-        const disabled = new Set<string>();
-        const takenForElectives = new Set(takenCoursesBase);
-
-        if (selectedMinorId)
-            MINORS.find((m) => m.id === selectedMinorId)?.courses.forEach((c) =>
-                takenForElectives.add(c.id)
-            );
-        if (selectedHonorsId)
-            HONORS.find((h) => h.id === selectedHonorsId)?.courses.forEach(
-                (c) => takenForElectives.add(c.id)
-            );
-
-        allCourses.forEach((course) => {
-            if (course.type === "elective" && course.options) {
-                course.options.forEach((option) => {
-                    if (
-                        takenForElectives.has(option.id) ||
-                        option.mutexIds?.some((id) => takenForElectives.has(id))
-                    ) {
-                        disabled.add(option.id);
-                    }
-                });
-            }
-        });
-        return disabled;
-    }, [allCourses, takenCoursesBase, selectedMinorId, selectedHonorsId]);
+    const disabledOptionIds = useMemo(
+        () => computeDisabledOptionIds(allCourses, takenCoursesBase, selectedMinorId, selectedHonorsId),
+        [allCourses, takenCoursesBase, selectedMinorId, selectedHonorsId]
+    );
 
     const activeCourseId = hoveredCourseId || selectedCourseId;
 
-    const activeRelationships = useMemo(() => {
-        if (!activeCourseId) return null;
+    const activeRelationships = useMemo(
+        () => computeActiveRelationships(activeCourseId, effectiveCourses),
+        [activeCourseId, effectiveCourses]
+    );
 
-        const activeCourse = effectiveCourses.find(
-            (c) => c.id === activeCourseId
-        );
-        if (!activeCourse) return null;
-
-        const prereqs = new Set(activeCourse.prereqs || []);
-        const postreqs = new Set<string>();
-
-        effectiveCourses.forEach((c) => {
-            const p = c.prereqs || [];
-            if (
-                p.includes(activeCourseId) ||
-                ((activeCourse as any).originalId &&
-                    p.includes((activeCourse as any).originalId))
-            ) {
-                postreqs.add(c.id);
-            }
-        });
-
-        return { prereqs, postreqs, activeId: activeCourseId };
-    }, [activeCourseId, effectiveCourses]);
-
-    const getCourseStatus = useCallback(
-        (courseId: string): CourseStatus => {
-            if (!activeRelationships) return "default";
-            if (courseId === activeRelationships.activeId) return "hovered";
-            if (activeRelationships.prereqs.has(courseId)) return "prereq";
-            if (activeRelationships.postreqs.has(courseId)) return "postreq";
-            return "default";
-        },
+    const getStatus = useCallback(
+        (courseId: string): CourseStatus => getCourseStatus(courseId, activeRelationships),
         [activeRelationships]
     );
 
@@ -536,7 +438,7 @@ export default function FlowsheetPage() {
                                         effectiveCourses.find(
                                             (c) => c.id === course.id
                                         ) || course;
-                                    const status = getCourseStatus(course.id);
+                                    const status = getStatus(course.id);
 
                                     return (
                                         <div
@@ -661,7 +563,7 @@ export default function FlowsheetPage() {
                                                             (o) =>
                                                                 o.id ===
                                                                 selections[
-                                                                    course.id
+                                                                course.id
                                                                 ]
                                                         ) || null
                                                     }
