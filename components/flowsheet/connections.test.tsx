@@ -39,7 +39,6 @@ describe("ConnectionLines", () => {
             <ConnectionLines connections={connections} />
         );
         const paths = container.querySelectorAll("path:not(defs path)");
-        // defs contain 2 marker paths, so we count paths outside defs
         expect(paths.length).toBe(2);
     });
 
@@ -136,9 +135,7 @@ describe("ConnectionLines", () => {
             "svg > path"
         ) as SVGPathElement | null;
         const d = path!.getAttribute("d")!;
-        // Must start at start point
         expect(d).toContain("M 10 20");
-        // Must use C (cubic bezier) to end point
         expect(d).toContain("110 50");
     });
 });

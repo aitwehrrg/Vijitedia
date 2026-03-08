@@ -10,10 +10,6 @@ export interface ActiveRelationships {
     activeId: string;
 }
 
-/**
- * Resolves effective courses by merging elective selections, minor substitutions,
- * and honors substitutions into the base course list.
- */
 export function resolveEffectiveCourses(
     allCourses: Course[],
     selections: Record<string, string>,
@@ -65,9 +61,6 @@ export function resolveEffectiveCourses(
     });
 }
 
-/**
- * Computes the set of "taken" course IDs from core courses and elective selections.
- */
 export function computeTakenCourses(
     allCourses: Course[],
     selections: Record<string, string>
@@ -78,9 +71,6 @@ export function computeTakenCourses(
     return taken;
 }
 
-/**
- * Determines which minor programs are disabled due to course ID or mutex conflicts.
- */
 export function computeDisabledMinorIds(
     takenCourses: Set<string>,
     minors: Minor[] = MINORS
@@ -100,9 +90,6 @@ export function computeDisabledMinorIds(
     return disabled;
 }
 
-/**
- * Determines which elective option IDs are disabled due to course conflicts.
- */
 export function computeDisabledOptionIds(
     allCourses: Course[],
     takenCoursesBase: Set<string>,
@@ -111,7 +98,6 @@ export function computeDisabledOptionIds(
 ): Set<string> {
     const disabled = new Set<string>();
     const takenForElectives = new Set(takenCoursesBase);
-
     if (selectedMinorId)
         MINORS.find((m) => m.id === selectedMinorId)?.courses.forEach((c) =>
             takenForElectives.add(c.id)
@@ -136,9 +122,6 @@ export function computeDisabledOptionIds(
     return disabled;
 }
 
-/**
- * Computes the prereq and postreq relationships for the currently active course.
- */
 export function computeActiveRelationships(
     activeCourseId: string | null,
     effectiveCourses: Course[]
@@ -149,7 +132,6 @@ export function computeActiveRelationships(
         (c) => c.id === activeCourseId
     );
     if (!activeCourse) return null;
-
     const prereqs = new Set(activeCourse.prereqs || []);
     const postreqs = new Set<string>();
 
@@ -167,9 +149,6 @@ export function computeActiveRelationships(
     return { prereqs, postreqs, activeId: activeCourseId };
 }
 
-/**
- * Pure function to determine a course's display status based on active relationships.
- */
 export function getCourseStatus(
     courseId: string,
     relationships: ActiveRelationships | null

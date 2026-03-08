@@ -372,7 +372,6 @@ export default function FlowsheetPage() {
                         }}
                     >
                         {currentProgram.years.map((year) => (
-                            /*ligma balls */
                             <div
                                 key={year.id}
                                 className="col-span-2 text-center border-b-2 border-slate-300/80 pb-2"

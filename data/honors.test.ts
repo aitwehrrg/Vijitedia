@@ -46,8 +46,6 @@ describe("HONORS", () => {
             const validIds = new Set(honor.courses.map((c) => c.id));
             honor.courses.forEach((course) => {
                 course.prereqs.forEach((prereq) => {
-                    // prereqs can reference either within the honors track or external courses
-                    // We just verify they're non-empty strings
                     expect(typeof prereq).toBe("string");
                     expect(prereq.length).toBeGreaterThan(0);
                 });

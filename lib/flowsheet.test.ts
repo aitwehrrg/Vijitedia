@@ -11,16 +11,12 @@ import {
 import { MINORS } from "@/data/minors";
 import { HONORS } from "@/data/honors";
 
-// ─── Helpers ──────────────────────────────────────────────────
-
 const mkCourse = (overrides: Partial<Course> & { id: string }): Course => ({
     type: "core",
     credits: 3,
     prereqs: [],
     ...overrides,
 });
-
-// ─── resolveEffectiveCourses ──────────────────────────────────
 
 describe("resolveEffectiveCourses", () => {
     it("returns core courses unchanged", () => {
@@ -53,8 +49,8 @@ describe("resolveEffectiveCourses", () => {
             null,
             null
         );
-        expect(result[0].id).toBe("E1"); // keeps slot ID
-        expect(result[0].code).toBe("OE101"); // merges option fields
+        expect(result[0].id).toBe("E1"); 
+        expect(result[0].code).toBe("OE101"); 
         expect(result[0].title).toBe("Open Elective I");
         expect(result[0].credits).toBe(4);
     });
@@ -76,7 +72,7 @@ describe("resolveEffectiveCourses", () => {
             }),
         ];
         const result = resolveEffectiveCourses(courses, {}, null, null);
-        expect(result[0].code).toBeUndefined(); // original course has no code
+        expect(result[0].code).toBeUndefined(); 
     });
 
     it("substitutes minor course when minor is selected", () => {
@@ -163,13 +159,11 @@ describe("resolveEffectiveCourses", () => {
             minorId,
             null
         );
-        expect(result[0].code).toBe("CORE"); // core unchanged
-        expect(result[1].code).toBe("OE1"); // elective merged
-        expect((result[2] as any).originalId).toBeDefined(); // minor substituted
+        expect(result[0].code).toBe("CORE"); 
+        expect(result[1].code).toBe("OE1"); 
+        expect((result[2] as any).originalId).toBeDefined(); 
     });
 });
-
-// ─── computeTakenCourses ──────────────────────────────────────
 
 describe("computeTakenCourses", () => {
     it("includes all core course IDs", () => {
@@ -207,8 +201,6 @@ describe("computeTakenCourses", () => {
         expect(taken.size).toBe(0);
     });
 });
-
-// ─── computeDisabledMinorIds ──────────────────────────────────
 
 describe("computeDisabledMinorIds", () => {
     const testMinors = [
@@ -327,8 +319,6 @@ describe("computeDisabledMinorIds", () => {
     });
 });
 
-// ─── computeDisabledOptionIds ─────────────────────────────────
-
 describe("computeDisabledOptionIds", () => {
     it("disables an option whose ID is already taken", () => {
         const courses = [
@@ -418,8 +408,6 @@ describe("computeDisabledOptionIds", () => {
     });
 });
 
-// ─── computeActiveRelationships ───────────────────────────────
-
 describe("computeActiveRelationships", () => {
     it("returns null when no active course ID", () => {
         const result = computeActiveRelationships(null, []);
@@ -475,8 +463,6 @@ describe("computeActiveRelationships", () => {
         expect(result!.activeId).toBe("B");
     });
 });
-
-// ─── getCourseStatus ──────────────────────────────────────────
 
 describe("getCourseStatus", () => {
     it('returns "default" when relationships is null', () => {

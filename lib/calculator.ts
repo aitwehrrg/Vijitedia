@@ -52,9 +52,6 @@ export interface PredictionResult {
     minPossible: number;
 }
 
-/**
- * Predicts the required GPA to achieve a target CGPA.
- */
 export function predictCGPA(
     targetCGPA: string,
     activeMainCourses: Course[],
@@ -117,9 +114,6 @@ export interface YearStat {
     failureCount: number;
 }
 
-/**
- * Computes per-year passed credits and failure counts.
- */
 export function computeYearStats(
     years: Year[],
     grades: Record<string, string>
@@ -139,10 +133,6 @@ export function computeYearStats(
     });
 }
 
-/**
- * Checks promotion eligibility for a given year index.
- * Returns an error string if ineligible, or null if eligible.
- */
 export function checkPromotionEligibility(
     yearIndex: number,
     yearStats: YearStat[],

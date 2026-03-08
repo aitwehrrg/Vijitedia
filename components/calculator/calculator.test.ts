@@ -9,8 +9,6 @@ import {
 } from "@/lib/calculator";
 import { Course, Year } from "@/types/flowsheet";
 
-// ─── Helpers ──────────────────────────────────────────────────
-
 const mockCourse = (id: string, credits: number): Course => ({
     id,
     credits,
@@ -31,8 +29,6 @@ const mockYear = (
         { id: `${id}-s2`, label: "Sem 2", courses: [] },
     ],
 });
-
-// ─── calculateStats ───────────────────────────────────────────
 
 describe("calculateStats", () => {
     it("returns zeros when no grades are provided", () => {
@@ -87,8 +83,6 @@ describe("calculateStats", () => {
     });
 });
 
-// ─── getGradeColor ────────────────────────────────────────────
-
 describe("getGradeColor", () => {
     it("returns green for AA (10 points)", () => {
         expect(getGradeColor("AA")).toContain("green");
@@ -131,8 +125,6 @@ describe("getGradeColor", () => {
     });
 });
 
-// ─── predictCGPA ──────────────────────────────────────────────
-
 describe("predictCGPA", () => {
     it("returns null for non-numeric target", () => {
         expect(predictCGPA("abc", [], { credits: 0, points: 0 })).toBeNull();
@@ -144,35 +136,29 @@ describe("predictCGPA", () => {
 
     it('returns "done" when all credits are completed', () => {
         const courses = [mockCourse("C1", 3), mockCourse("C2", 4)];
-        const stats = { credits: 7, points: 70 }; // all 7 credits completed
+        const stats = { credits: 7, points: 70 }; 
         const result = predictCGPA("9.0", courses, stats);
         expect(result!.status).toBe("done");
     });
 
     it('returns "impossible-high" when target is too ambitious', () => {
         const courses = [mockCourse("C1", 5), mockCourse("C2", 5)];
-        // 5 credits completed with 0 points, need 10.0 CGPA in remaining 5
         const stats = { credits: 5, points: 0 };
         const result = predictCGPA("10.0", courses, stats);
-        // Required: (10.0 * 10 - 0) / 5 = 20 > 10
         expect(result!.status).toBe("impossible-high");
     });
 
     it('returns "impossible-low" when target is already exceeded', () => {
         const courses = [mockCourse("C1", 5), mockCourse("C2", 5)];
-        // 5 credits at 10 GPA, 5 remaining, target 2.0
         const stats = { credits: 5, points: 50 };
         const result = predictCGPA("2.0", courses, stats);
-        // Required: (2.0 * 10 - 50) / 5 = (20-50)/5 = -6 < 0
         expect(result!.status).toBe("impossible-low");
     });
 
     it('returns "possible" with the required GPA value', () => {
         const courses = [mockCourse("C1", 5), mockCourse("C2", 5)];
-        // 5 credits at 8 GPA, 5 remaining, target 9.0
         const stats = { credits: 5, points: 40 };
         const result = predictCGPA("9.0", courses, stats);
-        // Required: (9.0 * 10 - 40) / 5 = (90-40)/5 = 10.0
         expect(result!.status).toBe("possible");
         expect(result!.value).toBe(10.0);
     });
@@ -181,7 +167,6 @@ describe("predictCGPA", () => {
         const courses = [mockCourse("C1", 5), mockCourse("C2", 5)];
         const stats = { credits: 5, points: 40 };
         const result = predictCGPA("9.0", courses, stats);
-        // max = (40 + 10*5) / 10 = 90/10 = 9.0
         expect(result!.maxPossible).toBe(9.0);
     });
 
@@ -189,7 +174,6 @@ describe("predictCGPA", () => {
         const courses = [mockCourse("C1", 5), mockCourse("C2", 5)];
         const stats = { credits: 5, points: 40 };
         const result = predictCGPA("9.0", courses, stats);
-        // min = 40 / 10 = 4.0
         expect(result!.minPossible).toBe(4.0);
     });
 
@@ -199,8 +183,6 @@ describe("predictCGPA", () => {
         expect(result!.maxPossible).toBe(0);
     });
 });
-
-// ─── computeYearStats ─────────────────────────────────────────
 
 describe("computeYearStats", () => {
     it("returns empty array for empty years", () => {
@@ -248,8 +230,6 @@ describe("computeYearStats", () => {
     });
 });
 
-// ─── checkPromotionEligibility ────────────────────────────────
-
 describe("checkPromotionEligibility", () => {
     const fullStats: YearStat[] = [
         { passedCredits: 40, failureCount: 0 },
@@ -262,7 +242,6 @@ describe("checkPromotionEligibility", () => {
         expect(checkPromotionEligibility(0, fullStats, false, 8.0)).toBeNull();
     });
 
-    // ── Year 1 → Year 2 ──
     it("returns error for Y1 insufficient credits (non-DSY)", () => {
         const stats = [
             { passedCredits: 20, failureCount: 0 },
@@ -285,7 +264,6 @@ describe("checkPromotionEligibility", () => {
         expect(checkPromotionEligibility(1, fullStats, false, 8.0)).toBeNull();
     });
 
-    // ── Year 2 → Year 3 ──
     it("returns error for Y2 insufficient credits", () => {
         const stats = [
             fullStats[0],
@@ -315,7 +293,6 @@ describe("checkPromotionEligibility", () => {
         expect(checkPromotionEligibility(2, stats, true, 8.0)).toBeNull();
     });
 
-    // ── Year 3 → Year 4 ──
     it("returns error for Y3 insufficient credits", () => {
         const stats = [
             fullStats[0],
@@ -359,7 +336,6 @@ describe("checkPromotionEligibility", () => {
         expect(checkPromotionEligibility(3, stats, true, 8.0)).toBeNull();
     });
 
-    // ── Graduation ──
     it("returns error for graduation when CGPA below 4.0", () => {
         const error = checkPromotionEligibility(4, fullStats, false, 3.5);
         expect(error).toContain("CGPA below 4.0");
