@@ -22,23 +22,31 @@
 │   ├── not-found.tsx                     # 404 Error page
 │   └── page.tsx                          # Main landing page
 ├── components
+│   ├── calculator/                       # Calculator interactive components
+│   │   └── client.tsx                    # Client-side calculator logic
 │   ├── flowsheet/                        # Flowsheet modular components
+│   │   ├── client.tsx                    # Client-side flowsheet logic
+│   │   ├── connections.tsx               # Renders Bézier curve connections
+│   │   └── header.tsx                    # Flowsheet header controls
 │   ├── ui/                               # Reusable ShadCN components
 │   ├── course-card.tsx                   # Renders individual course blocks
 │   ├── elective-card.tsx                 # Renders interactive elective slots
 │   ├── honors-slot.tsx                   # Renders honors degree slots
 │   └── minor-slot.tsx                    # Renders minor degree slots
 ├── data
-│   ├── majors/                           # Degree-specific JSON data
+│   ├── majors/                           # Degree-specific curriculum data
 │   ├── electives.ts                      # Elective pool definitions
 │   ├── grades.ts                         # Grade point mapping (AA = 10.0)
 │   ├── honors.ts                         # Honors program definitions
 │   ├── minors.ts                         # Minor degree definitions
 │   └── programs.ts                       # Main curriculum registry
 ├── lib
-│   └── utils.ts                          # Utility functions
+│   ├── calculator.ts                     # CGPA calculation functions
+│   ├── flowsheet.ts                      # Graph layout and traversal logic
+│   └── utils.ts                          # Shared utility functions
 ├── types
 │   └── flowsheet.ts                      # TypeScript interfaces (Course, Program)
+├── **/*.test.{ts,tsx}                    # Co-located Vitest unit tests
 ├── package.json
 └── ... (config files)
 ```
