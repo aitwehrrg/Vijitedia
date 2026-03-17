@@ -42,7 +42,7 @@ describe("ConnectionLines", () => {
         expect(paths.length).toBe(2);
     });
 
-    it("renders prereq connections with dashed stroke", () => {
+    it("renders prereq connections with dashed stroke and correct color class", () => {
         const connections: Connection[] = [
             {
                 start: { x: 0, y: 0 },
@@ -53,15 +53,15 @@ describe("ConnectionLines", () => {
         const { container } = render(
             <ConnectionLines connections={connections} />
         );
-        const path = container.querySelector(
-            "svg > path"
-        ) as SVGPathElement | null;
+        const paths = container.querySelectorAll("svg path");
+        const path = paths[2] as SVGPathElement | null;
         expect(path).not.toBeNull();
         expect(path!.getAttribute("stroke-dasharray")).toBe("5,5");
-        expect(path!.getAttribute("stroke")).toBe("#f59e0b");
+        expect(path!.getAttribute("stroke")).toBe("currentColor");
+        expect(path!.className.baseVal).toContain("text-amber-500");
     });
 
-    it("renders postreq connections with solid stroke", () => {
+    it("renders postreq connections with solid stroke and correct color class", () => {
         const connections: Connection[] = [
             {
                 start: { x: 0, y: 0 },
@@ -72,12 +72,12 @@ describe("ConnectionLines", () => {
         const { container } = render(
             <ConnectionLines connections={connections} />
         );
-        const path = container.querySelector(
-            "svg > path"
-        ) as SVGPathElement | null;
+        const paths = container.querySelectorAll("svg path");
+        const path = paths[2] as SVGPathElement | null;
         expect(path).not.toBeNull();
         expect(path!.getAttribute("stroke-dasharray")).toBe("0");
-        expect(path!.getAttribute("stroke")).toBe("#3b82f6");
+        expect(path!.getAttribute("stroke")).toBe("currentColor");
+        expect(path!.className.baseVal).toContain("text-blue-500");
     });
 
     it("sets correct markerEnd for each connection type", () => {
@@ -96,11 +96,11 @@ describe("ConnectionLines", () => {
         const { container } = render(
             <ConnectionLines connections={connections} />
         );
-        const paths = container.querySelectorAll("svg > path");
-        expect(paths[0].getAttribute("marker-end")).toBe(
+        const paths = container.querySelectorAll("svg path");
+        expect(paths[2].getAttribute("marker-end")).toBe(
             "url(#arrow-prereq)"
         );
-        expect(paths[1].getAttribute("marker-end")).toBe(
+        expect(paths[3].getAttribute("marker-end")).toBe(
             "url(#arrow-postreq)"
         );
     });
@@ -131,9 +131,8 @@ describe("ConnectionLines", () => {
         const { container } = render(
             <ConnectionLines connections={connections} />
         );
-        const path = container.querySelector(
-            "svg > path"
-        ) as SVGPathElement | null;
+        const paths = container.querySelectorAll("svg path");
+        const path = paths[2] as SVGPathElement | null;
         const d = path!.getAttribute("d")!;
         expect(d).toContain("M 10 20");
         expect(d).toContain("110 50");

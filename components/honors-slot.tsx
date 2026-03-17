@@ -59,7 +59,7 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
 
                         <PopoverTrigger asChild>
                             <button
-                                className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 shadow-sm transition-all"
+                                className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-background hover:bg-muted text-muted-foreground border border-border shadow-sm transition-all"
                                 title="Change Honors Track"
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -75,14 +75,14 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                     </div>
                 ) : (
                     <PopoverTrigger asChild>
-                        <div className="h-full border-2 border-dashed border-purple-200 hover:border-purple-400 hover:bg-purple-50/50 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
-                            <Award className="w-4 h-4 text-purple-300 group-hover:text-purple-600 mb-1 transition-colors" />
-                            <span className="text-sm font-semibold text-center text-purple-400 group-hover:text-purple-700 leading-tight transition-colors">
+                        <div className="h-full border-2 border-dashed border-border bg-card hover:border-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
+                            <Award className="w-4 h-4 text-muted-foreground group-hover:text-purple-600 mb-1 transition-colors" />
+                            <span className="text-sm font-semibold text-center text-foreground group-hover:text-purple-700 dark:group-hover:text-purple-400 leading-tight transition-colors">
                                 Honors{getSuffix(course.honorsIndex || 0)}
                             </span>
                             <Badge
                                 variant="secondary"
-                                className="mt-1 text-[10px] h-4 bg-purple-50 text-purple-400 group-hover:bg-purple-100 group-hover:text-purple-700 border-purple-100 transition-colors"
+                                className="mt-1 text-[10px] h-4 bg-muted text-muted-foreground group-hover:bg-purple-100 dark:group-hover:bg-purple-950/50 group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors"
                             >
                                 Select
                             </Badge>
@@ -114,12 +114,12 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                                         onSelectHonors(null);
                                         setOpen(false);
                                     }}
-                                    className="text-slate-500 italic"
+                                    className="text-muted-foreground italic"
                                 >
                                     <div className="flex items-center w-full">
                                         <span>No Honors Track</span>
                                         {!selectedHonorsId && (
-                                            <Check className="w-4 h-4 text-slate-400 ml-auto" />
+                                            <Check className="w-4 h-4 text-muted-foreground ml-auto" />
                                         )}
                                     </div>
                                 </CommandItem>
@@ -139,14 +139,14 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                                         >
                                             <div className="flex flex-col w-full">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="font-bold mr-2 text-slate-900">
+                                                    <span className="font-bold mr-2 text-foreground">
                                                         {h.name}
                                                     </span>
                                                     {isSelected && (
                                                         <Check className="w-4 h-4 text-purple-600 ml-2" />
                                                     )}
                                                 </div>
-                                                <span className="text-xs font-medium text-slate-500">
+                                                <span className="text-xs font-medium text-muted-foreground">
                                                     {h.dept}
                                                 </span>
                                             </div>

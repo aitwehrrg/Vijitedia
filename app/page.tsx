@@ -7,10 +7,11 @@ import {
     Github,
     Network,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
+        <div className="min-h-screen bg-background text-foreground flex flex-col relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900 dark:selection:text-indigo-100 dark:selection:bg-indigo-900">
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]">
                 <svg
                     className="w-full h-full"
@@ -87,15 +88,16 @@ export default function Home() {
                 ></div>
             </div>
 
-            <header className="relative z-10 border-b border-slate-200 bg-white/50 backdrop-blur-md">
+            <header className="relative z-10 border-b border-border bg-background/50 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2 font-bold text-xl tracking-tighter text-slate-900">
+                    <div className="flex items-center gap-2 font-bold text-xl tracking-tighter text-foreground">
                         <div className="p-1.5 bg-indigo-50 rounded-lg">
                             <Network className="w-5 h-5 text-indigo-600" />
                         </div>
                         <span>Vijitedia</span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm font-medium text-slate-500">
+                    <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
+                        <ThemeToggle />
                         <Button asChild>
                             <Link
                                 href="https://github.com/aitwehrrg/Vijitedia"
@@ -109,14 +111,14 @@ export default function Home() {
             </header>
 
             <main className="flex-1 relative z-10 flex flex-col items-center justify-center p-6 text-center">
-                <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1] text-slate-900 text-left">
+                <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1] text-foreground text-left">
                     Visualize Your <br />
-                    <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-gradient-x">
+                    <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-gradient-x dark:from-indigo-400 dark:via-violet-400 dark:to-indigo-400">
                         Engineering Path
                     </span>
                 </h1>
 
-                <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
                     The interactive directed graph for your VJTI degree. Trace
                     prerequisites, map out electives, and visualize dependencies
                     in real-time.
@@ -137,14 +139,14 @@ export default function Home() {
                 </div>
 
                 <div className="mt-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-                    <div className="h-12 w-px bg-linear-to-b from-transparent via-slate-300 to-transparent"></div>
+                    <div className="h-12 w-px bg-linear-to-b from-transparent via-border to-transparent"></div>
 
-                    <div className="flex items-center gap-6 p-4 rounded-2xl border border-slate-200 bg-white/60 backdrop-blur-sm hover:bg-white hover:shadow-md transition-all">
+                    <div className="flex items-center gap-6 p-4 rounded-2xl border border-border bg-background/60 backdrop-blur-sm hover:bg-background hover:shadow-md transition-all">
                         <div className="flex flex-col text-left">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
+                            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
                                 Utility Addon
                             </span>
-                            <span className="text-xs sm:text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <span className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-2">
                                 <Calculator className="w-4 h-4 text-emerald-500" />
                                 CGPA Calculator & Predictor
                             </span>
@@ -153,7 +155,7 @@ export default function Home() {
                             variant="ghost"
                             size="sm"
                             asChild
-                            className="text-slate-500 hover:text-indigo-600 hover:bg-indigo-50"
+                            className="text-muted-foreground hover:text-indigo-600 hover:bg-indigo-50 dark:hover:text-indigo-400 dark:hover:bg-indigo-950"
                         >
                             <Link href="/calculator">Try it &rarr;</Link>
                         </Button>
@@ -161,7 +163,7 @@ export default function Home() {
                 </div>
             </main>
 
-            <footer className="w-full py-6 text-center text-sm text-slate-400 border-t border-slate-200 bg-slate-50 relative z-10">
+            <footer className="w-full py-6 text-center text-sm text-muted-foreground border-t border-border bg-background relative z-10">
                 <p>
                     Built by{" "}
                     <a

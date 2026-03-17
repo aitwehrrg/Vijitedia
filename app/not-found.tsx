@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FileQuestion, ArrowLeft } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-center p-4 relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
-            <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.3]">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-background text-center p-4 relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900 dark:selection:bg-indigo-900 dark:selection:text-indigo-100">
+            <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
+                <ThemeToggle />
+            </div>
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.3] dark:opacity-[0.1]">
                 <svg
                     className="w-full h-full"
                     viewBox="0 0 100 100"
@@ -63,16 +67,16 @@ export default function NotFound() {
 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-linear-to-tr from-indigo-500/20 via-purple-500/20 to-blue-500/20 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
-            <div className="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 max-w-md w-full flex flex-col items-center space-y-6 relative z-10">
-                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center border border-indigo-100 shadow-inner">
-                    <FileQuestion className="w-8 h-8 text-indigo-500" />
+            <div className="bg-card/80 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-border max-w-md w-full flex flex-col items-center space-y-6 relative z-10">
+                <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center border border-border shadow-inner">
+                    <FileQuestion className="w-8 h-8 text-indigo-500 dark:text-indigo-400" />
                 </div>
 
                 <div className="space-y-2">
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                    <h1 className="text-3xl font-extrabold text-foreground tracking-tight">
                         Page Not Found
                     </h1>
-                    <p className="text-slate-500">
+                    <p className="text-muted-foreground">
                         The academic resource you are looking for doesn't exist
                         or has been moved.
                     </p>
@@ -88,7 +92,7 @@ export default function NotFound() {
                     <Button
                         variant="outline"
                         asChild
-                        className="w-full hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                        className="w-full transition-colors"
                     >
                         <Link href="/flowsheet" className="gap-2">
                             <ArrowLeft className="w-4 h-4" /> Go to Flowsheets

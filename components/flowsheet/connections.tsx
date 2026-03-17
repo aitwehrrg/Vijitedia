@@ -24,8 +24,9 @@ export const ConnectionLines = memo(
                         markerWidth="8"
                         markerHeight="8"
                         orient="auto-start-reverse"
+                        className="text-amber-500 dark:text-amber-400"
                     >
-                        <path d="M0,0 L12,6 L0,12 L3,6 z" fill="#f59e0b" />
+                        <path d="M0,0 L12,6 L0,12 L3,6 z" fill="currentColor" />
                     </marker>
                     <marker
                         id="arrow-postreq"
@@ -35,8 +36,9 @@ export const ConnectionLines = memo(
                         markerWidth="8"
                         markerHeight="8"
                         orient="auto-start-reverse"
+                        className="text-blue-500 dark:text-blue-400"
                     >
-                        <path d="M0,0 L12,6 L0,12 L3,6 z" fill="#3b82f6" />
+                        <path d="M0,0 L12,6 L0,12 L3,6 z" fill="currentColor" />
                     </marker>
                 </defs>
                 {connections.map((conn, i) => {
@@ -46,21 +48,23 @@ export const ConnectionLines = memo(
                         150
                     );
                     const pathData = `M ${conn.start.x} ${conn.start.y} C ${conn.start.x + curveIntensity} ${conn.start.y}, ${conn.end.x - curveIntensity} ${conn.end.y}, ${conn.end.x} ${conn.end.y}`;
-                    const color =
-                        conn.type === "prereq" ? "#f59e0b" : "#3b82f6";
+                    const colorClass =
+                        conn.type === "prereq"
+                            ? "text-amber-500 dark:text-amber-400"
+                            : "text-blue-500 dark:text-blue-400";
 
                     return (
                         <path
                             key={i}
                             d={pathData}
                             fill="none"
-                            stroke={color}
+                            stroke="currentColor"
                             strokeWidth="2"
                             strokeDasharray={
                                 conn.type === "prereq" ? "5,5" : "0"
                             }
                             markerEnd={`url(#arrow-${conn.type})`}
-                            className="opacity-80 transition-all duration-300"
+                            className={`opacity-80 transition-all duration-300 ${colorClass}`}
                         />
                     );
                 })}

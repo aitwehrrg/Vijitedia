@@ -25,6 +25,7 @@ import {
     AlertTriangle,
     Award,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import {
     Popover,
@@ -50,15 +51,15 @@ const CourseRow = memo(
             <div className="flex items-center justify-between gap-3 group">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-bold text-sm text-slate-700 font-mono truncate group-hover:text-indigo-600 transition-colors">
+                        <span className="font-bold text-sm text-foreground font-mono truncate group-hover:text-indigo-600 transition-colors">
                             {course.code || course.label || "Elective"}
                         </span>
-                        <span className="text-xs text-slate-400 shrink-0 bg-slate-100 px-1 rounded">
+                        <span className="text-xs text-muted-foreground shrink-0 bg-secondary px-1 rounded">
                             {course.credits} Cr
                         </span>
                     </div>
                     <div
-                        className="text-sm text-slate-600 truncate font-medium"
+                        className="text-sm text-muted-foreground truncate font-medium"
                         title={course.title}
                     >
                         {course.title || "Select Grade"}
@@ -212,13 +213,13 @@ export default function CalculatorPage() {
         if (!prediction) return null;
         if (prediction.status === "done")
             return (
-                <div className="text-sm font-medium p-2 rounded bg-slate-100 text-slate-600">
+                <div className="text-sm font-medium p-2 rounded bg-muted text-muted-foreground">
                     No remaining credits to predict.
                 </div>
             );
         if (prediction.status === "impossible-high")
             return (
-                <div className="text-sm font-medium p-2 rounded bg-red-50 text-red-600 space-y-1">
+                <div className="text-sm font-medium p-2 rounded bg-destructive/10 text-destructive space-y-1">
                     <div>Impossible. Target too high.</div>
                     <div className="text-xs opacity-90">
                         Max theoretical CGPA:{" "}
@@ -228,7 +229,7 @@ export default function CalculatorPage() {
             );
         if (prediction.status === "impossible-low")
             return (
-                <div className="text-sm font-medium p-2 rounded bg-blue-50 text-blue-600 space-y-1">
+                <div className="text-sm font-medium p-2 rounded bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 space-y-1">
                     <div>Guaranteed. Target already met.</div>
                     <div className="text-xs opacity-90">
                         Min theoretical CGPA:{" "}
@@ -237,7 +238,7 @@ export default function CalculatorPage() {
                 </div>
             );
         return (
-            <div className="text-sm font-medium p-2 rounded bg-green-50 text-green-600">
+            <div className="text-sm font-medium p-2 rounded bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400">
                 Need avg <strong>{prediction.value.toFixed(2)}</strong> in
                 remaining credits.
             </div>
@@ -266,7 +267,7 @@ export default function CalculatorPage() {
                 : `Cannot promote to ${targetYearLabel}`;
 
         return (
-            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800 text-sm font-medium">
+            <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-lg flex items-center gap-3 text-amber-800 dark:text-amber-400 text-sm font-medium">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>
                     {title}: {error}
@@ -276,8 +277,8 @@ export default function CalculatorPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50/50 flex flex-col">
-            <div className="bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-30 shadow-sm">
+        <div className="min-h-screen bg-background flex flex-col">
+            <div className="bg-card border-b border-border px-3 py-3 md:px-8 md:py-4 sticky top-0 z-30 shadow-sm">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-3 w-full md:w-auto">
                         <Button
@@ -291,16 +292,17 @@ export default function CalculatorPage() {
                             </Link>
                         </Button>
                         <div className="min-w-0">
-                            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 leading-tight truncate">
+                            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground leading-tight truncate">
                                 CGPA Calculator
                             </h1>
-                            <p className="text-xs md:text-sm text-slate-500 line-clamp-1">
+                            <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">
                                 {currentProgram.name}
                             </p>
                         </div>
                     </div>
 
                     <div className="w-full md:w-auto flex items-center justify-between gap-3 md:gap-6">
+                        <ThemeToggle />
                         <Button
                             asChild
                             variant="outline"
@@ -347,19 +349,19 @@ export default function CalculatorPage() {
 
                         <div className="flex items-center gap-4 md:gap-6">
                             <div className="text-right">
-                                <div className="text-[10px] md:text-xs uppercase font-bold text-slate-400 tracking-wider">
+                                <div className="text-[10px] md:text-xs uppercase font-bold text-muted-foreground tracking-wider">
                                     Credits
                                 </div>
-                                <div className="font-mono font-bold text-slate-700 text-sm md:text-base">
+                                <div className="font-mono font-bold text-foreground text-sm md:text-base">
                                     {mainStats.credits}
                                 </div>
                             </div>
                             <div className="text-right">
-                                <div className="text-[10px] md:text-xs uppercase font-bold text-slate-400 tracking-wider">
+                                <div className="text-[10px] md:text-xs uppercase font-bold text-muted-foreground tracking-wider">
                                     CGPA
                                 </div>
                                 <div
-                                    className={`text-xl md:text-2xl font-mono font-black ${Number(mainStats.gpa) >= 6.75 ? "text-green-600" : "text-slate-900"}`}
+                                    className={`text-xl md:text-2xl font-mono font-black ${Number(mainStats.gpa) >= 6.75 ? "text-green-600 dark:text-green-500" : "text-foreground"}`}
                                 >
                                     {mainStats.gpa}
                                 </div>
@@ -387,7 +389,7 @@ export default function CalculatorPage() {
                         <div key={year.id} className="space-y-4">
                             {!isYearDisabled &&
                                 renderPromotionWarning(yearIndex)}
-                            <h2 className="text-sm md:text-base font-bold text-slate-800 border-b pb-2">
+                            <h2 className="text-sm md:text-base font-bold text-foreground border-b border-border pb-2">
                                 {year.label}
                             </h2>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
@@ -406,9 +408,9 @@ export default function CalculatorPage() {
                                     return (
                                         <div
                                             key={semester.id}
-                                            className={`bg-white rounded-xl border shadow-sm p-4 md:p-5 flex flex-col transition-opacity duration-200 ${isExcluded ? "opacity-60 grayscale-[0.5]" : "opacity-100"}`}
+                                            className={`bg-card rounded-xl border border-border shadow-sm p-4 md:p-5 flex flex-col transition-opacity duration-200 ${isExcluded ? "opacity-60 grayscale-[0.5]" : "opacity-100"}`}
                                         >
-                                            <div className="flex justify-between items-center mb-4 border-b pb-3">
+                                            <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
                                                 <div className="flex items-center gap-3">
                                                     <Checkbox
                                                         id={`chk-${semester.id}`}
@@ -422,7 +424,7 @@ export default function CalculatorPage() {
                                                     />
                                                     <label
                                                         htmlFor={`chk-${semester.id}`}
-                                                        className="font-bold text-slate-700 text-sm cursor-pointer select-none"
+                                                        className="font-bold text-foreground text-sm cursor-pointer select-none"
                                                     >
                                                         {semester.label}
                                                     </label>
@@ -436,14 +438,14 @@ export default function CalculatorPage() {
                                                     </Badge>
                                                     <Badge
                                                         variant="outline"
-                                                        className={`font-mono text-sm ${!isExcluded && Number(semStats.gpa) >= 4.0 ? "bg-green-50 text-green-700 border-green-200" : "bg-slate-50 text-slate-500"}`}
+                                                        className={`font-mono text-sm ${!isExcluded && Number(semStats.gpa) >= 4.0 ? "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800" : "bg-muted text-muted-foreground border-border"}`}
                                                     >
                                                         SGPA: {semStats.gpa}
                                                     </Badge>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-6 w-6 text-slate-300 hover:text-red-500 hover:bg-red-50 ml-1"
+                                                        className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-1"
                                                         onClick={() =>
                                                             clearSemesterGrades(
                                                                 mainSemCourses
@@ -489,13 +491,13 @@ export default function CalculatorPage() {
                 {renderPromotionWarning(4)}
 
                 {activeHonorsCourses.length > 0 && (
-                    <div className="pt-8 border-t border-slate-200">
-                        <div className="bg-purple-50/50 rounded-xl border border-purple-100 shadow-sm p-4 md:p-6">
-                            <div className="flex justify-between items-center mb-6 border-b border-purple-100 pb-4">
+                    <div className="pt-8 border-t border-border">
+                        <div className="bg-purple-50/50 dark:bg-purple-950/20 rounded-xl border border-purple-100 dark:border-purple-900/50 shadow-sm p-4 md:p-6">
+                            <div className="flex justify-between items-center mb-6 border-b border-purple-100 dark:border-purple-900/50 pb-4">
                                 <div className="flex items-center gap-3">
-                                    <Award className="w-5 h-5 text-purple-900" />
+                                    <Award className="w-5 h-5 text-purple-900 dark:text-purple-400" />
                                     <div>
-                                        <h3 className="font-bold text-purple-900">
+                                        <h3 className="font-bold text-purple-900 dark:text-purple-400">
                                             Honors Degree
                                         </h3>
                                     </div>
@@ -506,7 +508,7 @@ export default function CalculatorPage() {
                                         <div className="text-[10px] uppercase font-bold text-purple-400 tracking-wider">
                                             Credits
                                         </div>
-                                        <div className="font-mono font-bold text-purple-800">
+                                        <div className="font-mono font-bold text-purple-800 dark:text-purple-300">
                                             {honorsStats.credits}
                                         </div>
                                     </div>
@@ -514,14 +516,14 @@ export default function CalculatorPage() {
                                         <div className="text-[10px] uppercase font-bold text-purple-400 tracking-wider">
                                             Honors GPA
                                         </div>
-                                        <div className="text-xl font-mono font-black text-purple-700">
+                                        <div className="text-xl font-mono font-black text-purple-700 dark:text-purple-300">
                                             {honorsStats.gpa}
                                         </div>
                                     </div>
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 text-purple-300 hover:text-red-500 hover:bg-red-50"
+                                        className="h-8 w-8 text-purple-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"
                                         onClick={() =>
                                             clearSemesterGrades(
                                                 activeHonorsCourses

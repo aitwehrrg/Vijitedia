@@ -4,20 +4,20 @@ import { GRADE_POINTS } from "@/data/grades";
 export const getGradeColor = (grade: string) => {
     const points = GRADE_POINTS[grade];
     if (points === undefined)
-        return "border-slate-300 bg-slate-100 text-slate-700 font-bold";
+        return "border-slate-300 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 font-bold";
     if (points >= 9)
-        return "border-green-300 bg-green-100 text-green-800 font-bold";
+        return "border-green-300 bg-green-100 text-green-800 dark:border-green-800 dark:bg-green-900/50 dark:text-green-300 font-bold";
     if (points >= 8)
-        return "border-cyan-300 bg-cyan-100 text-cyan-800 font-bold";
+        return "border-cyan-300 bg-cyan-100 text-cyan-800 dark:border-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-300 font-bold";
     if (points >= 7)
-        return "border-blue-300 bg-blue-100 text-blue-800 font-bold";
+        return "border-blue-300 bg-blue-100 text-blue-800 dark:border-blue-800 dark:bg-blue-900/50 dark:text-blue-300 font-bold";
     if (points >= 6)
-        return "border-violet-300 bg-violet-100 text-violet-800 font-bold";
+        return "border-violet-300 bg-violet-100 text-violet-800 dark:border-violet-800 dark:bg-violet-900/50 dark:text-violet-300 font-bold";
     if (points >= 5)
-        return "border-yellow-300 bg-yellow-100 text-yellow-800 font-bold";
+        return "border-yellow-300 bg-yellow-100 text-yellow-800 dark:border-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 font-bold";
     if (points >= 4)
-        return "border-orange-300 bg-orange-100 text-orange-800 font-bold";
-    return "border-rose-300 bg-rose-100 text-rose-800 font-bold";
+        return "border-orange-300 bg-orange-100 text-orange-800 dark:border-orange-800 dark:bg-orange-900/50 dark:text-orange-300 font-bold";
+    return "border-rose-300 bg-rose-100 text-rose-800 dark:border-rose-800 dark:bg-rose-900/50 dark:text-rose-300 font-bold";
 };
 
 export const calculateStats = (

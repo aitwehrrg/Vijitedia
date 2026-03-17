@@ -77,4 +77,22 @@ describe("CourseCard", () => {
         const card = container.firstChild as HTMLElement;
         expect(card.className).toContain("border-l-blue-500");
     });
+
+    it("applies correct dark mode styles for prereq", () => {
+        const { container } = render(
+            <CourseCard course={mockCourse} status="prereq" />
+        );
+        const card = container.firstChild as HTMLElement;
+        expect(card.className).toContain("dark:bg-amber-500/10");
+        expect(card.className).toContain("dark:ring-amber-500/30");
+    });
+
+    it("applies correct dark mode styles for postreq", () => {
+        const { container } = render(
+            <CourseCard course={mockCourse} status="postreq" />
+        );
+        const card = container.firstChild as HTMLElement;
+        expect(card.className).toContain("dark:bg-blue-500/10");
+        expect(card.className).toContain("dark:ring-blue-500/30");
+    });
 });

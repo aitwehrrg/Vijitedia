@@ -1,6 +1,7 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -84,8 +85,15 @@ export default function RootLayout({
                 ></meta>
             </head>
             <body className={`${cmSans.variable} ${cmMono.variable} font-sans`}>
-                {children}
-                <SpeedInsights />
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                    <SpeedInsights />
+                </ThemeProvider>
             </body>
         </html>
     );

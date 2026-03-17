@@ -81,6 +81,12 @@ describe("calculateStats", () => {
         expect(result.credits).toBe(1.5);
         expect(result.gpa).toBe("10.00");
     });
+
+    it("handles totalCredits = 0 to avoid division by zero when grades exist but no credits", () => {
+        const courses = [mockCourse("C1", 0), mockCourse("C2", 0)];
+        const result = calculateStats(courses, { C1: "AA", C2: "BB" });
+        expect(result).toEqual({ points: 0, credits: 0, gpa: "0.00" });
+    });
 });
 
 describe("getGradeColor", () => {
@@ -181,6 +187,13 @@ describe("predictCGPA", () => {
         const result = predictCGPA("9.0", [], { credits: 0, points: 0 });
         expect(result!.status).toBe("done");
         expect(result!.maxPossible).toBe(0);
+    });
+
+    it("handles edge case where current points exceed max possible points due to negative remaining credits", () => {
+        const courses = [mockCourse("C1", 5)];
+        const stats = { credits: 10, points: 100 };
+        const result = predictCGPA("9.0", courses, stats);
+        expect(result!.status).toBe("done");
     });
 });
 
@@ -351,6 +364,15 @@ describe("checkPromotionEligibility", () => {
     it("allows graduation when CGPA is high", () => {
         expect(
             checkPromotionEligibility(4, fullStats, false, 9.5)
+        ).toBeNull();
+    });
+
+    it("returns null for out of bounds year index", () => {
+        expect(
+            checkPromotionEligibility(5, fullStats, false, 10.0)
+        ).toBeNull();
+        expect(
+            checkPromotionEligibility(-1, fullStats, false, 10.0)
         ).toBeNull();
     });
 });

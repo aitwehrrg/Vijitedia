@@ -46,7 +46,7 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                         <CourseCard course={selectedOption} status={status} />
                         <PopoverTrigger asChild>
                             <button
-                                className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 shadow-sm transition-all"
+                                className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-background hover:bg-muted text-muted-foreground border border-border shadow-sm transition-all"
                                 title="Change Elective"
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -60,9 +60,9 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                     </div>
                 ) : (
                     <PopoverTrigger asChild>
-                        <div className="h-full border-2 border-dashed border-slate-300 p-2 flex flex-col justify-center items-center cursor-pointer hover:border-purple-400 hover:bg-purple-50 transition-colors">
-                            <Layers className="w-4 h-4 text-slate-400 mb-1" />
-                            <span className="text-sm font-semibold text-center text-slate-600 leading-tight">
+                        <div className="h-full border-2 border-dashed border-border bg-card p-2 flex flex-col justify-center items-center cursor-pointer hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors">
+                            <Layers className="w-4 h-4 text-muted-foreground mb-1" />
+                            <span className="text-sm font-semibold text-center text-foreground leading-tight">
                                 {course.label || "Elective"}
                             </span>
                             <Badge

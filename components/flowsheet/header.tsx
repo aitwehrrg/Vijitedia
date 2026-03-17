@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { FLOWSHEET_DATA } from "@/data/programs";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface FlowsheetHeaderProps {
     programName: string;
@@ -59,7 +60,7 @@ export function FlowsheetHeader({
 
     return (
         <div
-            className="w-full bg-white border-b px-3 py-3 md:px-8 md:py-4 sticky top-0 z-50 shadow-sm"
+            className="w-full bg-background border-b border-border px-3 py-3 md:px-8 md:py-4 sticky top-0 z-50 shadow-sm"
             onClick={(e) => e.stopPropagation()}
         >
             <div className="max-w-8xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-4">
@@ -75,16 +76,17 @@ export function FlowsheetHeader({
                         </Link>
                     </Button>
                     <div className="min-w-0">
-                        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 leading-tight truncate">
+                        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground leading-tight truncate">
                             Academic Flowsheet
                         </h1>
-                        <p className="text-xs md:text-sm text-slate-500 line-clamp-1">
+                        <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">
                             {programName}
                         </p>
                     </div>
                 </div>
 
                 <div className="w-full md:w-auto flex flex-row items-center justify-between gap-3 md:gap-4">
+                    <ThemeToggle />
                     <Button
                         asChild
                         variant="outline"
@@ -128,11 +130,11 @@ export function FlowsheetHeader({
                                 <SheetDescription>
                                     <span className="hidden 2xl:inline">
                                         Use{" "}
-                                        <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
+                                        <kbd className="bg-muted px-1 rounded border font-mono text-[10px] text-muted-foreground">
                                             ↑
                                         </kbd>{" "}
                                         and{" "}
-                                        <kbd className="bg-slate-100 px-1 rounded border font-mono text-[10px] text-slate-500">
+                                        <kbd className="bg-muted px-1 rounded border font-mono text-[10px] text-muted-foreground">
                                             ↓
                                         </kbd>{" "}
                                         to navigate.
@@ -162,12 +164,12 @@ export function FlowsheetHeader({
                                                         prog.id
                                                     );
                                             }}
-                                            className={cn(
+                                                className={cn(
                                                 "flex items-center justify-between px-4 py-6 rounded-xl border transition-all outline-none group",
-                                                "hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm focus:ring-2 focus:ring-blue-500 focus:bg-slate-50",
+                                                "hover:border-border hover:bg-muted/50 hover:shadow-sm focus:ring-2 focus:ring-blue-500 focus:bg-muted/50",
                                                 currentProgramId === prog.id
-                                                    ? "border-blue-600 bg-blue-50/50 ring-1 ring-blue-600/20"
-                                                    : "border-slate-100 bg-white shadow-sm"
+                                                    ? "border-blue-600 bg-blue-50/50 dark:bg-blue-950/20 ring-1 ring-blue-600/20"
+                                                    : "border-border bg-card shadow-sm"
                                             )}
                                         >
                                             <div className="flex flex-col gap-1.5 mr-3">
@@ -176,19 +178,19 @@ export function FlowsheetHeader({
                                                         "text-base font-semibold leading-snug transition-colors",
                                                         currentProgramId ===
                                                             prog.id
-                                                            ? "text-blue-700"
-                                                            : "text-slate-900 group-hover:text-slate-900"
+                                                            ? "text-blue-700 dark:text-blue-400"
+                                                            : "text-foreground"
                                                     )}
                                                 >
                                                     {prog.name}
                                                 </span>
-                                                <span className="text-sm text-slate-500 font-medium">
+                                                <span className="text-sm text-muted-foreground font-medium">
                                                     Dept. of {prog.department}
                                                 </span>
                                             </div>
                                             {currentProgramId === prog.id && (
-                                                <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                                                    <Check className="h-5 w-5 text-blue-600" />
+                                                <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0">
+                                                    <Check className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                                                 </div>
                                             )}
                                         </Link>
@@ -199,11 +201,11 @@ export function FlowsheetHeader({
                     </Sheet>
 
                     <div className="flex shrink-0 gap-3 text-xs font-medium">
-                        <div className="flex items-center text-slate-600">
+                        <div className="flex items-center text-muted-foreground">
                             <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5" />{" "}
                             Prereq
                         </div>
-                        <div className="flex items-center text-slate-600">
+                        <div className="flex items-center text-muted-foreground">
                             <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5" />{" "}
                             Postreq
                         </div>
