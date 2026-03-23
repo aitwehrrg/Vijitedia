@@ -85,7 +85,7 @@ export function FlowsheetHeader({
                     </div>
                 </div>
 
-                <div className="w-full md:w-auto flex flex-row items-center justify-between gap-3 md:gap-4">
+                <div className="w-full md:w-auto flex flex-row items-center justify-between gap-2 sm:gap-3 md:gap-4">
                     <ThemeToggle />
                     <Button
                         asChild
@@ -200,7 +200,7 @@ export function FlowsheetHeader({
                         </SheetContent>
                     </Sheet>
 
-                    <div className="flex shrink-0 gap-3 text-xs font-medium">
+                    <div className="hidden sm:flex shrink-0 gap-3 text-xs font-medium">
                         <div className="flex items-center text-muted-foreground">
                             <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5" />{" "}
                             Prereq

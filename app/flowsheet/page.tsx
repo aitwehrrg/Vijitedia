@@ -30,7 +30,7 @@ export default function FlowsheetLanding() {
     const sortedDepartments = Object.keys(groupedPrograms).sort();
 
     return (
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900 dark:selection:bg-indigo-900 dark:selection:text-indigo-100">
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden selection:bg-indigo-100 selection:text-indigo-900 dark:selection:bg-indigo-900 dark:selection:text-indigo-100">
             <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
                 <ThemeToggle />
             </div>

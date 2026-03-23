@@ -89,7 +89,7 @@ export default function Home() {
             </div>
 
             <header className="relative z-10 border-b border-border bg-background/50 backdrop-blur-md">
-                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2 font-bold text-xl tracking-tighter text-foreground">
                         <div className="p-1.5 bg-indigo-50 rounded-lg">
                             <Network className="w-5 h-5 text-indigo-600" />
@@ -103,7 +103,7 @@ export default function Home() {
                                 href="https://github.com/aitwehrrg/Vijitedia"
                                 target="_blank"
                             >
-                                <Github /> GitHub
+                                <Github /> <span className="hidden sm:inline">GitHub</span>
                             </Link>
                         </Button>
                     </div>
@@ -111,7 +111,7 @@ export default function Home() {
             </header>
 
             <main className="flex-1 relative z-10 flex flex-col items-center justify-center p-6 text-center">
-                <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1] text-foreground text-left">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1] text-foreground text-left">
                     Visualize Your <br />
                     <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-gradient-x dark:from-indigo-400 dark:via-violet-400 dark:to-indigo-400">
                         Engineering Path

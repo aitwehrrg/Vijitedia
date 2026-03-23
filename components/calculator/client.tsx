@@ -301,7 +301,7 @@ export default function CalculatorPage() {
                         </div>
                     </div>
 
-                    <div className="w-full md:w-auto flex items-center justify-between gap-3 md:gap-6">
+                    <div className="w-full md:w-auto flex flex-wrap items-center gap-2 sm:gap-3 md:gap-6">
                         <ThemeToggle />
                         <Button
                             asChild
@@ -321,7 +321,7 @@ export default function CalculatorPage() {
                             <PopoverTrigger asChild>
                                 <Button
                                     variant="outline"
-                                    className="h-10 md:h-9 border-dashed border-indigo-300 text-indigo-700 bg-indigo-50/50 hover:bg-indigo-50 text-xs md:text-sm px-3"
+                                    className="h-10 md:h-9 border-dashed border-indigo-300 dark:border-indigo-800 text-indigo-700 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 text-xs md:text-sm px-3"
                                 >
                                     <Target className="w-3.5 h-3.5 mr-2" />
                                     Predict
@@ -347,8 +347,8 @@ export default function CalculatorPage() {
                             </PopoverContent>
                         </Popover>
 
-                        <div className="flex items-center gap-4 md:gap-6">
-                            <div className="text-right">
+                        <div className="flex items-center gap-2 sm:gap-4 md:gap-6 ml-auto">
+                            <div className="text-right hidden sm:block">
                                 <div className="text-[10px] md:text-xs uppercase font-bold text-muted-foreground tracking-wider">
                                     Credits
                                 </div>

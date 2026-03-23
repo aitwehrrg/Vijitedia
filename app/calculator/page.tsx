@@ -30,7 +30,7 @@ export default function CalculatorLanding() {
     const sortedDepartments = Object.keys(groupedPrograms).sort();
 
     return (
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 relative overflow-hidden selection:bg-emerald-100 selection:text-emerald-900 dark:selection:bg-emerald-900 dark:selection:text-emerald-100">
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden selection:bg-emerald-100 selection:text-emerald-900 dark:selection:bg-emerald-900 dark:selection:text-emerald-100">
             <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
                 <ThemeToggle />
             </div>
