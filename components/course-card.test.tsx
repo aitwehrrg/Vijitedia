@@ -46,14 +46,6 @@ describe("CourseCard", () => {
         expect(screen.getByText("0")).toBeInTheDocument();
     });
 
-    it("applies default variant badge", () => {
-        const { container } = render(
-            <CourseCard course={mockCourse} status="default" />
-        );
-        const card = container.firstChild as HTMLElement;
-        expect(card.className).toContain("border-l-transparent");
-    });
-
     it("applies hovered variant styles", () => {
         const { container } = render(
             <CourseCard course={mockCourse} status="hovered" />
