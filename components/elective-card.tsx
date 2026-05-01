@@ -46,7 +46,7 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                         <CourseCard course={selectedOption} status={status} />
                         <PopoverTrigger asChild>
                             <button
-                                className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-background hover:bg-muted text-muted-foreground border border-border shadow-sm transition-all"
+                                className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-full bg-background hover:bg-muted text-muted-foreground border border-border transition-all"
                                 title="Change Elective"
                                 onClick={(e) => {
                                     e.stopPropagation();

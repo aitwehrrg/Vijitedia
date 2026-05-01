@@ -12,7 +12,7 @@ interface CourseCardProps {
 
 export function CourseCard({ course, status }: CourseCardProps) {
     const styles = {
-        default: "border-l-transparent hover:border-l-slate-400 dark:hover:border-l-slate-600 opacity-100 bg-card",
+        default: "border-l-border hover:border-l-slate-400 dark:hover:border-l-slate-600 opacity-100 bg-card",
         hovered:
             "border-l-primary ring-1 ring-primary ring-offset-2 bg-muted shadow-md scale-[1.03] z-10",
         prereq: "border-l-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/30 dashed-border",
@@ -38,7 +38,7 @@ export function CourseCard({ course, status }: CourseCardProps) {
 
     return (
         <Card
-            className={`h-full flex flex-col justify-between border-l-4 transition-all duration-200 cursor-pointer shadow-sm overflow-hidden ${styles[status]}`}
+            className={`h-full flex flex-col justify-between border-l-4 transition-all duration-200 cursor-pointer overflow-hidden ${styles[status]}`}
         >
             <CardHeader className="p-3 pb-2 space-y-0 shrink-0">
                 <div className="flex justify-between items-start gap-2">
