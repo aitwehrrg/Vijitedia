@@ -965,7 +965,7 @@ export const CE_PROGRAM: Program = {
                         {
                             id: "R5CO3401T",
                             type: "core",
-                            code: "R5CO3401T",
+                            code: "R5CO3011T",
                             title: "Financial Management",
                             credits: 2,
                             prereqs: [],

@@ -951,7 +951,7 @@ export const IT_PROGRAM: Program = {
                         {
                             id: "R5IT3401T",
                             type: "core",
-                            code: "R5IT3401T",
+                            code: "R5CO3011T",
                             title: "Financial Management",
                             credits: 2,
                             prereqs: [],
