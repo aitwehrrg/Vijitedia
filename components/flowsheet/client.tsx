@@ -226,46 +226,9 @@ export default function FlowsheetPage() {
         return () => observers.forEach((o) => o.disconnect());
     }, [isMobile, flatSemesters]);
 
-    // Auto-scroll to bring off-screen prereqs/postreqs into view on mobile tap
-    const scrollToRelated = useCallback(
-        (courseId: string) => {
-            if (!isMobile || !scrollContainerRef.current) return;
-
-            const relationships = computeActiveRelationships(courseId, effectiveCourses);
-            if (!relationships) return;
-
-            // Prefer scrolling to a prereq; fall back to postreq
-            const targets = [...relationships.prereqs, ...relationships.postreqs];
-            const container = scrollContainerRef.current;
-            const containerRect = container.getBoundingClientRect();
-
-            for (const targetId of targets) {
-                const node = cardRefs.current.get(targetId);
-                if (!node) continue;
-                const nodeRect = node.getBoundingClientRect();
-                // Check if the target is outside the visible scroll area
-                if (nodeRect.right < containerRect.left || nodeRect.left > containerRect.right) {
-                    node.scrollIntoView({
-                        behavior: "smooth",
-                        block: "nearest",
-                        inline: "center",
-                    });
-                    break;
-                }
-            }
-        },
-        [isMobile, effectiveCourses]
-    );
-
     const handleCourseClick = (e: React.MouseEvent, courseId: string) => {
         e.stopPropagation();
-        const wasSelected = selectedCourseId === courseId;
         setSelectedCourseId((prev) => (prev === courseId ? null : courseId));
-        // On mobile, scroll to related courses when selecting (not deselecting)
-        if (!wasSelected) {
-            // Small delay to let the selection state settle before computing relationships
-            setTimeout(() => scrollToRelated(courseId), 50);
-        }
     };
 
     const handleJumpToSemester = useCallback(
@@ -464,7 +427,7 @@ export default function FlowsheetPage() {
                     <div
                         className="grid w-full mb-2"
                         style={{
-                            gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(${MIN_COL_WIDTH}, 1fr))`,
+                            gridTemplateColumns: `repeat(${flatSemesters.length}, ${isMobile ? "85vw" : `minmax(${MIN_COL_WIDTH}, 1fr)`})`,
                         }}
                     >
                         {currentProgram.years.map((year) => (
@@ -482,7 +445,7 @@ export default function FlowsheetPage() {
                     <div
                         className="grid w-full mb-4 gap-4"
                         style={{
-                            gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(${MIN_COL_WIDTH}, 1fr))`,
+                            gridTemplateColumns: `repeat(${flatSemesters.length}, ${isMobile ? "85vw" : `minmax(${MIN_COL_WIDTH}, 1fr)`})`,
                         }}
                     >
                         {flatSemesters.map((sem, i) => (
@@ -510,7 +473,7 @@ export default function FlowsheetPage() {
                                 key={rowIndex}
                                 className="grid gap-4 w-full"
                                 style={{
-                                    gridTemplateColumns: `repeat(${flatSemesters.length}, minmax(${MIN_COL_WIDTH}, 1fr))`,
+                                    gridTemplateColumns: `repeat(${flatSemesters.length}, ${isMobile ? "85vw" : `minmax(${MIN_COL_WIDTH}, 1fr)`})`,
                                 }}
                             >
                                 {flatSemesters.map((semester, semIndex) => {
@@ -522,7 +485,7 @@ export default function FlowsheetPage() {
                                         return (
                                             <div
                                                 key={`empty-${semester.id}-${rowIndex}`}
-                                                className="aspect-4/3 relative"
+                                                className="aspect-4/3 w-full max-w-[160px] md:max-w-none mx-auto relative"
                                             >
                                                 {showSep && (
                                                     <div
@@ -542,7 +505,7 @@ export default function FlowsheetPage() {
                                     return (
                                         <div
                                             key={course.id}
-                                            className="aspect-4/3 w-full relative outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-xl scroll-mt-28 scroll-mb-28 md:scroll-mt-32 md:scroll-mb-32"
+                                            className="aspect-4/3 w-full max-w-[160px] md:max-w-none mx-auto relative outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-xl scroll-mt-28 scroll-mb-28 md:scroll-mt-32 md:scroll-mb-32"
                                             tabIndex={0}
                                             data-grid-row={rowIndex}
                                             data-grid-col={semIndex}
