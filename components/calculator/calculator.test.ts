@@ -1,13 +1,14 @@
 import { describe, it, expect } from "vitest";
 import {
     calculateStats,
+    calculateStatsWithQuickSgpa,
     getGradeColor,
     predictCGPA,
     computeYearStats,
     checkPromotionEligibility,
     YearStat,
 } from "@/lib/calculator";
-import { Course, Year } from "@/types/flowsheet";
+import { Course, Semester, Year } from "@/types/flowsheet";
 
 const mockCourse = (id: string, credits: number): Course => ({
     id,
@@ -28,6 +29,15 @@ const mockYear = (
         { id: `${id}-s1`, label: "Sem 1", courses },
         { id: `${id}-s2`, label: "Sem 2", courses: [] },
     ],
+});
+
+const mockSemester = (
+    id: string,
+    courses: Course[]
+): Semester => ({
+    id,
+    label: `Semester ${id}`,
+    courses,
 });
 
 describe("calculateStats", () => {
@@ -241,6 +251,40 @@ describe("computeYearStats", () => {
         expect(result[0]).toEqual({ passedCredits: 4, failureCount: 0 });
         expect(result[1]).toEqual({ passedCredits: 0, failureCount: 1 });
     });
+
+    it("counts quick-mode semester credits as passed when SGPA > 0", () => {
+        const years = [
+            mockYear("Y1", [mockCourse("C1", 3), mockCourse("C2", 4)]),
+        ];
+        const result = computeYearStats(years, {}, { "Y1-s1": 7.5 });
+        expect(result[0].passedCredits).toBe(7);
+        expect(result[0].failureCount).toBe(0);
+    });
+
+    it("does not count quick-mode semester credits when SGPA is 0", () => {
+        const years = [
+            mockYear("Y1", [mockCourse("C1", 3)]),
+        ];
+        const result = computeYearStats(years, {}, { "Y1-s1": 0 });
+        expect(result[0].passedCredits).toBe(0);
+        expect(result[0].failureCount).toBe(0);
+    });
+
+    it("mixes quick-mode and detailed semesters within a year", () => {
+        const c1 = mockCourse("C1", 4);
+        const c2 = mockCourse("C2", 3);
+        const years: Year[] = [{
+            id: "Y1",
+            label: "Year Y1",
+            semesters: [
+                { id: "Y1-s1", label: "Sem 1", courses: [c1] },
+                { id: "Y1-s2", label: "Sem 2", courses: [c2] },
+            ],
+        }];
+        const result = computeYearStats(years, { C2: "AA" }, { "Y1-s1": 8.0 });
+        expect(result[0].passedCredits).toBe(7); // 4 from quick + 3 from detailed
+        expect(result[0].failureCount).toBe(0);
+    });
 });
 
 describe("checkPromotionEligibility", () => {
@@ -374,5 +418,105 @@ describe("checkPromotionEligibility", () => {
         expect(
             checkPromotionEligibility(-1, fullStats, false, 10.0)
         ).toBeNull();
+    });
+});
+
+describe("calculateStatsWithQuickSgpa", () => {
+    it("falls back to individual grades when no quick semesters", () => {
+        const c1 = mockCourse("C1", 3);
+        const c2 = mockCourse("C2", 4);
+        const semesters = [mockSemester("S1", [c1, c2])];
+        const result = calculateStatsWithQuickSgpa(
+            [c1, c2],
+            { C1: "AA", C2: "BB" },
+            {},
+            semesters
+        );
+        expect(result.points).toBe(62);
+        expect(result.credits).toBe(7);
+        expect(result.gpa).toBe("8.86");
+    });
+
+    it("uses SGPA × credits for a quick-mode semester", () => {
+        const c1 = mockCourse("C1", 3);
+        const c2 = mockCourse("C2", 4);
+        const semesters = [mockSemester("S1", [c1, c2])];
+        const result = calculateStatsWithQuickSgpa(
+            [c1, c2],
+            {},
+            { S1: 8.0 },
+            semesters
+        );
+        // 8.0 * (3+4) = 56
+        expect(result.points).toBe(56);
+        expect(result.credits).toBe(7);
+        expect(result.gpa).toBe("8.00");
+    });
+
+    it("mixes quick and detailed semesters", () => {
+        const c1 = mockCourse("C1", 3);
+        const c2 = mockCourse("C2", 4);
+        const semesters = [
+            mockSemester("S1", [c1]),
+            mockSemester("S2", [c2]),
+        ];
+        const result = calculateStatsWithQuickSgpa(
+            [c1, c2],
+            { C2: "AA" },
+            { S1: 7.0 },
+            semesters
+        );
+        // S1 quick: 7.0 * 3 = 21, S2 detailed: 10 * 4 = 40
+        expect(result.points).toBe(61);
+        expect(result.credits).toBe(7);
+        expect(result.gpa).toBe("8.71");
+    });
+
+    it("clamps SGPA to [0, 10]", () => {
+        const c1 = mockCourse("C1", 5);
+        const semesters = [mockSemester("S1", [c1])];
+        const result = calculateStatsWithQuickSgpa(
+            [c1],
+            {},
+            { S1: 15 },
+            semesters
+        );
+        // clamped to 10: 10 * 5 = 50
+        expect(result.points).toBe(50);
+        expect(result.gpa).toBe("10.00");
+    });
+
+    it("handles empty courses", () => {
+        const result = calculateStatsWithQuickSgpa([], {}, {}, []);
+        expect(result).toEqual({ points: 0, credits: 0, gpa: "0.00" });
+    });
+
+    it("does not double-count courses in the same quick semester", () => {
+        const c1 = mockCourse("C1", 3);
+        const c2 = mockCourse("C2", 4);
+        const semesters = [mockSemester("S1", [c1, c2])];
+        const result = calculateStatsWithQuickSgpa(
+            [c1, c2],
+            {},
+            { S1: 9.0 },
+            semesters
+        );
+        // 9.0 * 7 = 63 (counted once)
+        expect(result.points).toBe(63);
+        expect(result.credits).toBe(7);
+    });
+
+    it("ignores quick SGPA for semesters with no matching courses", () => {
+        const c1 = mockCourse("C1", 3);
+        const semesters = [mockSemester("S1", [c1])];
+        const result = calculateStatsWithQuickSgpa(
+            [c1],
+            { C1: "BB" },
+            { S999: 10.0 },  // non-existent semester
+            semesters
+        );
+        // Only C1 with BB: 8 * 3 = 24
+        expect(result.points).toBe(24);
+        expect(result.credits).toBe(3);
     });
 });

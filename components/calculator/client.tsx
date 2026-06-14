@@ -24,6 +24,7 @@ import {
     Network,
     AlertTriangle,
     Award,
+    Zap,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
@@ -33,7 +34,15 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { getSuffix } from "@/lib/utils";
-import { getGradeColor, calculateStats, predictCGPA, computeYearStats, checkPromotionEligibility } from "@/lib/calculator";
+import {
+    getGradeColor,
+    calculateStats,
+    calculateStatsWithQuickSgpa,
+    predictCGPA,
+    computeYearStats,
+    checkPromotionEligibility,
+    QuickSgpaMap,
+} from "@/lib/calculator";
 
 const CourseRow = memo(
     ({
@@ -105,6 +114,7 @@ export default function CalculatorPage() {
     const [grades, setGrades] = useState<Record<string, string>>({});
     const [targetCGPA, setTargetCGPA] = useState<string>("");
     const [excludedSemesters, setExcludedSemesters] = useState<string[]>([]);
+    const [quickSgpa, setQuickSgpa] = useState<QuickSgpaMap>({});
     const [isLoaded, setIsLoaded] = useState(false);
 
     const currentProgram = useMemo(
@@ -117,9 +127,13 @@ export default function CalculatorPage() {
         const savedExcluded = localStorage.getItem(
             `cgpa_${programId}_excluded`
         );
+        const savedQuickSgpa = localStorage.getItem(
+            `cgpa_${programId}_quickSgpa`
+        );
 
         if (savedGrades) setGrades(JSON.parse(savedGrades));
         if (savedExcluded) setExcludedSemesters(JSON.parse(savedExcluded));
+        if (savedQuickSgpa) setQuickSgpa(JSON.parse(savedQuickSgpa));
 
         setIsLoaded(true);
     }, [programId]);
@@ -134,8 +148,12 @@ export default function CalculatorPage() {
                 `cgpa_${programId}_excluded`,
                 JSON.stringify(excludedSemesters)
             );
+            localStorage.setItem(
+                `cgpa_${programId}_quickSgpa`,
+                JSON.stringify(quickSgpa)
+            );
         }
-    }, [grades, excludedSemesters, programId, isLoaded]);
+    }, [grades, excludedSemesters, quickSgpa, programId, isLoaded]);
 
     const handleGradeChange = useCallback(
         (courseId: string, gradeKey: string) => {
@@ -164,6 +182,29 @@ export default function CalculatorPage() {
 
     const clearAllGrades = useCallback(() => {
         setGrades({});
+        setQuickSgpa({});
+    }, []);
+
+    const toggleQuickMode = useCallback((semId: string) => {
+        setQuickSgpa((prev) => {
+            if (prev[semId] !== undefined) {
+                const next = { ...prev };
+                delete next[semId];
+                return next;
+            }
+            return { ...prev, [semId]: 0 };
+        });
+    }, []);
+
+    const updateQuickSgpa = useCallback((semId: string, value: string) => {
+        const num = parseFloat(value);
+        if (value === "" || value === ".") {
+            setQuickSgpa((prev) => ({ ...prev, [semId]: 0 }));
+            return;
+        }
+        if (!isNaN(num)) {
+            setQuickSgpa((prev) => ({ ...prev, [semId]: Math.min(10, Math.max(0, num)) }));
+        }
     }, []);
 
     const activeMainCourses = useMemo(() => {
@@ -189,17 +230,31 @@ export default function CalculatorPage() {
         }));
     }, [currentProgram]);
 
+    const allSemesters = useMemo(() => {
+        if (!currentProgram) return [];
+        return currentProgram.years.flatMap((y) => y.semesters);
+    }, [currentProgram]);
+
     const mainStats = useMemo(() => {
+        const hasQuickSemesters = Object.keys(quickSgpa).length > 0;
+        if (hasQuickSemesters) {
+            return calculateStatsWithQuickSgpa(
+                activeMainCourses,
+                grades,
+                quickSgpa,
+                allSemesters
+            );
+        }
         return calculateStats(activeMainCourses, grades);
-    }, [activeMainCourses, grades]);
+    }, [activeMainCourses, grades, quickSgpa, allSemesters]);
 
     const honorsStats = useMemo(() => {
         return calculateStats(activeHonorsCourses, grades);
     }, [activeHonorsCourses, grades]);
 
     const yearStats = useMemo(
-        () => currentProgram ? computeYearStats(currentProgram.years, grades) : [],
-        [currentProgram, grades]
+        () => currentProgram ? computeYearStats(currentProgram.years, grades, quickSgpa) : [],
+        [currentProgram, grades, quickSgpa]
     );
 
     const prediction = useMemo(
@@ -396,14 +451,28 @@ export default function CalculatorPage() {
                                 {year.semesters.map((semester) => {
                                     const isExcluded =
                                         excludedSemesters.includes(semester.id);
+                                    const isQuickMode =
+                                        quickSgpa[semester.id] !== undefined;
                                     const mainSemCourses =
                                         semester.courses.filter(
                                             (c) => c.type !== "honors"
                                         );
-                                    const semStats = calculateStats(
-                                        mainSemCourses,
-                                        grades
+                                    const semCredits = mainSemCourses.reduce(
+                                        (sum, c) => sum + (c.credits || 0),
+                                        0
                                     );
+                                    const semStats = isQuickMode
+                                        ? {
+                                              points: (quickSgpa[semester.id] || 0) * semCredits,
+                                              credits: semCredits,
+                                              gpa: semCredits > 0
+                                                  ? (quickSgpa[semester.id] || 0).toFixed(2)
+                                                  : "0.00",
+                                          }
+                                        : calculateStats(
+                                              mainSemCourses,
+                                              grades
+                                          );
 
                                     return (
                                         <div
@@ -430,6 +499,28 @@ export default function CalculatorPage() {
                                                     </label>
                                                 </div>
                                                 <div className="flex gap-2 items-center">
+                                                    <Button
+                                                        variant={isQuickMode ? "default" : "ghost"}
+                                                        size="icon"
+                                                        className={`h-6 w-6 transition-colors ${
+                                                            isQuickMode
+                                                                ? "bg-amber-500 hover:bg-amber-600 text-white"
+                                                                : "text-muted-foreground hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                                                        }`}
+                                                        onClick={() =>
+                                                            toggleQuickMode(
+                                                                semester.id
+                                                            )
+                                                        }
+                                                        disabled={isExcluded}
+                                                        title={
+                                                            isQuickMode
+                                                                ? "Switch to detailed grades"
+                                                                : "Switch to quick SGPA"
+                                                        }
+                                                    >
+                                                        <Zap className="w-3 h-3" />
+                                                    </Button>
                                                     <Badge
                                                         variant="secondary"
                                                         className="font-mono text-sm"
@@ -457,29 +548,67 @@ export default function CalculatorPage() {
                                                     </Button>
                                                 </div>
                                             </div>
-                                            <div
-                                                className={`space-y-3 flex-1 ${isExcluded ? "pointer-events-none" : ""}`}
-                                            >
-                                                {mainSemCourses.map(
-                                                    (course) => (
-                                                        <CourseRow
-                                                            key={course.id}
-                                                            course={course}
-                                                            grade={
-                                                                grades[
-                                                                course.id
-                                                                ]
-                                                            }
-                                                            isDisabled={
-                                                                isExcluded
-                                                            }
-                                                            onGradeChange={
-                                                                handleGradeChange
-                                                            }
-                                                        />
-                                                    )
-                                                )}
-                                            </div>
+
+                                            {isQuickMode ? (
+                                                <div
+                                                    className={`flex-1 flex flex-col items-center justify-center py-6 gap-3 ${isExcluded ? "pointer-events-none" : ""}`}
+                                                >
+                                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                        <Zap className="w-3.5 h-3.5 text-amber-500" />
+                                                        <span className="font-medium">Quick Mode</span>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground text-center max-w-[250px]">
+                                                        Enter your approximate SGPA for this semester
+                                                    </p>
+                                                    <Input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        max="10"
+                                                        placeholder="e.g. 7.50"
+                                                        value={
+                                                            quickSgpa[semester.id] === 0
+                                                                ? ""
+                                                                : quickSgpa[semester.id]?.toString() ?? ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            updateQuickSgpa(
+                                                                semester.id,
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        className="w-32 h-10 text-center font-mono text-lg border-amber-200 dark:border-amber-800 focus-visible:ring-amber-400"
+                                                        disabled={isExcluded}
+                                                    />
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {semCredits} credits × SGPA
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className={`space-y-3 flex-1 ${isExcluded ? "pointer-events-none" : ""}`}
+                                                >
+                                                    {mainSemCourses.map(
+                                                        (course) => (
+                                                            <CourseRow
+                                                                key={course.id}
+                                                                course={course}
+                                                                grade={
+                                                                    grades[
+                                                                    course.id
+                                                                    ]
+                                                                }
+                                                                isDisabled={
+                                                                    isExcluded
+                                                                }
+                                                                onGradeChange={
+                                                                    handleGradeChange
+                                                                }
+                                                            />
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 })}

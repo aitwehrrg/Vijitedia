@@ -1,5 +1,10 @@
-import { Course, Year } from "@/types/flowsheet";
+import { Course, Semester, Year } from "@/types/flowsheet";
 import { GRADE_POINTS } from "@/data/grades";
+
+/**
+ * Map of semester ID → approximate SGPA entered by the student in quick mode.
+ */
+export type QuickSgpaMap = Record<string, number>;
 
 export const getGradeColor = (grade: string) => {
     const points = GRADE_POINTS[grade];
@@ -109,6 +114,76 @@ export function predictCGPA(
     };
 }
 
+/**
+ * Calculate stats for a list of courses that may span semesters in quick mode.
+ * For courses belonging to a quick-mode semester, their contribution is computed
+ * from the approximate SGPA rather than individual grades.
+ *
+ * @param courses      – flat list of courses to evaluate
+ * @param grades       – per-course grade selections
+ * @param quickSgpa    – map of semester ID → approximate SGPA
+ * @param semesters    – full semester objects (needed to check which semester a course belongs to)
+ */
+export function calculateStatsWithQuickSgpa(
+    courses: Course[],
+    grades: Record<string, string>,
+    quickSgpa: QuickSgpaMap,
+    semesters: Semester[]
+) {
+    let totalPoints = 0;
+    let totalCredits = 0;
+
+    // Build a lookup: courseId → semesterId
+    const courseToSemester = new Map<string, string>();
+    for (const sem of semesters) {
+        for (const c of sem.courses) {
+            courseToSemester.set(c.id, sem.id);
+        }
+    }
+
+    // Track which quick-mode semesters have already been counted
+    // (so we don't double-count courses within the same semester)
+    const countedQuickSemesters = new Set<string>();
+
+    for (const course of courses) {
+        const semId = courseToSemester.get(course.id);
+
+        if (semId && quickSgpa[semId] !== undefined) {
+            // Quick mode: count entire semester once
+            if (!countedQuickSemesters.has(semId)) {
+                countedQuickSemesters.add(semId);
+                const sem = semesters.find((s) => s.id === semId)!;
+                const semCourses = sem.courses.filter(
+                    (c) => c.type !== "honors" && courses.some((ac) => ac.id === c.id)
+                );
+                const semCredits = semCourses.reduce(
+                    (sum, c) => sum + (c.credits || 0),
+                    0
+                );
+                const sgpa = Math.max(0, Math.min(10, quickSgpa[semId]));
+                totalPoints += sgpa * semCredits;
+                totalCredits += semCredits;
+            }
+        } else {
+            // Detailed mode: use individual grade
+            const gradeKey = grades[course.id];
+            if (gradeKey) {
+                const points = GRADE_POINTS[gradeKey];
+                const credits = course.credits || 0;
+                totalPoints += points * credits;
+                totalCredits += credits;
+            }
+        }
+    }
+
+    return {
+        points: totalPoints,
+        credits: totalCredits,
+        gpa:
+            totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00",
+    };
+}
+
 export interface YearStat {
     passedCredits: number;
     failureCount: number;
@@ -116,19 +191,36 @@ export interface YearStat {
 
 export function computeYearStats(
     years: Year[],
-    grades: Record<string, string>
+    grades: Record<string, string>,
+    quickSgpa: QuickSgpaMap = {}
 ): YearStat[] {
     return years.map((year) => {
         let passedCredits = 0;
         let failureCount = 0;
-        const allCourses = year.semesters.flatMap((s) => s.courses);
-        allCourses.forEach((course) => {
-            const g = grades[course.id];
-            if (g) {
-                if (g === "FF") failureCount++;
-                else passedCredits += course.credits || 0;
+
+        for (const sem of year.semesters) {
+            if (quickSgpa[sem.id] !== undefined) {
+                // In quick mode, assume all credits are passed (SGPA > 0 implies passing)
+                const sgpa = quickSgpa[sem.id];
+                if (sgpa > 0) {
+                    const semCredits = sem.courses.reduce(
+                        (sum, c) => sum + (c.credits || 0),
+                        0
+                    );
+                    passedCredits += semCredits;
+                }
+                // No failures tracked in quick mode
+            } else {
+                for (const course of sem.courses) {
+                    const g = grades[course.id];
+                    if (g) {
+                        if (g === "FF") failureCount++;
+                        else passedCredits += course.credits || 0;
+                    }
+                }
             }
-        });
+        }
+
         return { passedCredits, failureCount };
     });
 }
