@@ -50,7 +50,7 @@ export const SemesterJumpBar = memo(function SemesterJumpBar({
                                     else pillRefs.current.delete(i);
                                 }}
                                 onClick={() => onJump(i)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
+                                className={`px-4 py-2.5 min-h-[44px] min-w-[64px] rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
                                     isActive
                                         ? "bg-foreground text-background shadow-sm"
                                         : "bg-muted text-muted-foreground hover:bg-muted/80"

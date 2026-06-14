@@ -60,7 +60,7 @@ export function FlowsheetHeader({
 
     return (
         <div
-            className="w-full bg-background border-b border-border px-3 py-3 md:px-8 md:py-4 sticky top-0 z-50 shadow-sm"
+            className="w-full bg-background border-b border-border px-3 py-3 md:px-8 md:py-4 relative md:sticky md:top-0 md:z-50 shadow-sm"
             onClick={(e) => e.stopPropagation()}
         >
             <div className="max-w-8xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-4">
