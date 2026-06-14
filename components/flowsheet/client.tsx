@@ -23,11 +23,26 @@ import {
     ConnectionLines,
     Connection,
 } from "@/components/flowsheet/connections";
+import { SemesterJumpBar } from "@/components/flowsheet/semester-jump-bar";
 
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { MINORS } from "@/data/minors";
 import { HONORS } from "@/data/honors";
 import { Course } from "@/types/flowsheet";
+
+/** Check if the viewport is mobile-sized (matches md: breakpoint) */
+function useIsMobile() {
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const mql = window.matchMedia("(max-width: 767px)");
+        const handler = (e: MediaQueryListEvent | MediaQueryList) =>
+            setIsMobile(e.matches);
+        handler(mql);
+        mql.addEventListener("change", handler as (e: MediaQueryListEvent) => void);
+        return () => mql.removeEventListener("change", handler as (e: MediaQueryListEvent) => void);
+    }, []);
+    return isMobile;
+}
 
 export default function FlowsheetPage() {
     const params = useParams();
@@ -43,9 +58,14 @@ export default function FlowsheetPage() {
         null
     );
     const [connections, setConnections] = useState<Connection[]>([]);
+    const [activeSemesterIndex, setActiveSemesterIndex] = useState(0);
+
+    const isMobile = useIsMobile();
 
     const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
     const contentRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const semesterSentinelRefs = useRef<Map<number, HTMLDivElement>>(new Map());
     const electiveRefs = useRef<Map<string, ElectiveCardHandle>>(new Map());
     const minorRefs = useRef<Map<string, MinorSlotHandle>>(new Map());
     const honorsRefs = useRef<Map<string, HonorsSlotHandle>>(new Map());
@@ -184,10 +204,83 @@ export default function FlowsheetPage() {
         cardRefs.current.clear();
     }, [programId]);
 
+    // IntersectionObserver to track which semester column is visible (mobile pill bar)
+    useEffect(() => {
+        if (!isMobile) return;
+        const observers: IntersectionObserver[] = [];
+        semesterSentinelRefs.current.forEach((el, index) => {
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) {
+                        setActiveSemesterIndex(index);
+                    }
+                },
+                {
+                    root: scrollContainerRef.current,
+                    threshold: 0.5,
+                }
+            );
+            observer.observe(el);
+            observers.push(observer);
+        });
+        return () => observers.forEach((o) => o.disconnect());
+    }, [isMobile, flatSemesters]);
+
+    // Auto-scroll to bring off-screen prereqs/postreqs into view on mobile tap
+    const scrollToRelated = useCallback(
+        (courseId: string) => {
+            if (!isMobile || !scrollContainerRef.current) return;
+
+            const relationships = computeActiveRelationships(courseId, effectiveCourses);
+            if (!relationships) return;
+
+            // Prefer scrolling to a prereq; fall back to postreq
+            const targets = [...relationships.prereqs, ...relationships.postreqs];
+            const container = scrollContainerRef.current;
+            const containerRect = container.getBoundingClientRect();
+
+            for (const targetId of targets) {
+                const node = cardRefs.current.get(targetId);
+                if (!node) continue;
+                const nodeRect = node.getBoundingClientRect();
+                // Check if the target is outside the visible scroll area
+                if (nodeRect.right < containerRect.left || nodeRect.left > containerRect.right) {
+                    node.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                        inline: "center",
+                    });
+                    break;
+                }
+            }
+        },
+        [isMobile, effectiveCourses]
+    );
+
     const handleCourseClick = (e: React.MouseEvent, courseId: string) => {
         e.stopPropagation();
+        const wasSelected = selectedCourseId === courseId;
         setSelectedCourseId((prev) => (prev === courseId ? null : courseId));
+        // On mobile, scroll to related courses when selecting (not deselecting)
+        if (!wasSelected) {
+            // Small delay to let the selection state settle before computing relationships
+            setTimeout(() => scrollToRelated(courseId), 50);
+        }
     };
+
+    const handleJumpToSemester = useCallback(
+        (index: number) => {
+            const sentinel = semesterSentinelRefs.current.get(index);
+            if (sentinel) {
+                sentinel.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "start",
+                });
+            }
+        },
+        []
+    );
 
     const handleElectiveSelect = (slotId: string, optionId: string) => {
         const currentSlot = allCourses.find((c) => c.id === slotId);
@@ -357,7 +450,10 @@ export default function FlowsheetPage() {
                 </div>
             </div>
 
-            <div className="flex-1 w-full overflow-x-auto p-4 md:p-8">
+            <div
+                ref={scrollContainerRef}
+                className="flex-1 w-full overflow-x-auto p-4 md:p-8 pb-16 md:pb-8 snap-x snap-mandatory md:snap-none"
+            >
                 <div
                     className="relative bg-card rounded-xl shadow-xl border border-border p-6 mx-auto min-w-[1200px] w-fit"
                     ref={contentRef}
@@ -392,7 +488,11 @@ export default function FlowsheetPage() {
                         {flatSemesters.map((sem, i) => (
                             <div
                                 key={sem.id}
-                                className="text-center text-[10px] uppercase font-bold text-muted-foreground tracking-wider relative"
+                                ref={(el) => {
+                                    if (el) semesterSentinelRefs.current.set(i, el);
+                                    else semesterSentinelRefs.current.delete(i);
+                                }}
+                                className="text-center text-[10px] uppercase font-bold text-muted-foreground tracking-wider relative snap-start"
                             >
                                 {sem.label}
                                 {shouldShowSeparator(i) && (
@@ -591,6 +691,14 @@ export default function FlowsheetPage() {
                     </div>
                 </div>
             </div>
+
+            {isMobile && (
+                <SemesterJumpBar
+                    semesters={flatSemesters}
+                    activeSemesterIndex={activeSemesterIndex}
+                    onJump={handleJumpToSemester}
+                />
+            )}
         </div>
     );
 }
