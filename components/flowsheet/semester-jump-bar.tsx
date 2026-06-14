@@ -30,7 +30,10 @@ export const SemesterJumpBar = memo(function SemesterJumpBar({
     }, [activeSemesterIndex]);
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/90 backdrop-blur-md border-t border-border pb-[env(safe-area-inset-bottom)]">
+        <div 
+            className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/90 backdrop-blur-md border-t border-border pb-[env(safe-area-inset-bottom)]"
+            onClick={(e) => e.stopPropagation()}
+        >
             <div
                 ref={scrollRef}
                 className="flex items-center gap-1 px-3 py-2 overflow-x-auto scrollbar-hide"

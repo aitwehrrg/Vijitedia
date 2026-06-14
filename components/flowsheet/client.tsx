@@ -415,7 +415,7 @@ export default function FlowsheetPage() {
 
             <div
                 ref={scrollContainerRef}
-                className="flex-1 w-full overflow-x-auto p-4 md:p-8 pb-16 md:pb-8 snap-x snap-mandatory md:snap-none"
+                className="flex-1 w-full overflow-x-auto p-4 md:p-8 pb-16 md:pb-8 snap-x snap-proximity md:snap-none"
             >
                 <div
                     className="relative bg-card rounded-xl shadow-xl border border-border p-6 mx-auto min-w-[1200px] w-fit"
@@ -485,7 +485,7 @@ export default function FlowsheetPage() {
                                         return (
                                             <div
                                                 key={`empty-${semester.id}-${rowIndex}`}
-                                                className="aspect-4/3 w-full max-w-[160px] md:max-w-none mx-auto relative"
+                                                className="aspect-4/3 w-full max-w-[260px] md:max-w-none mx-auto relative"
                                             >
                                                 {showSep && (
                                                     <div
@@ -505,7 +505,7 @@ export default function FlowsheetPage() {
                                     return (
                                         <div
                                             key={course.id}
-                                            className="aspect-4/3 w-full max-w-[160px] md:max-w-none mx-auto relative outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-xl scroll-mt-28 scroll-mb-28 md:scroll-mt-32 md:scroll-mb-32"
+                                            className="aspect-4/3 w-full max-w-[260px] md:max-w-none mx-auto relative outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-xl scroll-mt-28 scroll-mb-28 md:scroll-mt-32 md:scroll-mb-32"
                                             tabIndex={0}
                                             data-grid-row={rowIndex}
                                             data-grid-col={semIndex}
