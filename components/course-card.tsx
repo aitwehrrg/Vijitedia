@@ -40,27 +40,27 @@ export function CourseCard({ course, status }: CourseCardProps) {
         <Card
             className={`h-full flex flex-col justify-between border-l-4 transition-all duration-200 cursor-pointer overflow-hidden ${styles[status]}`}
         >
-            <CardHeader className="p-3 pb-2 space-y-0 shrink-0">
+            <CardHeader className="p-4 pb-2 md:p-3 md:pb-2 space-y-0 shrink-0">
                 <div className="flex justify-between items-start gap-2">
                     <Badge
                         variant={status === "default" ? "outline" : "secondary"}
-                        className="h-6 px-2 font-mono text-sm font-bold tracking-tight flex items-center shrink-0"
+                        className="h-7 px-3 md:h-6 md:px-2 font-mono text-base md:text-sm font-bold tracking-tight flex items-center shrink-0"
                     >
                         <StatusIcon />
                         {course.code || "??"}
                     </Badge>
 
                     <div className="flex flex-col items-end shrink-0">
-                        <span className="text-sm font-bold text-foreground font-mono bg-muted px-1.5 py-0.5 rounded-md border border-border">
+                        <span className="text-base md:text-sm font-bold text-foreground font-mono bg-muted px-2 py-1 md:px-1.5 md:py-0.5 rounded-md border border-border">
                             {course.credits || 0}
                         </span>
                     </div>
                 </div>
             </CardHeader>
 
-            <CardContent className="p-3 pt-0 grow flex items-center min-h-0">
+            <CardContent className="p-4 pt-0 md:p-3 md:pt-0 grow flex items-center min-h-0">
                 <CardTitle
-                    className="text-xs sm:text-sm font-medium leading-snug text-foreground line-clamp-3"
+                    className="text-base md:text-xs xl:text-sm font-medium leading-snug text-foreground line-clamp-3"
                     title={course.title}
                 >
                     {course.title || "Untitled Course"}
