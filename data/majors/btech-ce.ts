@@ -963,7 +963,7 @@ export const CE_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "R5CO3401T",
+                            id: "R5CO3011T",
                             type: "core",
                             code: "R5CO3011T",
                             title: "Financial Management",
@@ -1024,7 +1024,7 @@ export const CE_PROGRAM: Program = {
                                     code: "R5CO3112T",
                                     title: "Quantum Computing",
                                     credits: 3,
-                                    prereqs: ["R5MA2007T", "R5CO1026T"],
+                                    prereqs: ["R5MA2007T", "R5CO1026T", "R5CO2006T"],
                                     linkedOptionId: "R5CO3112L",
                                 },
                             ],

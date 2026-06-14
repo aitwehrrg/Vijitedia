@@ -35,7 +35,7 @@ export const OPEN_ELECTIVES_I: CourseOption[] = [
         title: "Financial Management",
         credits: 4,
         prereqs: [],
-        mutexIds: ["R5CO3401T", "R5IT3401T", "R5EL3401T"],
+        mutexIds: ["R5CO3011T", "R5EL3401T"],
     },
     {
         id: "R5HS3303T",

@@ -949,7 +949,7 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "R5IT3401T",
+                            id: "R5CO3011T",
                             type: "core",
                             code: "R5CO3011T",
                             title: "Financial Management",
@@ -1010,7 +1010,7 @@ export const IT_PROGRAM: Program = {
                                     code: "R5IT3112T",
                                     title: "Quantum Computing",
                                     credits: 3,
-                                    prereqs: ["R5MA2007T", "R5CO1026T"],
+                                    prereqs: ["R5MA2007T", "R5CO1026T", "R5IT2006T"],
                                     linkedOptionId: "R5IT3112L",
                                 },
                             ],
