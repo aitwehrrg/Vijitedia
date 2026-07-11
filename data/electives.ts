@@ -66,3 +66,84 @@ export const OPEN_ELECTIVES_I: CourseOption[] = [
         ],
     },
 ];
+
+export const OPEN_ELECTIVES_II: CourseOption[] = [
+    {
+        id: "R5CH4301T",
+        code: "R5CH4301T",
+        title: "Sustainability: Industry Perspectives for a Greener World",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5MC4301T",
+        code: "R5MC4301T",
+        title: "Deep Learning",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5HS4301T",
+        code: "R5HS4301T",
+        title: "Corporate Leadership",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5HS4302T",
+        code: "R5HS4302T",
+        title: "Engineers and Society",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5MA4301T",
+        code: "R5MA4301T",
+        title: "Numerical Optimization",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5PH4301T",
+        code: "R5PH4301T",
+        title: "Quantum Computing",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5HS4303T",
+        code: "R5HS4303T",
+        title: "Financial Literacy for Professionals",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5HS4304T",
+        code: "R5HS4304T",
+        title: "Entrepreneurship for Engineers",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5HS4305T",
+        code: "R5HS4305T",
+        title: "Economics of Banking and Finance Markets",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5HS4306T",
+        code: "R5HS4306T",
+        title: "Foundations of Accounting and Finance",
+        credits: 4,
+        prereqs: [],
+    },
+    {
+        id: "R5HS4307T",
+        code: "R5HS4307T",
+        title: "Developing Soft Skills and Leadership through Indian Knowledge Systems",
+        credits: 4,
+        prereqs: [],
+    },
+];
+
