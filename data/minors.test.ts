@@ -15,12 +15,12 @@ describe("MINORS", () => {
         });
     });
 
-    it("every minor has exactly 5 courses", () => {
+    it("every minor has exactly 6 courses", () => {
         MINORS.forEach((minor) => {
             expect(
                 minor.courses,
                 `Minor '${minor.name}' has ${minor.courses.length} courses instead of 5`
-            ).toHaveLength(5);
+            ).toHaveLength(6);
         });
     });
 
@@ -55,8 +55,8 @@ describe("MINORS", () => {
         });
     });
 
-    it("minor credit totals are progressive (2, 2, 3, 3, 4)", () => {
-        const expectedCredits = [2, 2, 3, 3, 4];
+    it("minor credit totals are progressive (2, 2, 3, 3, 3, 1)", () => {
+        const expectedCredits = [2, 2, 3, 3, 3, 1];
         MINORS.forEach((minor) => {
             minor.courses.forEach((course, i) => {
                 expect(
