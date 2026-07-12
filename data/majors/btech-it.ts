@@ -1280,7 +1280,7 @@ export const IT_PROGRAM: Program = {
                                 {
                                     id: "R5IT4104T",
                                     code: "R5IT4104T",
-                                    title: "Gen-AI and LLMs",
+                                    title: "GenAI and LLMs",
                                     credits: 3,
                                     prereqs: [
                                         "R5CO1026T",
@@ -1359,7 +1359,7 @@ export const IT_PROGRAM: Program = {
                                 {
                                     id: "R5IT4104L",
                                     code: "R5IT4104L",
-                                    title: "Gen-AI and LLMs Laboratory",
+                                    title: "GenAI and LLMs Laboratory",
                                     credits: 1,
                                     prereqs: [
                                         "R5IT2005L",

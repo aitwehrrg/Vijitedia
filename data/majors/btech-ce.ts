@@ -1285,7 +1285,7 @@ export const CE_PROGRAM: Program = {
                                 {
                                     id: "R5CO4104T",
                                     code: "R5CO4104T",
-                                    title: "Gen-AI and LLMs",
+                                    title: "GenAI and LLMs",
                                     credits: 3,
                                     prereqs: [
                                         "R5CO1026T",
@@ -1364,7 +1364,7 @@ export const CE_PROGRAM: Program = {
                                 {
                                     id: "R5CO4104L",
                                     code: "R5CO4104L",
-                                    title: "Gen-AI and LLMs Laboratory",
+                                    title: "GenAI and LLMs Laboratory",
                                     credits: 1,
                                     prereqs: [
                                         "R5CO2005L",
