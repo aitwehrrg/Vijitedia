@@ -70,7 +70,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <head>
                 <meta property="og:image" content="/thumbnail.jpeg"></meta>
                 <meta property="og:site_name" content="Vijitedia"></meta>

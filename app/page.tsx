@@ -353,7 +353,7 @@ export default function Home() {
                                 </Link>
                             </div>
                         </div>
-                        <div className="w-full h-full">
+                        <div className="hidden lg:block w-full h-full">
                             <FlowsheetPreview />
                         </div>
                     </div>
@@ -362,7 +362,7 @@ export default function Home() {
                 {/* CALCULATOR SECTION */}
                 <section className="w-full py-8 md:py-12 -mx-6 px-6">
                     <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center text-left">
-                        <div className="w-full h-full order-2 lg:order-1">
+                        <div className="hidden lg:block w-full h-full order-2 lg:order-1">
                             <CalculatorPreview />
                         </div>
                         <div className="flex flex-col items-start space-y-6 order-1 lg:order-2">
