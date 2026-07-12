@@ -753,6 +753,7 @@ export const CE_PROGRAM: Program = {
                                 "R5CO1021T",
                                 "R5CO2003T",
                                 "R5CO2003L",
+                                "R5CO2006T",
                             ],
                         },
                         {
