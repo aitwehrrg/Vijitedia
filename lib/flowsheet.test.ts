@@ -49,8 +49,8 @@ describe("resolveEffectiveCourses", () => {
             null,
             null
         );
-        expect(result[0].id).toBe("E1"); 
-        expect(result[0].code).toBe("OE101"); 
+        expect(result[0].id).toBe("E1");
+        expect(result[0].code).toBe("OE101");
         expect(result[0].title).toBe("Open Elective I");
         expect(result[0].credits).toBe(4);
     });
@@ -72,7 +72,7 @@ describe("resolveEffectiveCourses", () => {
             }),
         ];
         const result = resolveEffectiveCourses(courses, {}, null, null);
-        expect(result[0].code).toBeUndefined(); 
+        expect(result[0].code).toBeUndefined();
     });
 
     it("substitutes minor course when minor is selected", () => {
@@ -111,12 +111,7 @@ describe("resolveEffectiveCourses", () => {
             }),
         ];
         const honorsId = HONORS[0].id;
-        const result = resolveEffectiveCourses(
-            courses,
-            {},
-            null,
-            honorsId
-        );
+        const result = resolveEffectiveCourses(courses, {}, null, honorsId);
         expect(result[0].id).toBe("H0");
         expect((result[0] as any).originalId).toBeDefined();
         expect(result[0].code).toBeDefined();
@@ -159,9 +154,9 @@ describe("resolveEffectiveCourses", () => {
             minorId,
             null
         );
-        expect(result[0].code).toBe("CORE"); 
-        expect(result[1].code).toBe("OE1"); 
-        expect((result[2] as any).originalId).toBeDefined(); 
+        expect(result[0].code).toBe("CORE");
+        expect(result[1].code).toBe("OE1");
+        expect((result[2] as any).originalId).toBeDefined();
     });
 });
 
@@ -449,6 +444,16 @@ describe("computeActiveRelationships", () => {
         ];
         const result = computeActiveRelationships("C1", courses);
         expect(result!.postreqs.has("D1")).toBe(true);
+    });
+
+    it("maps prereqs referencing an originalId to the slot id", () => {
+        const courses = [
+            { ...mkCourse({ id: "M0" }), originalId: "ORIG1" } as any,
+            mkCourse({ id: "M1", prereqs: ["ORIG1"] }),
+        ];
+        const result = computeActiveRelationships("M1", courses);
+        expect(result!.prereqs.has("M0")).toBe(true);
+        expect(result!.prereqs.has("ORIG1")).toBe(false);
     });
 
     it("handles both prereqs and postreqs simultaneously", () => {

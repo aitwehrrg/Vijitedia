@@ -128,11 +128,17 @@ export function computeActiveRelationships(
 ): ActiveRelationships | null {
     if (!activeCourseId) return null;
 
-    const activeCourse = effectiveCourses.find(
-        (c) => c.id === activeCourseId
-    );
+    const activeCourse = effectiveCourses.find((c) => c.id === activeCourseId);
     if (!activeCourse) return null;
-    const prereqs = new Set(activeCourse.prereqs || []);
+    const prereqs = new Set<string>();
+    (activeCourse.prereqs || []).forEach((prereqId) => {
+        const match = effectiveCourses.find(
+            (c) =>
+                c.id === prereqId ||
+                (c as { originalId?: string }).originalId === prereqId
+        );
+        prereqs.add(match ? match.id : prereqId);
+    });
     const postreqs = new Set<string>();
 
     effectiveCourses.forEach((c) => {
