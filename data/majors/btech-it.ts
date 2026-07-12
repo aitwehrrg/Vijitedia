@@ -1565,7 +1565,7 @@ export const IT_PROGRAM: Program = {
                     label: "Semester VIII",
                     courses: [
                         {
-                            id: "R5IT4701I",
+                            id: "R5CO4701I",
                             type: "core",
                             code: "R5CO4701I",
                             title: "Internship",
@@ -1573,7 +1573,7 @@ export const IT_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "R5IT4802P",
+                            id: "R5CO4802P",
                             type: "core",
                             code: "R5CO4802P",
                             title: "Research Publications and IPR",

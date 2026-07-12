@@ -1579,10 +1579,10 @@ export const CE_PROGRAM: Program = {
                             prereqs: [],
                         },
                         {
-                            id: "R5CO4XXXT",
+                            id: "R5CO4802P",
                             type: "core",
-                            code: "R5CO4XXXT",
-                            title: "Online Course",
+                            code: "R5CO4802P",
+                            title: "Research Publications and IPR",
                             credits: 2,
                             prereqs: [],
                         },
