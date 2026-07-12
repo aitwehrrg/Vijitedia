@@ -1331,9 +1331,12 @@ export const IT_PROGRAM: Program = {
                                     title: "Performance Analysis of Network Systems Laboratory",
                                     credits: 1,
                                     prereqs: [
+                                        "R5CO1001T",
+                                        "R5CO1001L",
                                         "R5CO1026T",
                                         "R5IT2003T",
                                         "R5IT2003L",
+                                        "R5IT2005L",
                                         "R5IT2009T",
                                         "R5IT2009L",
                                     ],
@@ -1417,6 +1420,7 @@ export const IT_PROGRAM: Program = {
                                     title: "Deep Learning",
                                     credits: 3,
                                     prereqs: ["R5IT3001T", "R5IT3001L"],
+                                    mutexIds: ["R5MC4301T"],
                                     linkedOptionId: "R5IT4109L",
                                 },
                                 {
@@ -1438,6 +1442,7 @@ export const IT_PROGRAM: Program = {
                                     title: "Quantum Computing",
                                     credits: 3,
                                     prereqs: [],
+                                    mutexIds: ["R5PH4301T"],
                                     linkedOptionId: "R5IT4111L",
                                 },
                                 {
@@ -1481,6 +1486,7 @@ export const IT_PROGRAM: Program = {
                                     title: "Deep Learning Laboratory",
                                     credits: 1,
                                     prereqs: ["R5IT3001T", "R5IT3001L"],
+                                    mutexIds: ["R5MC4301T"],
                                     linkedOptionId: "R5IT4109T",
                                 },
                                 {
@@ -1504,6 +1510,7 @@ export const IT_PROGRAM: Program = {
                                     title: "Quantum Computing Laboratory",
                                     credits: 1,
                                     prereqs: [],
+                                    mutexIds: ["R5PH4301T"],
                                     linkedOptionId: "R5IT4111T",
                                 },
                                 {

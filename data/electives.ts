@@ -81,6 +81,7 @@ export const OPEN_ELECTIVES_II: CourseOption[] = [
         title: "Deep Learning",
         credits: 4,
         prereqs: [],
+        mutexIds: ["R5CO4109T", "R5IT4109T"],
     },
     {
         id: "R5HS4301T",
@@ -109,6 +110,7 @@ export const OPEN_ELECTIVES_II: CourseOption[] = [
         title: "Quantum Computing",
         credits: 4,
         prereqs: [],
+        mutexIds: ["R5CO4111T", "R5IT4111T"],
     },
     {
         id: "R5HS4303T",
@@ -146,4 +148,3 @@ export const OPEN_ELECTIVES_II: CourseOption[] = [
         prereqs: [],
     },
 ];
-
