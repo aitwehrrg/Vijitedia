@@ -125,6 +125,7 @@ export const OPEN_ELECTIVES_II: CourseOption[] = [
         title: "Entrepreneurship for Engineers",
         credits: 4,
         prereqs: [],
+        mutexIds: ["R5CE2201T", "R5IL2201T"],
     },
     {
         id: "R5HS4305T",

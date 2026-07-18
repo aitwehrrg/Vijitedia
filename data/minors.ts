@@ -12,6 +12,7 @@ export const MINORS: Minor[] = [
                 title: "Understanding Incubation and Entrepreneurship",
                 credits: 2,
                 prereqs: [],
+                mutexIds: ["R5HS4304T"],
             },
             {
                 id: "R5CE2204T",
@@ -685,7 +686,7 @@ export const MINORS: Minor[] = [
                 title: "Orientation Programme in Entrepreneurship",
                 credits: 2,
                 prereqs: [],
-                mutexIds: ["R5HS3305T"],
+                mutexIds: ["R5HS3305T", "R5HS4304T"],
             },
             {
                 id: "R5IL2202T",
