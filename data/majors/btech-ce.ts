@@ -1230,7 +1230,7 @@ export const CE_PROGRAM: Program = {
                             id: "R5CO4004L",
                             type: "core",
                             code: "R5CO4004L",
-                            title: "Cross Platform App Development Laboratory",
+                            title: "Cross-Platform App Development Laboratory",
                             credits: 1,
                             prereqs: [
                                 "R5CO1001T",

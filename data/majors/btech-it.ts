@@ -1225,7 +1225,7 @@ export const IT_PROGRAM: Program = {
                             id: "R5IT4004L",
                             type: "core",
                             code: "R5IT4004L",
-                            title: "Cross Platform App Development Laboratory",
+                            title: "Cross-Platform App Development Laboratory",
                             credits: 1,
                             prereqs: [
                                 "R5CO1001T",
