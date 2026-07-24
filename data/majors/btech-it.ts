@@ -1210,7 +1210,7 @@ export const IT_PROGRAM: Program = {
                             code: "R5XX42XXT",
                             title: "Multidisciplinary Minor V Laboratory",
                             label: "Multidisciplinary Minor V Laboratory",
-                            credits: 1,
+                            credits: 0,
                             minorIndex: 5,
                         },
                         {
