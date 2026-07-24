@@ -1,10 +1,65 @@
-import { Course, Semester, Year } from "@/types/flowsheet";
+import { Course, Minor, Semester, Year } from "@/types/flowsheet";
 import { GRADE_POINTS } from "@/data/grades";
+import { MINORS } from "@/data/minors";
 
 /**
  * Map of semester ID → approximate SGPA entered by the student in quick mode.
  */
 export type QuickSgpaMap = Record<string, number>;
+
+export type CalculatorCourse = Course & {
+    calculatorDisabled?: boolean;
+    includeInCgpa?: boolean;
+};
+
+export function resolveMinorCourseForCalculator(
+    course: Course,
+    minorMode: "five" | "six"
+): CalculatorCourse {
+    if (course.type !== "minor" || course.minorIndex === undefined) {
+        return { ...course, includeInCgpa: true, calculatorDisabled: false };
+    }
+
+    if (course.minorIndex < 4)
+        return {
+            ...course,
+            includeInCgpa: true,
+            calculatorDisabled: false,
+        };
+    
+    // Final theory slot keeps endpoint credits constant:
+    // default or no-lab track = 4, lab-enabled track = 3
+    if (course.minorIndex === 4) {
+        return {
+            ...course,
+            credits: minorMode === "six" ? 3 : 4,
+            includeInCgpa: true,
+            calculatorDisabled: false,
+        };
+    }
+
+    // Final lab slot: enabled only for lab-backed tracks; otherwise visible but disabled.
+    if (course.minorIndex === 5) {
+        if (minorMode === "six") {
+            return {
+                ...course,
+                credits: 1,
+                includeInCgpa: true,
+                calculatorDisabled: false,
+            };
+        }
+
+        return {
+            ...course,
+            title: `${course.title || "Minor V Laboratory"}`,
+            credits: 0,
+            includeInCgpa: false,
+            calculatorDisabled: true,
+        };
+    }
+
+    return { ...course, includeInCgpa: true, calculatorDisabled: false };
+}
 
 export const getGradeColor = (grade: string) => {
     const points = GRADE_POINTS[grade];

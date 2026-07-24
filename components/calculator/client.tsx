@@ -5,7 +5,7 @@ import { notFound, useParams } from "next/navigation";
 import { Course } from "@/types/flowsheet";
 import { FLOWSHEET_DATA } from "@/data/programs";
 import { HONORS } from "@/data/honors";
-import { GRADE_POINTS, GRADE_OPTIONS } from "@/data/grades";
+import { GRADE_OPTIONS } from "@/data/grades";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -41,6 +41,8 @@ import {
     predictCGPA,
     computeYearStats,
     checkPromotionEligibility,
+    resolveMinorCourseForCalculator,
+    CalculatorCourse,
     QuickSgpaMap,
 } from "@/lib/calculator";
 
@@ -57,7 +59,13 @@ const CourseRow = memo(
         onGradeChange: (courseId: string, val: string) => void;
     }) => {
         return (
-            <div className="flex items-center justify-between gap-3 group">
+            <div 
+                className={`flex items-center justify-between gap-3 group rounded-md px-2 py-1.5 transition-colors ${
+                    isDisabled
+                        ? "opacity-60 grayscale bg-muted/40 border border-border"
+                        : ""
+                }`}
+            >
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                         <span className="font-bold text-sm text-foreground font-mono truncate group-hover:text-indigo-600 transition-colors">
@@ -101,7 +109,10 @@ const CourseRow = memo(
         return (
             prev.grade === next.grade &&
             prev.isDisabled === next.isDisabled &&
-            prev.course.id === next.course.id
+            prev.course.id === next.course.id &&
+            prev.course.code === next.course.code &&
+            prev.course.title === next.course.title &&
+            prev.course.credits === next.course.credits
         );
     }
 );
@@ -115,6 +126,7 @@ export default function CalculatorPage() {
     const [targetCGPA, setTargetCGPA] = useState<string>("");
     const [excludedSemesters, setExcludedSemesters] = useState<string[]>([]);
     const [quickSgpa, setQuickSgpa] = useState<QuickSgpaMap>({});
+    const [minorMode, setMinorMode] = useState<"five" | "six">("five");
     const [isLoaded, setIsLoaded] = useState(false);
 
     const currentProgram = useMemo(
@@ -130,10 +142,19 @@ export default function CalculatorPage() {
         const savedQuickSgpa = localStorage.getItem(
             `cgpa_${programId}_quickSgpa`
         );
+        const savedMinorMode = localStorage.getItem(
+            `cgpa_${programId}_minorMode`
+        );
 
         if (savedGrades) setGrades(JSON.parse(savedGrades));
         if (savedExcluded) setExcludedSemesters(JSON.parse(savedExcluded));
         if (savedQuickSgpa) setQuickSgpa(JSON.parse(savedQuickSgpa));
+        if (savedMinorMode) {
+            const parsedMode = JSON.parse(savedMinorMode) as "five" | "six";
+            if (parsedMode === "five" || parsedMode === "six") {
+                setMinorMode(parsedMode);
+            }
+        }
 
         setIsLoaded(true);
     }, [programId]);
@@ -152,8 +173,19 @@ export default function CalculatorPage() {
                 `cgpa_${programId}_quickSgpa`,
                 JSON.stringify(quickSgpa)
             );
+            localStorage.setItem(
+                `cgpa_${programId}_minorMode`,
+                JSON.stringify(minorMode)
+            );
         }
-    }, [grades, excludedSemesters, quickSgpa, programId, isLoaded]);
+    }, [
+        grades,
+        excludedSemesters,
+        quickSgpa,
+        minorMode,
+        programId,
+        isLoaded
+    ]);
 
     const handleGradeChange = useCallback(
         (courseId: string, gradeKey: string) => {
@@ -207,14 +239,37 @@ export default function CalculatorPage() {
         }
     }, []);
 
+    const resolvedYears = useMemo(() => {
+        if (!currentProgram) return [];
+
+        return currentProgram.years.map((year) => ({
+            ...year,
+            semesters: year.semesters.map((semester) => ({
+                ...semester,
+                courses: semester.courses.map((course) => 
+                    resolveMinorCourseForCalculator(course, minorMode)
+                ),
+            })),
+        }));
+    }, [currentProgram, minorMode]);
+
+    const allSemesters = useMemo(() => {
+        return resolvedYears.flatMap((y) => y.semesters);
+    }, [resolvedYears]);
+
     const activeMainCourses = useMemo(() => {
         if (!currentProgram) return [];
-        return currentProgram.years.flatMap((y) =>
+        return resolvedYears.flatMap((y) =>
             y.semesters
                 .filter((s) => !excludedSemesters.includes(s.id))
-                .flatMap((s) => s.courses.filter((c) => c.type !== "honors"))
+                .flatMap((s) =>
+                    s.courses.filter(
+                        (c: CalculatorCourse) =>
+                            c.type !== "honors" && c.includeInCgpa !== false
+                    )
+                )
         );
-    }, [currentProgram, excludedSemesters]);
+    }, [currentProgram, resolvedYears, excludedSemesters]);
 
     const activeHonorsCourses = useMemo(() => {
         if (!currentProgram) return [];
@@ -228,11 +283,6 @@ export default function CalculatorPage() {
             code: `R5XX${(i >> 2) + 3}XXX${i === 7 ? "P" : (i & 1) === 0 ? "T" : "L"}`,
             title: `Honors ${getSuffix(i)}`,
         }));
-    }, [currentProgram]);
-
-    const allSemesters = useMemo(() => {
-        if (!currentProgram) return [];
-        return currentProgram.years.flatMap((y) => y.semesters);
     }, [currentProgram]);
 
     const mainStats = useMemo(() => {
@@ -253,8 +303,25 @@ export default function CalculatorPage() {
     }, [activeHonorsCourses, grades]);
 
     const yearStats = useMemo(
-        () => currentProgram ? computeYearStats(currentProgram.years, grades, quickSgpa) : [],
-        [currentProgram, grades, quickSgpa]
+        () => 
+            resolvedYears.length > 0
+                ? computeYearStats(
+                    resolvedYears.map((year) => ({
+                        ...year,
+                        semesters: year.semesters.map((semester) => ({
+                            ...semester,
+                            courses: semester.courses.filter(
+                                (c: CalculatorCourse) =>
+                                    c.type !== "honors" &&
+                                    c.includeInCgpa !== false
+                            ),
+                        })),
+                    })),
+                    grades,
+                    quickSgpa
+                )
+            : [],
+        [resolvedYears, grades, quickSgpa]
     );
 
     const prediction = useMemo(
@@ -436,7 +503,7 @@ export default function CalculatorPage() {
             </div>
 
             <div className="max-w-7xl mx-auto w-full p-4 md:p-8 space-y-8">
-                {currentProgram.years.map((year, yearIndex) => {
+                {resolvedYears.map((year, yearIndex) => {
                     const isYearDisabled = year.semesters.every((s) =>
                         excludedSemesters.includes(s.id)
                     );
@@ -451,13 +518,18 @@ export default function CalculatorPage() {
                                 {year.semesters.map((semester) => {
                                     const isExcluded =
                                         excludedSemesters.includes(semester.id);
+                                    const isSemesterSeven =
+                                        semester.label === "Semester VII";
                                     const isQuickMode =
                                         quickSgpa[semester.id] !== undefined;
-                                    const mainSemCourses =
-                                        semester.courses.filter(
-                                            (c) => c.type !== "honors"
-                                        );
-                                    const semCredits = mainSemCourses.reduce(
+                                    const mainSemCourses = semester.courses.filter(
+                                        (c: CalculatorCourse) => c.type !== "honors"
+                                    );
+                                    const semCoursesForCalc = mainSemCourses.filter(
+                                        (c: CalculatorCourse) =>
+                                            c.includeInCgpa !== false
+                                    );
+                                    const semCredits = semCoursesForCalc.reduce(
                                         (sum, c) => sum + (c.credits || 0),
                                         0
                                     );
@@ -470,7 +542,7 @@ export default function CalculatorPage() {
                                                   : "0.00",
                                           }
                                         : calculateStats(
-                                              mainSemCourses,
+                                              semCoursesForCalc,
                                               grades
                                           );
 
@@ -499,6 +571,23 @@ export default function CalculatorPage() {
                                                     </label>
                                                 </div>
                                                 <div className="flex gap-2 items-center">
+                                                    {isSemesterSeven && (
+                                                        <label className="flex items-center gap-2 text-[10px] md:text-xs text:muted-foreground select-none">
+                                                            <Checkbox
+                                                                checked={minorMode === "six"}
+                                                                onCheckedChange={(checked) =>
+                                                                    setMinorMode(
+                                                                        checked === true
+                                                                        ? "six"
+                                                                        : "five"
+                                                                    )
+                                                                }
+                                                                disabled={isExcluded}
+                                                                className="h-3.5 w-3.5"
+                                                            />
+                                                            <span>Minor has lab</span>
+                                                        </label>
+                                                    )}
                                                     <Button
                                                         variant={isQuickMode ? "default" : "ghost"}
                                                         size="icon"
@@ -599,7 +688,13 @@ export default function CalculatorPage() {
                                                                     ]
                                                                 }
                                                                 isDisabled={
-                                                                    isExcluded
+                                                                    isExcluded ||
+                                                                    Boolean(
+                                                                        (
+                                                                            course as CalculatorCourse
+                                                                        )
+                                                                            .calculatorDisabled
+                                                                    )
                                                                 }
                                                                 onGradeChange={
                                                                     handleGradeChange

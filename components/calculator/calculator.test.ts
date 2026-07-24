@@ -6,9 +6,11 @@ import {
     predictCGPA,
     computeYearStats,
     checkPromotionEligibility,
+    resolveMinorCourseForCalculator,
     YearStat,
 } from "@/lib/calculator";
 import { Course, Semester, Year } from "@/types/flowsheet";
+import { resolve } from "path";
 
 const mockCourse = (id: string, credits: number): Course => ({
     id,
@@ -38,6 +40,68 @@ const mockSemester = (
     id,
     label: `Semester ${id}`,
     courses,
+});
+
+const mockMinorSlot = (id: string, minorIndex: number, credits: number): Course => ({
+    id,
+    credits,
+    type: "minor",
+    code: id,
+    title: `Minor Slot ${minorIndex}`,
+    prereqs: [],
+    minorIndex,
+});
+
+describe("resolveMinorCourseForCalculator", () => {
+    it("defaults every final theory to 4 credits in five-course mode", () => {
+        const theory = mockMinorSlot("MDM-V", 4, 3);
+        const resolved = resolveMinorCourseForCalculator(theory, "five");
+        expect(resolved.credits).toBe(4);
+        expect(resolved.includeInCgpa).toBe(true);
+        expect(resolved.calculatorDisabled).toBe(false);
+    });
+
+    it("keeps lab visible but disabled in five-course mode", () => {
+        const lab = mockMinorSlot("MDM-V LAB", 5, 0);
+        const resolved = resolveMinorCourseForCalculator(lab, "five");
+        expect(resolved.credits).toBe(0);
+        expect(resolved.includeInCgpa).toBe(false);
+        expect(resolved.calculatorDisabled).toBe(true);
+    });
+
+    it("keeps final endpoint as 4 credits for 5-course minor (4 + disabled lab)", () => {
+        const theory = resolveMinorCourseForCalculator(
+            mockMinorSlot("MDM-V", 4, 3),
+            "five"
+        );
+        const lab = resolveMinorCourseForCalculator(
+            mockMinorSlot("MDM-V LAB", 5, 0),
+            "five"
+        );
+
+        expect(theory.credits).toBe(4);
+        expect(lab.credits).toBe(0);
+        expect(lab.calculatorDisabled).toBe(true);
+        expect((theory.credits || 0) + (lab.credits || 0)).toBe(4);
+    });
+
+    it("splits final endpoint to 3+1 for 6-course minor", () => {
+        const theory = resolveMinorCourseForCalculator(
+            mockMinorSlot("MDM-V", 4, 3),
+            "six"
+        );
+        const lab = resolveMinorCourseForCalculator(
+            mockMinorSlot("MDM-V LAB", 5, 0),
+            "six"
+        );
+
+        expect(theory.credits).toBe(3);
+        expect(lab.credits).toBe(1);
+        expect(lab.calculatorDisabled).toBe(false);
+        expect(theory.includeInCgpa).toBe(true);
+        expect(lab.includeInCgpa).toBe(true);
+        expect((theory.credits || 0) + (lab.credits || 0)).toBe(4);
+    });
 });
 
 describe("calculateStats", () => {
