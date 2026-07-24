@@ -29,7 +29,7 @@ describe("FLOWSHEET_DATA", () => {
     it.each(
         FLOWSHEET_DATA.map((p) => [p.id, p])
     )(
-        "program '%s' has valid courses with id, type, and positive credits",
+        "program '%s' has valid courses with id, type, and valid credits",
         (_id, program) => {
             const allCourses = program.years.flatMap((y) =>
                 y.semesters.flatMap((s) => s.courses)
@@ -38,7 +38,14 @@ describe("FLOWSHEET_DATA", () => {
 
             allCourses.forEach((course) => {
                 expect(course.id).toBeTruthy();
-                expect(course.credits).toBeGreaterThan(0);
+                const isMinorLabPlaceholder =
+                    course.type === "minor" && course.minorIndex === 5;
+
+                if (isMinorLabPlaceholder) {
+                    expect(course.credits).toBeGreaterThanOrEqual(0);
+                } else {
+                    expect(course.credits).toBeGreaterThan(0);
+                }
             });
         }
     );

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { CourseCard } from "@/components/course-card";
 import {
     resolveEffectiveCourses,
+    isMinorLabSlotVisible,
     computeTakenCourses,
     computeDisabledMinorIds,
     computeDisabledOptionIds,
@@ -89,6 +90,17 @@ export default function FlowsheetPage() {
     const flatSemesters = useMemo(
         () => currentProgram?.years.flatMap((y) => y.semesters) || [],
         [currentProgram]
+    );
+
+    const visibleSemesters = useMemo(
+        () =>
+            flatSemesters.map((semester) => ({
+                ...semester,
+                courses: semester.courses.filter((course) =>
+                    isMinorLabSlotVisible(course, selectedMinorId)
+                ),
+            })),
+        [flatSemesters, selectedMinorId]
     );
 
     const maxRows = useMemo(
@@ -204,6 +216,18 @@ export default function FlowsheetPage() {
         cardRefs.current.clear();
     }, [programId]);
 
+    useEffect(() => {
+        if (selectedCourseId && !allCourses.some((c) => c.id === selectedCourseId)) {
+            setSelectedCourseId(null);
+        }
+    }, [selectedCourseId, allCourses]);
+
+    useEffect(() => {
+        if (selectedCourseId && !allCourses.some((c) => c.id === hoveredCourseId)) {
+            setHoveredCourseId(null);
+        }
+    }, [hoveredCourseId, allCourses]);
+
     // IntersectionObserver to track which semester column is visible (mobile pill bar)
     useEffect(() => {
         if (!isMobile) return;
@@ -279,7 +303,7 @@ export default function FlowsheetPage() {
         course: Course
     ) => {
         const focusCell = (r: number, c: number) => {
-            const targetSemester = flatSemesters[c];
+            const targetSemester = visibleSemesters[c];
             if (targetSemester && targetSemester.courses[r]) {
                 const targetId = targetSemester.courses[r].id;
                 cardRefs.current.get(targetId)?.focus();
@@ -476,7 +500,7 @@ export default function FlowsheetPage() {
                                     gridTemplateColumns: `repeat(${flatSemesters.length}, ${isMobile ? "85vw" : `minmax(${MIN_COL_WIDTH}, 1fr)`})`,
                                 }}
                             >
-                                {flatSemesters.map((semester, semIndex) => {
+                                {visibleSemesters.map((semester, semIndex) => {
                                     const course = semester.courses[rowIndex];
                                     const showSep =
                                         shouldShowSeparator(semIndex);

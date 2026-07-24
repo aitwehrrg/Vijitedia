@@ -61,6 +61,20 @@ export function resolveEffectiveCourses(
     });
 }
 
+export function isMinorLabSlotVisible(
+    course: Course,
+    selectedMinorId: string | null,
+    minors: Minor[] = MINORS
+): boolean {
+    if (course.type !== "minor" || course.minorIndex !== 5) return true;
+    if (!selectedMinorId) return false;
+
+    const selectedMinor = minors.find((m) => m.id === selectedMinorId);
+    const labCourse = selectedMinor?.courses[5];
+
+    return Boolean(labCourse && labCourse.credits === 1);
+}
+
 export function computeTakenCourses(
     allCourses: Course[],
     selections: Record<string, string>

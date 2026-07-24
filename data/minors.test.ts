@@ -15,12 +15,16 @@ describe("MINORS", () => {
         });
     });
 
-    it("every minor has exactly 6 courses", () => {
+    it("every minor has 5 or 6 courses", () => {
         MINORS.forEach((minor) => {
             expect(
-                minor.courses,
-                `Minor '${minor.name}' has ${minor.courses.length} courses instead of 5`
-            ).toHaveLength(6);
+                minor.courses.length,
+                `Minor '${minor.name}' has ${minor.courses.length} courses; expected at least 5`
+            ).toBeGreaterThanOrEqual(5);
+            expect(
+                minor.courses.length,
+                `Minor '${minor.name}' has ${minor.courses.length} courses; expected at most 6`
+            ).toBeLessThanOrEqual(6);
         });
     });
 
@@ -55,15 +59,25 @@ describe("MINORS", () => {
         });
     });
 
-    it("minor credit totals are progressive (2, 2, 3, 3, 3, 1)", () => {
-        const expectedCredits = [2, 2, 3, 3, 3, 1];
+    it("minor credit pattern matches allowed endings", () => {
+        const baseCredits = [2, 2, 3, 3];
         MINORS.forEach((minor) => {
-            minor.courses.forEach((course, i) => {
+            expect(
+                minor.courses.slice(0, 4).map((c) => c.credits),
+                `Minor '${minor.name}' first 4 credits should be ${baseCredits.join(",")}`
+            ).toEqual(baseCredits);
+
+            if (minor.courses.length === 5) {
                 expect(
-                    course.credits,
-                    `Minor '${minor.name}' course ${i} has ${course.credits} credits, expected ${expectedCredits[i]}`
-                ).toBe(expectedCredits[i]);
-            });
+                    minor.courses[4].credits,
+                    `Minor '${minor.name}' 5-course ending must have final 4-credit course`
+                ).toBe(4);
+            } else {
+                expect(
+                    [minor.courses[4].credits, minor.courses[5].credits],
+                    `Minor '${minor.name}' 6-course ending must be 3 + 1 credits`
+                ).toEqual([3, 1]);
+            }
         });
     });
 });

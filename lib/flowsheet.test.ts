@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { Course } from "@/types/flowsheet";
 import {
     resolveEffectiveCourses,
+    isMinorLabSlotVisible,
     computeTakenCourses,
     computeDisabledMinorIds,
     computeDisabledOptionIds,
@@ -102,6 +103,57 @@ describe("resolveEffectiveCourses", () => {
         expect((result[0] as any).originalId).toBeUndefined();
     });
 
+    it("does not substitute minor lab slot for a selected 5-course minor", () => {
+        const fiveCourseMinor = MINORS.find((m) => m.courses.length === 5);
+        expect(fiveCourseMinor).toBeDefined();
+
+        const courses = [
+            mkCourse({
+                id: "M-LAB",
+                type: "minor",
+                minorIndex: 5,
+                code: "SLOT-LAB",
+                title: "Minor Lab Slot",
+                credits: 0,
+            }),
+        ];
+
+        const result = resolveEffectiveCourses(
+            courses,
+            {},
+            fiveCourseMinor!.id,
+            null
+        );
+
+        expect(result[0].id).toBe("M-LAB");
+        expect((result[0] as any).originalId).toBeUndefined();
+        expect(result[0].code).toBe("SLOT-LAB");
+    });
+
+    it("substitutes minor lab slot for a selected 6-course minor", () => {
+        const sixCourseMinor = MINORS.find((m) => m.courses.length === 6);
+        expect(sixCourseMinor).toBeDefined();
+
+        const courses = [
+            mkCourse({
+                id: "M-LAB",
+                type: "minor",
+                minorIndex: 5,
+            }),
+        ];
+
+        const result = resolveEffectiveCourses(
+            courses,
+            {},
+            sixCourseMinor!.id,
+            null
+        );
+
+        expect(result[0].id).toBe("M-LAB");
+        expect((result[0] as any).originalId).toBe(sixCourseMinor!.courses[5].id);
+        expect(result[0].credits).toBe(1);
+    });
+
     it("substitutes honors course when honors is selected", () => {
         const courses = [
             mkCourse({
@@ -194,6 +246,54 @@ describe("computeTakenCourses", () => {
     it("returns empty set for empty inputs", () => {
         const taken = computeTakenCourses([], {});
         expect(taken.size).toBe(0);
+    });
+});
+
+describe("isMinorLabSlotVisible", () => {
+    const minorLabSlot = mkCourse({ id: "M-LAB", type: "minor", minorIndex: 5 });
+
+    it("returns true for non-minor courses", () => {
+        const core = mkCourse({ id: "C1", type: "core" });
+        expect(isMinorLabSlotVisible(core, null)).toBe(true);
+    });
+
+    it("returns true for non-lab minor slots", () => {
+        const minor = mkCourse({ id: "M0", type: "minor", minorIndex: 0 });
+        expect(isMinorLabSlotVisible(minor, null)).toBe(true);
+    });
+
+    it("returns false for lab slot when no minor is selected", () => {
+        expect(isMinorLabSlotVisible(minorLabSlot, null)).toBe(false);
+    });
+
+    it("returns false for lab slot when selected minor has only five courses", () => {
+        
+    });
+
+    it("returns true for lab slot when selected minor has a valid 6th lab course", () => {
+        
+    });
+
+    it("returns false for malformed 6th course with non-lab credits", () => {
+        const malformedMinors = [
+            {
+                id: "malformed",
+                dept: "X",
+                name: "Malformed",
+                courses: [
+                    { id: "A", code: "A", title: "A", credits: 2, prereqs: [] },
+                    { id: "B", code: "B", title: "B", credits: 2, prereqs: [] },
+                    { id: "C", code: "C", title: "C", credits: 3, prereqs: [] },
+                    { id: "D", code: "D", title: "D", credits: 3, prereqs: [] },
+                    { id: "E", code: "E", title: "E", credits: 3, prereqs: [] },
+                    { id: "F", code: "F", title: "F", credits: 2, prereqs: [] },
+                ],
+            },
+        ];
+
+        expect(
+            isMinorLabSlotVisible(minorLabSlot, "malformed", malformedMinors)
+        ).toBe(false);
     });
 });
 

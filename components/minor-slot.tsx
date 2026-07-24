@@ -47,6 +47,12 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
         ref
     ) => {
         const [open, setOpen] = useState(false);
+        const minorSlotLabel =
+            course.minorIndex === undefined
+                ? "Minor"
+                : course.minorIndex === 5
+                    ? "Minor V Laboratory"
+                    : `Minor ${toRoman(course.minorIndex + 1)}`;
 
         useImperativeHandle(ref, () => ({
             trigger: () => setOpen(true),
@@ -79,7 +85,7 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                         <div className="h-full border-2 border-dashed border-border bg-card hover:border-indigo-400 hover:bg-indigo-50/30 dark:hover:bg-indigo-950/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
                             <GraduationCap className="w-4 h-4 text-muted-foreground group-hover:text-indigo-500 mb-1 transition-colors" />
                             <span className="text-sm font-semibold text-center text-foreground group-hover:text-indigo-700 dark:group-hover:text-indigo-400 leading-tight transition-colors">
-                                Minor {((idx) => idx < 5 ? toRoman(idx + 1) : "V Laboratory")(course.minorIndex!)}
+                                {minorSlotLabel}
                             </span>
                             <Badge
                                 variant="secondary"
