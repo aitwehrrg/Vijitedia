@@ -126,7 +126,7 @@ export default function CalculatorPage() {
     const [targetCGPA, setTargetCGPA] = useState<string>("");
     const [excludedSemesters, setExcludedSemesters] = useState<string[]>([]);
     const [quickSgpa, setQuickSgpa] = useState<QuickSgpaMap>({});
-    const [minorMode, setMinorMode] = useState<"five" | "six">("five");
+    const [minorHasLab, setMinorHasLab] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const currentProgram = useMemo(
@@ -142,18 +142,20 @@ export default function CalculatorPage() {
         const savedQuickSgpa = localStorage.getItem(
             `cgpa_${programId}_quickSgpa`
         );
-        const savedMinorMode = localStorage.getItem(
+        const savedMinorHasLab = localStorage.getItem(
+            `cgpa_${programId}_minorHasLab`
+        );
+        const legacyMinorMode = localStorage.getItem(
             `cgpa_${programId}_minorMode`
         );
 
         if (savedGrades) setGrades(JSON.parse(savedGrades));
         if (savedExcluded) setExcludedSemesters(JSON.parse(savedExcluded));
         if (savedQuickSgpa) setQuickSgpa(JSON.parse(savedQuickSgpa));
-        if (savedMinorMode) {
-            const parsedMode = JSON.parse(savedMinorMode) as "five" | "six";
-            if (parsedMode === "five" || parsedMode === "six") {
-                setMinorMode(parsedMode);
-            }
+        if (savedMinorHasLab !== null) {
+            setMinorHasLab(JSON.parse(savedMinorHasLab) === true);
+        } else if (legacyMinorMode) {
+            setMinorHasLab(JSON.parse(legacyMinorMode) === "six");
         }
 
         setIsLoaded(true);
@@ -174,15 +176,15 @@ export default function CalculatorPage() {
                 JSON.stringify(quickSgpa)
             );
             localStorage.setItem(
-                `cgpa_${programId}_minorMode`,
-                JSON.stringify(minorMode)
+                `cgpa_${programId}_minorHasLab`,
+                JSON.stringify(minorHasLab)
             );
         }
     }, [
         grades,
         excludedSemesters,
         quickSgpa,
-        minorMode,
+        minorHasLab,
         programId,
         isLoaded
     ]);
@@ -247,11 +249,11 @@ export default function CalculatorPage() {
             semesters: year.semesters.map((semester) => ({
                 ...semester,
                 courses: semester.courses.map((course) => 
-                    resolveMinorCourseForCalculator(course, minorMode)
+                    resolveMinorCourseForCalculator(course, minorHasLab)
                 ),
             })),
         }));
-    }, [currentProgram, minorMode]);
+    }, [currentProgram, minorHasLab]);
 
     const allSemesters = useMemo(() => {
         return resolvedYears.flatMap((y) => y.semesters);
@@ -571,23 +573,6 @@ export default function CalculatorPage() {
                                                     </label>
                                                 </div>
                                                 <div className="flex gap-2 items-center">
-                                                    {isSemesterSeven && (
-                                                        <label className="flex items-center gap-2 text-[10px] md:text-xs text:muted-foreground select-none">
-                                                            <Checkbox
-                                                                checked={minorMode === "six"}
-                                                                onCheckedChange={(checked) =>
-                                                                    setMinorMode(
-                                                                        checked === true
-                                                                        ? "six"
-                                                                        : "five"
-                                                                    )
-                                                                }
-                                                                disabled={isExcluded}
-                                                                className="h-3.5 w-3.5"
-                                                            />
-                                                            <span>Minor has lab</span>
-                                                        </label>
-                                                    )}
                                                     <Button
                                                         variant={isQuickMode ? "default" : "ghost"}
                                                         size="icon"
@@ -637,6 +622,26 @@ export default function CalculatorPage() {
                                                     </Button>
                                                 </div>
                                             </div>
+
+                                            {isSemesterSeven && (
+                                                <div className="flex items-center gap-2 mb-2 px-1">
+                                                    <Checkbox
+                                                        id={`minor-lab-${semester.id}`}
+                                                        checked={minorHasLab}
+                                                        onCheckedChange={(checked) =>
+                                                            setMinorHasLab(checked === true)
+                                                        }
+                                                        disabled={isExcluded}
+                                                        className="h-3.5 w-3.5"
+                                                    />
+                                                    <label
+                                                        htmlFor={`minor-lab-${semester.id}`}
+                                                        className="text-xs text-muted-foreground select-none cursor-pointer"
+                                                    >
+                                                        Minor has lab
+                                                    </label>
+                                                </div>
+                                            )}
 
                                             {isQuickMode ? (
                                                 <div

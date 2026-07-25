@@ -14,7 +14,7 @@ export type CalculatorCourse = Course & {
 
 export function resolveMinorCourseForCalculator(
     course: Course,
-    minorMode: "five" | "six"
+    minorHasLab: boolean
 ): CalculatorCourse {
     if (course.type !== "minor" || course.minorIndex === undefined) {
         return { ...course, includeInCgpa: true, calculatorDisabled: false };
@@ -32,7 +32,7 @@ export function resolveMinorCourseForCalculator(
     if (course.minorIndex === 4) {
         return {
             ...course,
-            credits: minorMode === "six" ? 3 : 4,
+            credits: minorHasLab ? 3 : 4,
             includeInCgpa: true,
             calculatorDisabled: false,
         };
@@ -40,7 +40,7 @@ export function resolveMinorCourseForCalculator(
 
     // Final lab slot: enabled only for lab-backed tracks; otherwise visible but disabled.
     if (course.minorIndex === 5) {
-        if (minorMode === "six") {
+        if (minorHasLab) {
             return {
                 ...course,
                 credits: 1,

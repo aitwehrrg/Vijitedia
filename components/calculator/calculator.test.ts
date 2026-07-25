@@ -55,7 +55,7 @@ const mockMinorSlot = (id: string, minorIndex: number, credits: number): Course 
 describe("resolveMinorCourseForCalculator", () => {
     it("defaults every final theory to 4 credits in five-course mode", () => {
         const theory = mockMinorSlot("MDM-V", 4, 3);
-        const resolved = resolveMinorCourseForCalculator(theory, "five");
+        const resolved = resolveMinorCourseForCalculator(theory, false);
         expect(resolved.credits).toBe(4);
         expect(resolved.includeInCgpa).toBe(true);
         expect(resolved.calculatorDisabled).toBe(false);
@@ -63,7 +63,7 @@ describe("resolveMinorCourseForCalculator", () => {
 
     it("keeps lab visible but disabled in five-course mode", () => {
         const lab = mockMinorSlot("MDM-V LAB", 5, 0);
-        const resolved = resolveMinorCourseForCalculator(lab, "five");
+        const resolved = resolveMinorCourseForCalculator(lab, false);
         expect(resolved.credits).toBe(0);
         expect(resolved.includeInCgpa).toBe(false);
         expect(resolved.calculatorDisabled).toBe(true);
@@ -72,11 +72,11 @@ describe("resolveMinorCourseForCalculator", () => {
     it("keeps final endpoint as 4 credits for 5-course minor (4 + disabled lab)", () => {
         const theory = resolveMinorCourseForCalculator(
             mockMinorSlot("MDM-V", 4, 3),
-            "five"
+            false
         );
         const lab = resolveMinorCourseForCalculator(
             mockMinorSlot("MDM-V LAB", 5, 0),
-            "five"
+            false
         );
 
         expect(theory.credits).toBe(4);
@@ -88,11 +88,11 @@ describe("resolveMinorCourseForCalculator", () => {
     it("splits final endpoint to 3+1 for 6-course minor", () => {
         const theory = resolveMinorCourseForCalculator(
             mockMinorSlot("MDM-V", 4, 3),
-            "six"
+            true
         );
         const lab = resolveMinorCourseForCalculator(
             mockMinorSlot("MDM-V LAB", 5, 0),
-            "six"
+            true
         );
 
         expect(theory.credits).toBe(3);
