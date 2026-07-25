@@ -62,7 +62,7 @@ const CourseRow = memo(
             <div 
                 className={`flex items-center justify-between gap-3 group rounded-md px-2 py-1.5 transition-colors ${
                     isDisabled
-                        ? "opacity-60 grayscale bg-muted/40 border border-border"
+                        ? "opacity-60 grayscale"
                         : ""
                 }`}
             >
@@ -553,30 +553,89 @@ export default function CalculatorPage() {
                                             key={semester.id}
                                             className={`bg-card rounded-xl border border-border shadow-sm p-4 md:p-5 flex flex-col transition-opacity duration-200 ${isExcluded ? "opacity-60 grayscale-[0.5]" : "opacity-100"}`}
                                         >
-                                            <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
-                                                <div className="flex items-center gap-3">
-                                                    <Checkbox
-                                                        id={`chk-${semester.id}`}
-                                                        checked={!isExcluded}
-                                                        onCheckedChange={() =>
-                                                            toggleSemester(
-                                                                semester.id
-                                                            )
-                                                        }
-                                                        className="data-[state=checked]:bg-neutral-600 data-[state=checked]:border-neutral-600"
-                                                    />
-                                                    <label
-                                                        htmlFor={`chk-${semester.id}`}
-                                                        className="font-bold text-foreground text-sm cursor-pointer select-none"
-                                                    >
-                                                        {semester.label}
-                                                    </label>
+                                            <div className="flex flex-col gap-2 mb-4 border-b border-border pb-3 md:flex-row md:justify-between md:items-center md:gap-3">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-3">
+                                                        <Checkbox
+                                                            id={`chk-${semester.id}`}
+                                                            checked={!isExcluded}
+                                                            onCheckedChange={() =>
+                                                                toggleSemester(
+                                                                    semester.id
+                                                                )
+                                                            }
+                                                            className="data-[state=checked]:bg-neutral-600 data-[state=checked]:border-neutral-600"
+                                                        />
+                                                        <label
+                                                            htmlFor={`chk-${semester.id}`}
+                                                            className="font-bold text-foreground text-sm cursor-pointer select-none"
+                                                        >
+                                                            {semester.label}
+                                                        </label>
+                                                    </div>
+                                                    <div className="flex gap-2 items-center md:hidden">
+                                                        <Button
+                                                            variant={isQuickMode ? "default" : "ghost"}
+                                                            size="icon"
+                                                            className={`h-6 w-6 transition-colors ${
+                                                                isQuickMode
+                                                                    ? "bg-amber-500 hover:bg-amber-600 text-white"
+                                                                    : "text-muted-foreground border border-dashed border-muted-foreground/30 hover:text-amber-600 hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                                                            }`}
+                                                            onClick={() =>
+                                                                toggleQuickMode(
+                                                                    semester.id
+                                                                )
+                                                            }
+                                                            disabled={isExcluded}
+                                                            title={
+                                                                isQuickMode
+                                                                    ? "Switch to detailed grades"
+                                                                    : "Switch to quick SGPA"
+                                                            }
+                                                        >
+                                                            <Zap className="w-3 h-3" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                            onClick={() =>
+                                                                clearSemesterGrades(
+                                                                    mainSemCourses
+                                                                )
+                                                            }
+                                                            disabled={isExcluded}
+                                                        >
+                                                            <RotateCcw className="w-3 h-3" />
+                                                        </Button>
+                                                    </div>
                                                 </div>
-                                                <div className="flex gap-2 items-center">
+                                                <div className="flex gap-2 items-center justify-between">
+                                                    {isSemesterSeven && !isQuickMode && (
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Checkbox
+                                                                id={`minor-lab-${semester.id}`}
+                                                                checked={minorHasLab}
+                                                                onCheckedChange={(checked) =>
+                                                                    setMinorHasLab(checked === true)
+                                                                }
+                                                                disabled={isExcluded}
+                                                                className="h-3.5 w-3.5 data-[state=checked]:bg-indigo-500 data-[state=checked]:border-indigo-500"
+                                                            />
+                                                            <label
+                                                                htmlFor={`minor-lab-${semester.id}`}
+                                                                className="text-xs text-muted-foreground select-none cursor-pointer"
+                                                            >
+                                                                Minor has lab
+                                                            </label>
+                                                        </div>
+                                                    )}
+                                                    <div className="flex gap-2 items-center ml-auto">
                                                     <Button
                                                         variant={isQuickMode ? "default" : "ghost"}
                                                         size="icon"
-                                                        className={`h-6 w-6 transition-colors ${
+                                                        className={`hidden md:inline-flex h-6 w-6 transition-colors ${
                                                             isQuickMode
                                                                 ? "bg-amber-500 hover:bg-amber-600 text-white"
                                                                 : "text-muted-foreground border border-dashed border-muted-foreground/30 hover:text-amber-600 hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30"
@@ -610,7 +669,7 @@ export default function CalculatorPage() {
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-1"
+                                                        className="hidden md:inline-flex h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-1"
                                                         onClick={() =>
                                                             clearSemesterGrades(
                                                                 mainSemCourses
@@ -620,28 +679,11 @@ export default function CalculatorPage() {
                                                     >
                                                         <RotateCcw className="w-3 h-3" />
                                                     </Button>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            {isSemesterSeven && !isQuickMode && (
-                                                <div className="flex items-center gap-2 mb-2 px-1">
-                                                    <Checkbox
-                                                        id={`minor-lab-${semester.id}`}
-                                                        checked={minorHasLab}
-                                                        onCheckedChange={(checked) =>
-                                                            setMinorHasLab(checked === true)
-                                                        }
-                                                        disabled={isExcluded}
-                                                        className="h-3.5 w-3.5"
-                                                    />
-                                                    <label
-                                                        htmlFor={`minor-lab-${semester.id}`}
-                                                        className="text-xs text-muted-foreground select-none cursor-pointer"
-                                                    >
-                                                        Minor has lab
-                                                    </label>
-                                                </div>
-                                            )}
+
 
                                             {isQuickMode ? (
                                                 <div
