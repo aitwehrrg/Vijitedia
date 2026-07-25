@@ -86,6 +86,7 @@ export const calculateStats = (
 ) => {
     let totalPoints = 0;
     let totalCredits = 0;
+    let earnedCredits = 0;
 
     courses.forEach((course) => {
         const gradeKey = grades[course.id];
@@ -94,12 +95,16 @@ export const calculateStats = (
             const credits = course.credits || 0;
             totalPoints += points * credits;
             totalCredits += credits;
+            if (gradeKey !== "FF") {
+                earnedCredits += credits;
+            }
         }
     });
 
     return {
         points: totalPoints,
         credits: totalCredits,
+        earnedCredits,
         gpa:
             totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00",
     };
@@ -187,6 +192,7 @@ export function calculateStatsWithQuickSgpa(
 ) {
     let totalPoints = 0;
     let totalCredits = 0;
+    let earnedCredits = 0;
 
     // Build a lookup: courseId → semesterId
     const courseToSemester = new Map<string, string>();
@@ -218,6 +224,7 @@ export function calculateStatsWithQuickSgpa(
                 const sgpa = Math.max(0, Math.min(10, quickSgpa[semId]));
                 totalPoints += sgpa * semCredits;
                 totalCredits += semCredits;
+                earnedCredits += semCredits;
             }
         } else {
             // Detailed mode: use individual grade
@@ -227,6 +234,9 @@ export function calculateStatsWithQuickSgpa(
                 const credits = course.credits || 0;
                 totalPoints += points * credits;
                 totalCredits += credits;
+                if (gradeKey !== "FF") {
+                    earnedCredits += credits;
+                }
             }
         }
     }
@@ -234,6 +244,7 @@ export function calculateStatsWithQuickSgpa(
     return {
         points: totalPoints,
         credits: totalCredits,
+        earnedCredits,
         gpa:
             totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00",
     };

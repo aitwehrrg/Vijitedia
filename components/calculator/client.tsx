@@ -477,7 +477,7 @@ export default function CalculatorPage() {
                                     Credits
                                 </div>
                                 <div className="font-mono font-bold text-foreground text-sm md:text-base">
-                                    {mainStats.credits}
+                                    {mainStats.earnedCredits}
                                 </div>
                             </div>
                             <div className="text-right">
@@ -539,6 +539,7 @@ export default function CalculatorPage() {
                                         ? {
                                               points: (quickSgpa[semester.id] || 0) * semCredits,
                                               credits: semCredits,
+                                              earnedCredits: semCredits,
                                               gpa: semCredits > 0
                                                   ? (quickSgpa[semester.id] || 0).toFixed(2)
                                                   : "0.00",
@@ -658,7 +659,7 @@ export default function CalculatorPage() {
                                                         variant="secondary"
                                                         className="font-mono text-sm"
                                                     >
-                                                        {semStats.credits} Cr
+                                                        {semStats.earnedCredits} Cr
                                                     </Badge>
                                                     <Badge
                                                         variant="outline"
@@ -774,7 +775,7 @@ export default function CalculatorPage() {
                                             Credits
                                         </div>
                                         <div className="font-mono font-bold text-purple-800 dark:text-purple-300">
-                                            {honorsStats.credits}
+                                            {honorsStats.earnedCredits}
                                         </div>
                                     </div>
                                     <div className="text-right">

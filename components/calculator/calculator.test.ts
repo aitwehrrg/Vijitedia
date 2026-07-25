@@ -108,19 +108,19 @@ describe("calculateStats", () => {
     it("returns zeros when no grades are provided", () => {
         const courses = [mockCourse("C1", 3), mockCourse("C2", 4)];
         const result = calculateStats(courses, {});
-        expect(result).toEqual({ points: 0, credits: 0, gpa: "0.00" });
+        expect(result).toEqual({ points: 0, credits: 0, earnedCredits: 0, gpa: "0.00" });
     });
 
     it("calculates correctly for a single course with AA grade", () => {
         const courses = [mockCourse("C1", 3)];
         const result = calculateStats(courses, { C1: "AA" });
-        expect(result).toEqual({ points: 30, credits: 3, gpa: "10.00" });
+        expect(result).toEqual({ points: 30, credits: 3, earnedCredits: 3, gpa: "10.00" });
     });
 
     it("calculates correctly for a single course with FF grade", () => {
         const courses = [mockCourse("C1", 4)];
         const result = calculateStats(courses, { C1: "FF" });
-        expect(result).toEqual({ points: 0, credits: 4, gpa: "0.00" });
+        expect(result).toEqual({ points: 0, credits: 4, earnedCredits: 0, gpa: "0.00" });
     });
 
     it("calculates weighted average across multiple courses", () => {
@@ -128,24 +128,25 @@ describe("calculateStats", () => {
         const result = calculateStats(courses, { C1: "AA", C2: "BB" });
         expect(result.points).toBe(62);
         expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(7);
         expect(result.gpa).toBe("8.86");
     });
 
     it("ignores courses without assigned grades", () => {
         const courses = [mockCourse("C1", 3), mockCourse("C2", 4)];
         const result = calculateStats(courses, { C1: "AB" });
-        expect(result).toEqual({ points: 27, credits: 3, gpa: "9.00" });
+        expect(result).toEqual({ points: 27, credits: 3, earnedCredits: 3, gpa: "9.00" });
     });
 
     it("handles empty course list", () => {
         const result = calculateStats([], { C1: "AA" });
-        expect(result).toEqual({ points: 0, credits: 0, gpa: "0.00" });
+        expect(result).toEqual({ points: 0, credits: 0, earnedCredits: 0, gpa: "0.00" });
     });
 
     it("handles course with 0 credits gracefully", () => {
         const courses = [mockCourse("C1", 0)];
         const result = calculateStats(courses, { C1: "AA" });
-        expect(result).toEqual({ points: 0, credits: 0, gpa: "0.00" });
+        expect(result).toEqual({ points: 0, credits: 0, earnedCredits: 0, gpa: "0.00" });
     });
 
     it("handles fractional credits", () => {
@@ -153,13 +154,35 @@ describe("calculateStats", () => {
         const result = calculateStats(courses, { C1: "AA" });
         expect(result.points).toBe(15);
         expect(result.credits).toBe(1.5);
+        expect(result.earnedCredits).toBe(1.5);
         expect(result.gpa).toBe("10.00");
     });
 
     it("handles totalCredits = 0 to avoid division by zero when grades exist but no credits", () => {
         const courses = [mockCourse("C1", 0), mockCourse("C2", 0)];
         const result = calculateStats(courses, { C1: "AA", C2: "BB" });
-        expect(result).toEqual({ points: 0, credits: 0, gpa: "0.00" });
+        expect(result).toEqual({ points: 0, credits: 0, earnedCredits: 0, gpa: "0.00" });
+    });
+
+    it("excludes FF credits from earnedCredits but includes in credits", () => {
+        const courses = [mockCourse("C1", 3), mockCourse("C2", 4)];
+        const result = calculateStats(courses, { C1: "AA", C2: "FF" });
+        expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(3);
+        expect(result.points).toBe(30);
+    });
+
+    it("earnedCredits equals credits when no FF grades", () => {
+        const courses = [mockCourse("C1", 3), mockCourse("C2", 4)];
+        const result = calculateStats(courses, { C1: "AA", C2: "BB" });
+        expect(result.earnedCredits).toBe(result.credits);
+    });
+
+    it("earnedCredits is 0 when all grades are FF", () => {
+        const courses = [mockCourse("C1", 3), mockCourse("C2", 4)];
+        const result = calculateStats(courses, { C1: "FF", C2: "FF" });
+        expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(0);
     });
 });
 
@@ -498,6 +521,7 @@ describe("calculateStatsWithQuickSgpa", () => {
         );
         expect(result.points).toBe(62);
         expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(7);
         expect(result.gpa).toBe("8.86");
     });
 
@@ -514,6 +538,7 @@ describe("calculateStatsWithQuickSgpa", () => {
         // 8.0 * (3+4) = 56
         expect(result.points).toBe(56);
         expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(7);
         expect(result.gpa).toBe("8.00");
     });
 
@@ -533,6 +558,7 @@ describe("calculateStatsWithQuickSgpa", () => {
         // S1 quick: 7.0 * 3 = 21, S2 detailed: 10 * 4 = 40
         expect(result.points).toBe(61);
         expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(7);
         expect(result.gpa).toBe("8.71");
     });
 
@@ -552,7 +578,7 @@ describe("calculateStatsWithQuickSgpa", () => {
 
     it("handles empty courses", () => {
         const result = calculateStatsWithQuickSgpa([], {}, {}, []);
-        expect(result).toEqual({ points: 0, credits: 0, gpa: "0.00" });
+        expect(result).toEqual({ points: 0, credits: 0, earnedCredits: 0, gpa: "0.00" });
     });
 
     it("does not double-count courses in the same quick semester", () => {
@@ -568,6 +594,7 @@ describe("calculateStatsWithQuickSgpa", () => {
         // 9.0 * 7 = 63 (counted once)
         expect(result.points).toBe(63);
         expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(7);
     });
 
     it("ignores quick SGPA for semesters with no matching courses", () => {
@@ -582,5 +609,35 @@ describe("calculateStatsWithQuickSgpa", () => {
         // Only C1 with BB: 8 * 3 = 24
         expect(result.points).toBe(24);
         expect(result.credits).toBe(3);
+        expect(result.earnedCredits).toBe(3);
+    });
+
+    it("excludes FF credits from earnedCredits in detailed mode", () => {
+        const c1 = mockCourse("C1", 3);
+        const c2 = mockCourse("C2", 4);
+        const semesters = [mockSemester("S1", [c1, c2])];
+        const result = calculateStatsWithQuickSgpa(
+            [c1, c2],
+            { C1: "AA", C2: "FF" },
+            {},
+            semesters
+        );
+        expect(result.credits).toBe(7);
+        expect(result.earnedCredits).toBe(3);
+        expect(result.points).toBe(30);
+    });
+
+    it("quick-mode semesters always count all credits as earned", () => {
+        const c1 = mockCourse("C1", 3);
+        const c2 = mockCourse("C2", 4);
+        const semesters = [mockSemester("S1", [c1, c2])];
+        const result = calculateStatsWithQuickSgpa(
+            [c1, c2],
+            {},
+            { S1: 5.0 },
+            semesters
+        );
+        expect(result.earnedCredits).toBe(7);
+        expect(result.credits).toBe(7);
     });
 });
