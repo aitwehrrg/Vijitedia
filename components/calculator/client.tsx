@@ -579,7 +579,7 @@ export default function CalculatorPage() {
                                                         className={`h-6 w-6 transition-colors ${
                                                             isQuickMode
                                                                 ? "bg-amber-500 hover:bg-amber-600 text-white"
-                                                                : "text-muted-foreground hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                                                                : "text-muted-foreground border border-dashed border-muted-foreground/30 hover:text-amber-600 hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30"
                                                         }`}
                                                         onClick={() =>
                                                             toggleQuickMode(
@@ -623,7 +623,7 @@ export default function CalculatorPage() {
                                                 </div>
                                             </div>
 
-                                            {isSemesterSeven && (
+                                            {isSemesterSeven && !isQuickMode && (
                                                 <div className="flex items-center gap-2 mb-2 px-1">
                                                     <Checkbox
                                                         id={`minor-lab-${semester.id}`}
@@ -682,7 +682,9 @@ export default function CalculatorPage() {
                                                 <div
                                                     className={`space-y-3 flex-1 ${isExcluded ? "pointer-events-none" : ""}`}
                                                 >
-                                                    {mainSemCourses.map(
+                                                    {mainSemCourses
+                                                        .filter((c) => !(c as CalculatorCourse).calculatorDisabled)
+                                                        .map(
                                                         (course) => (
                                                             <CourseRow
                                                                 key={course.id}
@@ -692,15 +694,7 @@ export default function CalculatorPage() {
                                                                     course.id
                                                                     ]
                                                                 }
-                                                                isDisabled={
-                                                                    isExcluded ||
-                                                                    Boolean(
-                                                                        (
-                                                                            course as CalculatorCourse
-                                                                        )
-                                                                            .calculatorDisabled
-                                                                    )
-                                                                }
+                                                                isDisabled={isExcluded}
                                                                 onGradeChange={
                                                                     handleGradeChange
                                                                 }
