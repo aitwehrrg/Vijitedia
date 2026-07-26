@@ -686,7 +686,7 @@ export const CE_PROGRAM: Program = {
                             code: "R5CO2009T",
                             title: "Software Engineering",
                             credits: 3,
-                            prereqs: [],
+                            prereqs: ["R5CO1028L"],
                         },
                         {
                             id: "R5CO2009L",
@@ -694,7 +694,7 @@ export const CE_PROGRAM: Program = {
                             code: "R5CO2009L",
                             title: "Software Engineering Laboratory",
                             credits: 1,
-                            prereqs: [],
+                            prereqs: ["R5CO1028L"],
                         },
                         {
                             id: "R5CO2010L",
