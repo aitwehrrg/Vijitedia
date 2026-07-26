@@ -38,14 +38,7 @@ describe("FLOWSHEET_DATA", () => {
 
             allCourses.forEach((course) => {
                 expect(course.id).toBeTruthy();
-                const isMinorLabPlaceholder =
-                    course.type === "minor" && course.minorIndex === 5;
-
-                if (isMinorLabPlaceholder) {
-                    expect(course.credits).toBeGreaterThanOrEqual(0);
-                } else {
-                    expect(course.credits).toBeGreaterThan(0);
-                }
+                expect(course.credits).toBeGreaterThan(0);
             });
         }
     );

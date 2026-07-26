@@ -1215,7 +1215,7 @@ export const CE_PROGRAM: Program = {
                             code: "R5XX42XXT",
                             title: "Multidisciplinary Minor V Laboratory",
                             label: "Multidisciplinary Minor V Laboratory",
-                            credits: 0,
+                            credits: 1,
                             minorIndex: 5,
                         },
                         {
