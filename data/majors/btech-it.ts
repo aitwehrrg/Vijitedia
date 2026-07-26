@@ -980,7 +980,6 @@ export const IT_PROGRAM: Program = {
                                 "R5IT3002T",
                                 "R5IT3002L",
                                 "R5CO1024L",
-                                "R5IT1024L",
                                 "R5IT3004T",
                                 "R5IT2009T",
                                 "R5IT2009L",
