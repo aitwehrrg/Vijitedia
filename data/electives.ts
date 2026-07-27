@@ -69,6 +69,13 @@ export const OPEN_ELECTIVES_I: CourseOption[] = [
 
 export const OPEN_ELECTIVES_II: CourseOption[] = [
     {
+        id: "R5MA4301T",
+        code: "R5MA4301T",
+        title: "Numerical Optimization",
+        credits: 4,
+        prereqs: [],
+    },
+    {
         id: "R5CH4301T",
         code: "R5CH4301T",
         title: "Sustainability: Industry Perspectives for a Greener World",
@@ -84,6 +91,14 @@ export const OPEN_ELECTIVES_II: CourseOption[] = [
         mutexIds: ["R5CO4109T", "R5IT4109T"],
     },
     {
+        id: "R5PH4301T",
+        code: "R5PH4301T",
+        title: "Quantum Computing",
+        credits: 4,
+        prereqs: [],
+        mutexIds: ["R5CO4111T", "R5IT4111T"],
+    },
+    {
         id: "R5HS4301T",
         code: "R5HS4301T",
         title: "Corporate Leadership",
@@ -96,21 +111,6 @@ export const OPEN_ELECTIVES_II: CourseOption[] = [
         title: "Engineers and Society",
         credits: 4,
         prereqs: [],
-    },
-    {
-        id: "R5MA4301T",
-        code: "R5MA4301T",
-        title: "Numerical Optimization",
-        credits: 4,
-        prereqs: [],
-    },
-    {
-        id: "R5PH4301T",
-        code: "R5PH4301T",
-        title: "Quantum Computing",
-        credits: 4,
-        prereqs: [],
-        mutexIds: ["R5CO4111T", "R5IT4111T"],
     },
     {
         id: "R5HS4303T",
