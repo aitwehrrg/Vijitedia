@@ -529,7 +529,7 @@ export const CE_PROGRAM: Program = {
                             id: "R5CO2002L",
                             type: "core",
                             code: "R5CO2002L",
-                            title: "Design and Analysis of Algorithms Laboratory",
+                            title: "Algorithms Laboratory",
                             credits: 1,
                             prereqs: ["R5CO1022T", "R5CO1023L"],
                         },
