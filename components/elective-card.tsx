@@ -60,7 +60,7 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                     </div>
                 ) : (
                     <PopoverTrigger asChild>
-                        <div className="h-full border-2 border-dashed border-border bg-card p-2 flex flex-col justify-center items-center cursor-pointer hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors">
+                        <div className="h-full border-2 border-dashed border-border bg-card p-2 flex flex-col justify-center items-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                             <Layers className="w-4 h-4 text-muted-foreground mb-1" />
                             <span className="text-sm font-semibold text-center text-foreground leading-tight">
                                 {course.label || "Elective"}
@@ -126,7 +126,7 @@ export const ElectiveCard = forwardRef<ElectiveCardHandle, ElectiveCardProps>(
                                                         )}
                                                     </div>
                                                     {isSelected && (
-                                                        <Check className="w-4 h-4 text-purple-600" />
+                                                        <Check className="w-4 h-4 text-foreground" />
                                                     )}
                                                 </div>
                                                 <span className="text-xs text-muted-foreground">

@@ -413,7 +413,7 @@ export default function FlowsheetPage() {
                                     {" "}
                                     with Minor in{" "}
                                 </span>
-                                <span className="font-semibold text-blue-600 dark:text-blue-400">
+                                <span className="font-semibold text-teal-600 dark:text-teal-400">
                                     {selectedMinor.name}
                                 </span>
                             </span>

@@ -622,7 +622,7 @@ export default function CalculatorPage() {
                                                                     setMinorHasLab(checked === true)
                                                                 }
                                                                 disabled={isExcluded}
-                                                                className="h-3.5 w-3.5 data-[state=checked]:bg-indigo-500 data-[state=checked]:border-indigo-500"
+                                                                className="h-3.5 w-3.5 data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500"
                                                             />
                                                             <label
                                                                 htmlFor={`minor-lab-${semester.id}`}

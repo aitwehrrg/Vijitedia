@@ -8,9 +8,10 @@ export type CourseStatus = "default" | "hovered" | "prereq" | "postreq";
 interface CourseCardProps {
     course: Course;
     status: CourseStatus;
+    className?: string;
 }
 
-export function CourseCard({ course, status }: CourseCardProps) {
+export function CourseCard({ course, status, className }: CourseCardProps) {
     const styles = {
         default: "border-l-border hover:border-l-slate-400 dark:hover:border-l-slate-600 opacity-100 bg-card",
         hovered:
@@ -38,7 +39,7 @@ export function CourseCard({ course, status }: CourseCardProps) {
 
     return (
         <Card
-            className={`h-full flex flex-col justify-between border-l-4 transition-all duration-200 cursor-pointer overflow-hidden ${styles[status]}`}
+            className={`h-full flex flex-col justify-between border-l-4 transition-all duration-200 cursor-pointer overflow-hidden ${styles[status]} ${className || ""}`}
         >
             <CardHeader className="p-4 pb-2 md:p-3 md:pb-2 space-y-0 shrink-0">
                 <div className="flex justify-between items-start gap-2">

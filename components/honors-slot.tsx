@@ -55,7 +55,11 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
             <Popover open={open} onOpenChange={setOpen}>
                 {selectedHonorsId ? (
                     <div className="relative h-full w-full group">
-                        <CourseCard course={effectiveCourse} status={status} />
+                        <CourseCard
+                            course={effectiveCourse}
+                            status={status}
+                            className={status === "default" ? "bg-purple-50/60 dark:bg-purple-950/20 border-l-purple-500" : undefined}
+                        />
 
                         <PopoverTrigger asChild>
                             <button
@@ -71,18 +75,20 @@ export const HonorsSlot = forwardRef<HonorsSlotHandle, HonorsSlotProps>(
                             </button>
                         </PopoverTrigger>
 
-                        <div className="absolute inset-0 border-2 border-purple-500/20 pointer-events-none rounded-lg" />
+                        {status === "default" && (
+                            <div className="absolute inset-0 border-2 border-purple-400/40 dark:border-purple-500/30 pointer-events-none rounded-lg" />
+                        )}
                     </div>
                 ) : (
                     <PopoverTrigger asChild>
-                        <div className="h-full border-2 border-dashed border-border bg-card hover:border-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
-                            <Award className="w-4 h-4 text-muted-foreground group-hover:text-purple-600 mb-1 transition-colors" />
-                            <span className="text-sm font-semibold text-center text-foreground group-hover:text-purple-700 dark:group-hover:text-purple-400 leading-tight transition-colors">
+                        <div className="h-full border-2 border-dashed border-muted bg-muted/40 dark:bg-muted/20 hover:border-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group opacity-60 hover:opacity-100">
+                            <Award className="w-4 h-4 text-muted-foreground/60 group-hover:text-purple-600 mb-1 transition-colors" />
+                            <span className="text-sm font-semibold text-center text-muted-foreground group-hover:text-purple-700 dark:group-hover:text-purple-400 leading-tight transition-colors">
                                 Honors{getSuffix(course.honorsIndex || 0)}
                             </span>
                             <Badge
                                 variant="secondary"
-                                className="mt-1 text-[10px] h-4 bg-muted text-muted-foreground group-hover:bg-purple-100 dark:group-hover:bg-purple-950/50 group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors"
+                                className="mt-1 text-[10px] h-4 bg-muted/60 text-muted-foreground/60 group-hover:bg-purple-100 dark:group-hover:bg-purple-950/50 group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors"
                             >
                                 Select
                             </Badge>

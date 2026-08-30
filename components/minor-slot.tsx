@@ -62,7 +62,11 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
             <Popover open={open} onOpenChange={setOpen}>
                 {selectedMinorId ? (
                     <div className="relative h-full w-full group">
-                        <CourseCard course={effectiveCourse} status={status} />
+                        <CourseCard
+                            course={effectiveCourse}
+                            status={status}
+                            className={status === "default" ? "bg-teal-50/60 dark:bg-teal-950/20 border-l-teal-500" : undefined}
+                        />
 
                         <PopoverTrigger asChild>
                             <button
@@ -78,18 +82,20 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                             </button>
                         </PopoverTrigger>
 
-                        <div className="absolute inset-0 border-2 border-indigo-500/10 pointer-events-none rounded-lg" />
+                        {status === "default" && (
+                            <div className="absolute inset-0 border-2 border-teal-400/40 dark:border-teal-500/30 pointer-events-none rounded-lg" />
+                        )}
                     </div>
                 ) : (
                     <PopoverTrigger asChild>
-                        <div className="h-full border-2 border-dashed border-border bg-card hover:border-indigo-400 hover:bg-indigo-50/30 dark:hover:bg-indigo-950/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
-                            <GraduationCap className="w-4 h-4 text-muted-foreground group-hover:text-indigo-500 mb-1 transition-colors" />
-                            <span className="text-sm font-semibold text-center text-foreground group-hover:text-indigo-700 dark:group-hover:text-indigo-400 leading-tight transition-colors">
+                        <div className="h-full border-2 border-dashed border-border bg-card hover:border-teal-400 hover:bg-teal-50/30 dark:hover:bg-teal-950/30 p-2 flex flex-col justify-center items-center cursor-pointer transition-colors rounded-lg group">
+                            <GraduationCap className="w-4 h-4 text-muted-foreground group-hover:text-teal-500 mb-1 transition-colors" />
+                            <span className="text-sm font-semibold text-center text-foreground group-hover:text-teal-700 dark:group-hover:text-teal-400 leading-tight transition-colors">
                                 {minorSlotLabel}
                             </span>
                             <Badge
                                 variant="secondary"
-                                className="mt-1 text-[10px] h-4 bg-muted text-muted-foreground group-hover:bg-indigo-100 dark:group-hover:bg-indigo-950/50 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors"
+                                className="mt-1 text-[10px] h-4 bg-muted text-muted-foreground group-hover:bg-teal-100 dark:group-hover:bg-teal-950/50 group-hover:text-teal-700 dark:group-hover:text-teal-400 transition-colors"
                             >
                                 Select
                             </Badge>
@@ -147,7 +153,7 @@ export const MinorSlot = forwardRef<MinorSlotHandle, MinorSlotProps>(
                                                     ) : (
                                                         selectedMinorId ===
                                                             m.id && (
-                                                            <Check className="w-4 h-4 text-indigo-600 ml-2" />
+                                                            <Check className="w-4 h-4 text-teal-600 ml-2" />
                                                         )
                                                     )}
                                                 </div>
