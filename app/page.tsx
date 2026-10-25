@@ -337,13 +337,14 @@ export default function Home() {
                 {/* PLACEMENTS 2027 SECTION */}
                 <section className="w-full -mx-6 px-6 mb-8 md:mb-12">
                     <div className="max-w-6xl mx-auto">
-                        <div className="relative overflow-hidden rounded-2xl border border-green-200/60 dark:border-green-800/40 bg-gradient-to-br from-green-50 via-emerald-50/50 to-teal-50 dark:from-green-950/40 dark:via-emerald-950/30 dark:to-teal-950/20 p-6 sm:p-8 shadow-sm">
+                        <div className="relative overflow-hidden rounded-2xl border border-green-200/60 dark:border-green-800/40 bg-gradient-to-br from-green-50 via-emerald-50/50 to-teal-50 dark:from-green-950/40 dark:via-emerald-950/30 dark:to-teal-950/20 p-5 sm:p-8 shadow-sm">
                             {/* Subtle background pattern */}
                             <div className="absolute inset-0 bg-[radial-gradient(#34a85310_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
                             
-                            <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                <div className="flex items-start gap-4">
-                                    <div className="p-2 bg-white dark:bg-green-900/50 rounded-xl shrink-0 mt-0.5 shadow-sm border border-green-100 dark:border-green-800/50">
+                            {/* Mobile: centered vertical stack | Desktop: horizontal row */}
+                            <div className="relative flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left sm:justify-between gap-4">
+                                <div className="flex flex-col items-center sm:flex-row sm:items-start gap-3 sm:gap-4">
+                                    <div className="p-2 bg-white dark:bg-green-900/50 rounded-xl shrink-0 shadow-sm border border-green-100 dark:border-green-800/50">
                                         {/* Google Sheets icon */}
                                         <svg className="w-6 h-6" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M11 8C11 5.79086 12.7909 4 15 4H29L37 12V40C37 42.2091 35.2091 44 33 44H15C12.7909 44 11 42.2091 11 40V8Z" fill="#0F9D58"/>
@@ -355,7 +356,7 @@ export default function Home() {
                                         </svg>
                                     </div>
                                     <div>
-                                        <div className="flex items-center gap-2 mb-1">
+                                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
                                             <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                                                 2027 Placements Sheet
                                             </h3>
@@ -368,8 +369,8 @@ export default function Home() {
                                         </p>
                                     </div>
                                 </div>
-                                <Link href="/placements" target="_blank" rel="noopener noreferrer">
-                                    <Button size="sm" className="rounded-full bg-[#0F9D58] hover:bg-[#0B8043] text-white shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all font-semibold whitespace-nowrap">
+                                <Link href="/placements" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                                    <Button size="sm" className="w-full sm:w-auto rounded-full bg-[#0F9D58] hover:bg-[#0B8043] text-white shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all font-semibold whitespace-nowrap">
                                         View Sheet <ExternalLink className="ml-1.5 w-3.5 h-3.5" />
                                     </Button>
                                 </Link>
