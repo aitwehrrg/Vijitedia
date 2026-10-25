@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Calculator, GitBranch, Github, Network, ChevronDown } from "lucide-react";
+import { ArrowRight, Calculator, GitBranch, Github, Network, ChevronDown, ExternalLink } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CourseCard } from "@/components/course-card";
 import type { Course } from "@/types/flowsheet";
@@ -333,6 +333,50 @@ export default function Home() {
                         in real-time.
                     </p>
                 </div>
+
+                {/* PLACEMENTS 2027 SECTION */}
+                <section className="w-full -mx-6 px-6 mb-8 md:mb-12">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="relative overflow-hidden rounded-2xl border border-green-200/60 dark:border-green-800/40 bg-gradient-to-br from-green-50 via-emerald-50/50 to-teal-50 dark:from-green-950/40 dark:via-emerald-950/30 dark:to-teal-950/20 p-6 sm:p-8 shadow-sm">
+                            {/* Subtle background pattern */}
+                            <div className="absolute inset-0 bg-[radial-gradient(#34a85310_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+                            
+                            <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <div className="flex items-start gap-4">
+                                    <div className="p-2 bg-white dark:bg-green-900/50 rounded-xl shrink-0 mt-0.5 shadow-sm border border-green-100 dark:border-green-800/50">
+                                        {/* Google Sheets icon */}
+                                        <svg className="w-6 h-6" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11 8C11 5.79086 12.7909 4 15 4H29L37 12V40C37 42.2091 35.2091 44 33 44H15C12.7909 44 11 42.2091 11 40V8Z" fill="#0F9D58"/>
+                                            <path d="M29 4L37 12H31C29.8954 12 29 11.1046 29 10V4Z" fill="#87CEAC"/>
+                                            <rect x="16" y="20" width="16" height="16" rx="1" fill="white"/>
+                                            <line x1="16" y1="26" x2="32" y2="26" stroke="#0F9D58" strokeWidth="1"/>
+                                            <line x1="16" y1="30" x2="32" y2="30" stroke="#0F9D58" strokeWidth="1"/>
+                                            <line x1="24" y1="20" x2="24" y2="36" stroke="#0F9D58" strokeWidth="1"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                                                2027 Placements Sheet
+                                            </h3>
+                                            <Badge className="bg-green-100 dark:bg-green-900/60 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800 text-[10px] uppercase tracking-wider font-bold hover:bg-green-100 dark:hover:bg-green-900/60">
+                                                Live
+                                            </Badge>
+                                        </div>
+                                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                            Browse the crowdsourced placement data: companies, packages, branchwise statistics and more, all in one place.
+                                        </p>
+                                    </div>
+                                </div>
+                                <Link href="/placements" target="_blank" rel="noopener noreferrer">
+                                    <Button size="sm" className="rounded-full bg-[#0F9D58] hover:bg-[#0B8043] text-white shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all font-semibold whitespace-nowrap">
+                                        View Sheet <ExternalLink className="ml-1.5 w-3.5 h-3.5" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 {/* FLOWSHEET SECTION */}
                 <section className="w-full -mx-6 px-6">
